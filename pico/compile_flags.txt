@@ -1,0 +1,6 @@
+-Wall
+-Wextra
+-I
+./include/
+-I
+/home/umutsevdi/src/dev/pico-sdk/src/rp2_common/

@@ -1,0 +1,12 @@
+version: '3.2'
+services:
+  debbox:
+    container_name: debbox
+    image: debian:bookworm-slim
+    environment:
+      - PICO_SDK_PATH:/pico-sdk/
+    volumes:
+      - $HOME/src/dev/smartwatch/pico/:/app/
+      - $HOME/src/dev/pico-sdk/:/pico-sdk/
+    command: bash -c "echo OK;env; sleep infinity"
+

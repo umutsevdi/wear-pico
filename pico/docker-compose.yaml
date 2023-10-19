@@ -7,6 +7,6 @@ services:
       - PICO_SDK_PATH:/pico-sdk/
     volumes:
       - $HOME/src/dev/smartwatch/pico/:/app/
-      - $HOME/src/dev/pico-sdk/:/pico-sdk/
+      - $HOME/src/dev/smartwatch/pico/pico-sdk/:/pico-sdk/
     command: bash -c "echo OK;env; sleep infinity"
 

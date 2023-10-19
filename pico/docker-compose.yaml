@@ -2,7 +2,10 @@ version: '3.2'
 services:
   debbox:
     container_name: debbox
-    image: debian:bookworm-slim
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: debbox-pico
     environment:
       - PICO_SDK_PATH:/pico-sdk/
     volumes:

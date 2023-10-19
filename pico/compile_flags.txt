@@ -1,6 +1,9 @@
 -Wall
 -Wextra
 -I
+`find pico-sdk/src/ | grep pico/.*.h `
+-I
 ./include/
 -I
-/home/umutsevdi/src/dev/pico-sdk/src/rp2_common/
+./pico-sdk/src/common/pico_stdlib/include/pico/stdlib.h
+

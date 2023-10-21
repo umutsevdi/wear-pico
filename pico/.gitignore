@@ -55,3 +55,4 @@ obj/
 .idea/
 build/
 cmake-build-debug/
+.inc/

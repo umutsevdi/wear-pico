@@ -1,11 +1,11 @@
 version: '3.2'
 services:
-  debbox:
-    container_name: debbox
+  picobox:
+    container_name: picobox
     build:
       context: .
       dockerfile: Dockerfile
-    image: debbox-pico
+    image: picobox
     environment:
       - PICO_SDK_PATH:/pico-sdk/
     volumes:

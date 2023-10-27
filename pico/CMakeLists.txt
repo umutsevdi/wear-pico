@@ -1,16 +1,30 @@
-cmake_minimum_required(VERSION 3.13)
-
-# initialize the SDK based on PICO_SDK_PATH
-# note: this must happen before project()
+cmake_minimum_required(VERSION 3.12)
+# Pull in SDK (must be before project)
 include(pico_sdk_import.cmake)
-project(smartwatch)
 
-# initialize the Raspberry Pi Pico SDK
+include(pico_extras_import_optional.cmake)
+
+project(pico_examples C CXX ASM)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
+    message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
+endif()
+
+set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
+
+# Initialize the SDK
 pico_sdk_init()
 
-file(GLOB SOURCES src/*.c)
-file(GLOB INCLUDE include/*.h)
+add_subdirectory(smartwatch)
 
-add_executable(smartwatch ${SOURCES})
-target_link_libraries(smartwatch pico_stdlib)
-pico_add_extra_outputs(smartwatch)
+add_compile_options(-Wall
+        -O3
+        -Wextra
+        -Wno-format          # int != int32_t as far as the compiler is concerned because gcc has int32_t as long int
+        -Wno-unused-function # we have some for the docs that aren't called
+        )
+if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-maybe-uninitialized)
+endif()

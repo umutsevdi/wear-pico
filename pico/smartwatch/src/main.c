@@ -1,8 +1,17 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "pico/multicore.h"
 #include "pico/stdlib.h"
 #include "pico/time.h"
+
+void run()
+{
+    while (true) {
+        printf("CORE 2 running with %s\n", __func__);
+        sleep_ms(1000);
+    }
+}
 
 bool repeating_alarm_cb(struct repeating_timer* timer)
 {
@@ -13,7 +22,7 @@ bool repeating_alarm_cb(struct repeating_timer* timer)
     uint64_t c = 0;
     do {
         c++;
-    } while (absolute_time_diff_us(t, get_absolute_time()) < 5000000);
+    } while (absolute_time_diff_us(t, get_absolute_time()) < 10000000);
 
     printf("%ld - %d INTERRUPT_END  %s:%3d ->[%s]\n",
 
@@ -38,11 +47,11 @@ int main(int argc, char* argv[])
     stdio_init_all();
     repeating_timer_t timer;
     printf("OK\r\n");
-    bool is_active = add_repeating_timer_ms(5000, repeating_alarm_cb,
-                                            "CALLBACK txt", &timer);
+    add_repeating_timer_ms(5000, repeating_alarm_cb, "CALLBACK txt", &timer);
+    multicore_launch_core1(run);
 
     while (1) {
-        printf("%s[%d]\n", __func__, is_active);
+        printf("CORE 1 running with %s\n", __func__);
         sleep_ms(1000);
     }
 

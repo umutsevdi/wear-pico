@@ -1,7 +1,7 @@
 -Wall
 -Wextra
 -I
-./include/
+./smartwatch/include/
 -I
 ./.inc/
 

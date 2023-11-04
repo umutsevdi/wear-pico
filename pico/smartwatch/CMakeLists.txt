@@ -5,7 +5,7 @@ add_executable(smartwatch ${SOURCES})
 target_link_libraries(smartwatch pico_stdlib)
 
 # pull in common dependencies
-target_link_libraries(smartwatch pico_stdlib pico_time)
+target_link_libraries(smartwatch pico_stdlib pico_time pico_multicore)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(smartwatch 1)

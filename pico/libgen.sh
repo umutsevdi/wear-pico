@@ -10,9 +10,9 @@
 #*****************************************************************************
 rm -rf ./.inc
 mkdir ./.inc/ -p 2>/dev/null
-find pico-sdk/ -type f | grep "include/.*\.h" | sed -e "s/\(pico-sdk\).*\(include\)\(.*\.h\)/cp \0 .inc\3/g" > f
+find pico-sdk/src -type f |  grep "include/.*\.h" | sed -e "s/\(pico-sdk\).*\(include\)\(.*\.h\)/cp \0 .inc\3/g" > f
 find build/generated/ -type f | grep "generated/.*\.h" | sed "s/\(build\/generated\)\(\/[_A-Za-z0-9]*\)\(.*\.h\)/cp \0 .inc\3 /g" >> f
+find pico-sdk/lib -type f | grep "pico-sdk/lib/[A-Za-z\-_0-9]*/src/.*\.h" | grep -v "example" | grep -v "test" | sed "s/pico-sdk\/lib\/\([A-Za-z\-_0-9]*\)\/src\/\(.*\)/cp \0 .inc\/\2 /g" >> f
 mkdir -p $(awk '{print $3}' f | xargs dirname | sort -u)
 bash f
-grep generated f | awk '{print $3}' | xargs sed "s/\".*\/include\//\"/g" -i
 rm f

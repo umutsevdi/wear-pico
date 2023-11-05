@@ -1,11 +1,18 @@
 file(GLOB SOURCES src/*.c)
-file(GLOB INCLUDE include/*.h)
-
+include_directories(include/)
 add_executable(smartwatch ${SOURCES})
-target_link_libraries(smartwatch pico_stdlib)
+
 
 # pull in common dependencies
-target_link_libraries(smartwatch pico_stdlib pico_time pico_multicore)
+target_link_libraries(smartwatch pico_stdlib
+    pico_time
+    pico_multicore
+    pico_btstack_ble # Needed for ble
+    pico_btstack_cyw43 # Needed for ble
+    pico_cyw43_arch_none # Needed for pico_w
+    hardware_adc # don't think it's needed (but haven't tested)
+    hardware_exception
+)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(smartwatch 1)

@@ -1,9 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "pico/multicore.h"
-#include "pico/stdlib.h"
-#include "pico/time.h"
+#include <pico/multicore.h>
+#include <pico/stdlib.h>
+#include <pico/time.h>
 
 void run()
 {

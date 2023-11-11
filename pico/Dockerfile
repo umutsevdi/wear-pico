@@ -4,9 +4,9 @@ FROM ubuntu:20.04
 # Set the maintainer information
 LABEL maintainer="Umut Sevdi <mail@umutsevdi.com>"
 
-# Copy files from the host into the image
-RUN apt-get update && \
-    apt-get install -y \
+RUN echo "export PICO_SDK_PATH=/pico-sdk" >> /root/.bashrc
+
+RUN apt update && apt-get install -y \
     cmake \
     gcc-arm-none-eabi \
     libnewlib-arm-none-eabi \
@@ -14,7 +14,6 @@ RUN apt-get update && \
     vim \
     python3 \
     g++
-RUN echo "export PICO_SDK_PATH=/pico-sdk" >> /root/.bashrc
 
 # Any other setup or commands you need to run during the build process
 # For example, you can install packages, configure settings, etc.

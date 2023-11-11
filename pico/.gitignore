@@ -56,3 +56,5 @@ obj/
 build/
 cmake-build-debug/
 .inc/
+waveshare/
+src/waveshare

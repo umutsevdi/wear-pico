@@ -5,10 +5,17 @@
 #include <pico/stdlib.h>
 #include <pico/time.h>
 
+#include "screen.h"
+#include "util.h"
+
 void run()
 {
+    sleep_ms(2000);
+    WARN(SW_SCR_BEGIN);
+    sw_scr_run();
+    WARN(SW_SCR_END);
     while (true) {
-        printf("CORE 2 running with %s\n", __func__);
+        printf("CORE 1 running with %s\n", __func__);
         sleep_ms(1000);
     }
 }
@@ -51,9 +58,15 @@ int main(int argc, char* argv[])
     multicore_launch_core1(run);
 
     while (1) {
-        printf("CORE 1 running with %s\n", __func__);
+        //        printf("CORE 0 running with %s\n", __func__);
         sleep_ms(1000);
     }
 
     return 0;
 }
+
+#ifndef __force_inline
+#error "this should have been enabled"
+#define __force_inline inline
+#endif
+#include <GUI_Paint.h>

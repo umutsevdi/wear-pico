@@ -7,6 +7,7 @@
  * Description: BtStack server configuration environment variables
 
 *****************************************************************************/
+#ifdef __UNDEFINED__
 #pragma once
 
 #define RUNNING_AS_CLIENT 0
@@ -64,3 +65,4 @@
 #define HCI_RESET_RESEND_TIMEOUT_MS 1000
 #define ENABLE_SOFTWARE_AES128
 #define ENABLE_MICRO_ECC_FOR_LE_SECURE_CONNECTIONS
+#endif

@@ -3,5 +3,12 @@
 -I
 ./smartwatch/include/
 -I
+./smartwatch/waveshare/lib/Config/
+-I
+./smartwatch/waveshare/lib/GUI/
+-I
+./smartwatch/waveshare/lib/LCD/
+-I
+./smartwatch/waveshare/lib/Fonts/
+-I
 ./.inc/
-

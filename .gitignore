@@ -51,10 +51,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 build/
-bin/
-obj/
 .idea/
-build/
 cmake-build-debug/
 .inc/
 smartwatch/waveshare

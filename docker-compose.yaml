@@ -1,0 +1,15 @@
+version: '3.2'
+services:
+  picobox:
+    container_name: picobox
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: picobox
+    environment:
+      - PICO_SDK_PATH:/pico-sdk/
+    volumes:
+      - $HOME/src/dev/smartwatch/:/app/
+      - $HOME/src/dev/smartwatch/pico-sdk/:/pico-sdk/
+    command: bash -c "echo OK;env; sleep infinity"
+

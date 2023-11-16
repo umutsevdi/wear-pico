@@ -33,20 +33,8 @@ enum MSGFMT {
     MSGFMT_ERROR_DATE_LEN,
     MSGFMT_ERROR_DATE_PARSE,
     MSGFMT_ERROR_REQ_TYPE,
+    MSGFMT_ERROR_EVENT_PARSE,
 };
-
-typedef struct {
-    int16_t flag;
-    uint16_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t minute;
-    uint8_t second;
-} DateTime;
-
-enum MSGFMT sw_date_parse(const char* buffer, DateTime* dt);
-enum MSGFMT sw_date_to_str(const DateTime* dt, char buffer[15]);
 
 typedef enum {
     DT_WC_YEAR = 0b000001,
@@ -57,8 +45,46 @@ typedef enum {
     DT_WC_SEC = 0b100000,
 } DT_WC;
 
-/* Calendar events struct
-* {DateTime}|{DateTime}|Name|Description|Location */
+/**
+ * Represents any date or time with optional fields.
+ *
+ * String Format:  YYYYmmDDHHMMSS
+ *
+ * - DateTime structure is generated from an array of 14 characters where each
+ * can be a number or '?'.
+ * If any date time field starts with a '?' that section is ignored.
+ * - After the sturcture is generated DT_WC enum can be used on
+ * DateTime.flag to obtain ignored fields.
+ *
+ *   Example:
+ *   - 202112201830??  20 December 2012 18:30
+ *   - ????????123015  12:30:15
+ */
+typedef struct {
+    int16_t flag;
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t minute;
+    uint8_t second;
+} DateTime;
+
+/**
+ * Converts the given null terminated string of numbers into a DateTime struct.
+ * @buffer - a string that contains 0-9 or ?. *
+ * @dt - to assign
+ * @return - Whether mapping succeeded or not
+ */
+enum MSGFMT sw_str_to_date(const char buffer[15], DateTime* dt);
+/**
+ * Converts the given DateTime struct into its string representation.
+ * @dt - to map
+ * @buffer - to insert
+ * @return - Whether mapping succeeded or not
+ */
+enum MSGFMT sw_date_to_str(const DateTime* dt, char buffer[15]);
+
 typedef struct {
     char* name;
     char* desc;
@@ -67,8 +93,15 @@ typedef struct {
     DateTime end;
 } Event;
 
-enum MSGFMT sw_event_new(Event* event, char* event_str, size_t event_str_s);
-enum MSGFMT sw_event_destroy(Event* event);
+/**
+ * Constructs an event using the given buffer.
+ *
+ * String Format:  start|end|name|desc|location
+ * @str - Event string to parse. Modifies the original buffer while
+ * generating the event.
+ * @return Returns an error code for any failure.
+ */
+enum MSGFMT sw_event_new(Event* event, char* str, size_t str_s);
 
 /******************************************************************************
                                 Request
@@ -77,11 +110,6 @@ enum MSGFMT sw_event_destroy(Event* event);
 
 /**
  * Common types for request and response type enums:
- * # DateTime: Describes the optional date and/or time values. YYYYmmDDHHMMSS
- * Unknown fields are replaced with '?'. 
- *   Example:
- *   - 202112201830??  20 December 2012 18:30 
- *   - ????????123015  12:30:15 
  * # Option: Used on custom buttons. Payload is separated by '|' symbol.
  *   Example:
  *   - Accept|Deny
@@ -125,7 +153,7 @@ typedef struct {
 
 typedef struct {
     float pct;
-    char* status;
+    bool is_ac;
 } ParamBat;
 
 /* Media On Song Change parameters are pointers to the payload addresses after
@@ -136,19 +164,17 @@ typedef struct {
     char* artist;
 } ParamOsc;
 
-union SwPayloadParam {
-    DateTime connect;
-    ParamNotify notify;
-    char call_begin[30];
-    ParamEvent sync_event;
-    ParamBat sync_bat;
-    ParamOsc mdi_osc;
-};
-
 typedef struct {
     uint16_t __magic;
     enum SW_REQ req_t;
-    union SwPayloadParam payload;
+    union {
+        DateTime connect;
+        ParamNotify notify;
+        char call_begin[30];
+        ParamEvent sync_event;
+        ParamBat sync_bat;
+        ParamOsc mdi_osc;
+    } payload;
     char* _payload;
     size_t _payload_s;
 } SwRequest;

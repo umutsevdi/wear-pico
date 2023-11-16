@@ -10,12 +10,12 @@
 #pragma once
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_URI_LENGTH 4096
 #define MAXLINE 256
 #define PRINT(FMT, ARGS...) printf(__FILE__ #FMT "\r\n" ARGS)
 #define WARN(CODE)                                                             \

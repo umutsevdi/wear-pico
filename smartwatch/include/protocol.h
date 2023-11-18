@@ -1,6 +1,6 @@
 /******************************************************************************
 
- * File: include/msg.h
+ * File: include/protocol.h
  *
  * Author: Umut Sevdi
  * Created: 10/31/23
@@ -34,6 +34,11 @@ enum MSGFMT {
     MSGFMT_ERROR_DATE_PARSE,
     MSGFMT_ERROR_REQ_TYPE,
     MSGFMT_ERROR_EVENT_PARSE,
+    MSGFMT_ERROR_NOTIFY_PARSE,
+    MSGFMT_ERROR_EVENTLST_PARSE,
+    MSGFMT_ERROR_BAT_PARSE,
+    MSGFMT_ERROR_OSC_PARSE,
+
 };
 
 typedef enum {
@@ -120,7 +125,7 @@ enum SW_REQ {
     SW_REQ_CONNECT, /* Connection request. Payload: "{DateTime}" */
     SW_REQ_DISCONNECT,
     SW_REQ_NOTIFY,     /* Notification event. Triggers an interrupt.
-                        * Payload: App Name\nTitle\nMessage\n{Option} */
+                        * Payload: App Name\nTitle\nMessage\nOption{Option} */
     SW_REQ_CALL_BEGIN, /* Call start event. Payload: "Caller" */
     SW_REQ_CALL_EXIT,  /* Occurs when the Call event is handled by the phone. */
     SW_REQ_PING, /* Client periodically asks to server, requested data. Every sec */
@@ -135,26 +140,47 @@ enum SW_REQ {
     SW_REQ_SIZE, /* Number of options in SW_REQ_TYPE */
 };
 
+#define SW_PARAM_MAX_SIZE 4
 /*
  * Notify parameters are pointers to the payload addresses after all \n
- * characters are set to 0 */
+ * characters are set to 0.
+ *
+ * Maximum number of notification option can be no higher than SW_PARAM_MAX_SIZE
+ *
+* String Format:
+* title\n
+* message\n
+* option_s\n
+* option_1\n
+* option_2\n
+* ...
+* option_{option_s}
+*/
 typedef struct {
+    char* app;
     char* title;
     char* message;
     /* Option array */
-    char** option;
-    char* option_s;
-} ParamNotify;
+    char* option[SW_PARAM_MAX_SIZE];
+    int32_t option_s;
+} SwReqNotify;
+
+enum MSGFMT sw_param_notify_new(SwReqNotify* notify, char* str, size_t str_s);
 
 typedef struct {
-    Event* events;
-    size_t events_s;
-} ParamEvent;
+    Event* list;
+    int32_t size;
+} SwReqEvent;
+
+enum MSGFMT sw_event_list_new(SwReqEvent* events, char* str, size_t str_s);
+void sw_event_list_free(SwReqEvent* events);
 
 typedef struct {
     float pct;
     bool is_ac;
-} ParamBat;
+} SwReqBat;
+
+enum MSGFMT sw_bat_new(SwReqBat* bat, char* str, size_t str_s);
 
 /* Media On Song Change parameters are pointers to the payload addresses after
  * all \n characters are set to 0 */
@@ -162,21 +188,23 @@ typedef struct {
     char* song;
     char* album;
     char* artist;
-} ParamOsc;
+} SwReqOSC;
+
+enum MSGFMT sw_osc_new(SwReqOSC* osc, char* str, size_t str_s);
 
 typedef struct {
     uint16_t __magic;
     enum SW_REQ req_t;
     union {
         DateTime connect;
-        ParamNotify notify;
-        char call_begin[30];
-        ParamEvent sync_event;
-        ParamBat sync_bat;
-        ParamOsc mdi_osc;
-    } payload;
-    char* _payload;
-    size_t _payload_s;
+        SwReqNotify notify;
+        char caller[30];
+        SwReqEvent events;
+        SwReqBat bat;
+        SwReqOSC osc;
+    } pl;
+    char* _raw;
+    size_t _raw_s;
 } SwRequest;
 
 /**

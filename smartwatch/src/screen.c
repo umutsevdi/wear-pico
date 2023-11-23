@@ -14,6 +14,25 @@
 
 Touch_1IN28_XY XY;
 
+#define GESTURE_S(G)                                                           \
+    G == UP             ? "UP   "                                              \
+    : G == Down         ? "DOWN "                                              \
+    : G == LEFT         ? "LEFT "                                              \
+    : G == RIGHT        ? "RIGHT"                                              \
+    : G == CLICK        ? "CLICK"                                              \
+    : G == DOUBLE_CLICK ? "DOUBL"                                              \
+    : G == LONG_PRESS   ? "LONG "                                              \
+                        : "NONE "
+
+#define MODE_S(M)                                                              \
+    M == TOUCH_INIT          ? "INIT"                                          \
+    : M == TOUCH_IRQ         ? "IRQ "                                          \
+    : M == TOUCH_FUNCTION    ? "FUNC"                                          \
+    : M == TOUCH_DRAW        ? "DRAW"                                          \
+    : M == TOUCH_OUT_GESTURE ? "GEST"                                          \
+    : M == TOUCH_NO_DRAW     ? "NDRW"                                          \
+                             : "NONE"
+
 typedef enum _SW_SCR_STATUS {
     SW_SCR_OK,
     SW_SCR_ALLOC,
@@ -38,9 +57,7 @@ enum DRAWING_STATE {
 bool sw_scr_cb_refresh(struct repeating_timer* t)
 {
     l++;//Determine continuous or single point
-    if (l == 253) {
-        l = 252;
-    }
+    if (l == 253) { l = 252; }
     return true;
 }
 
@@ -57,9 +74,7 @@ void Touch_INT_callback(uint gpio, uint32_t events)
 
 static SW_SCR_STATUS _sw_scr_init(UWORD** img_ptr, UDOUBLE img_s)
 {
-    if (DEV_Module_Init() != 0) {
-        return -1;
-    }
+    if (DEV_Module_Init() != 0) { return -1; }
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(WHITE);
     //backlight settings
@@ -117,58 +132,43 @@ int sw_scr_run(void)
     Paint_ClearWindows(35, 35, 205, 208, WHITE);
 
     XY.mode = 0;
+    if (Touch_1IN28_init(XY.mode) == true)
+        printf("OK!\r\n");
+    else
+        printf("NO!\r\n");
 
     LCD_1IN28_Display(img);
     while (true) {
-#define GESTURE_S(G)                                                           \
-    G == UP             ? "UP   "                                              \
-    : G == Down         ? "DOWN "                                              \
-    : G == LEFT         ? "LEFT "                                              \
-    : G == RIGHT        ? "RIGHT"                                              \
-    : G == CLICK        ? "CLICK"                                              \
-    : G == DOUBLE_CLICK ? "DOUBL"                                              \
-    : G == LONG_PRESS   ? "LONG "                                              \
-                        : "NONE "
-
-#define MODE_S(M)                                                              \
-    M == TOUCH_INIT          ? "INIT"                                          \
-    : M == TOUCH_IRQ         ? "IRQ "                                          \
-    : M == TOUCH_FUNCTION    ? "FUNC"                                          \
-    : M == TOUCH_DRAW        ? "DRAW"                                          \
-    : M == TOUCH_OUT_GESTURE ? "GEST"                                          \
-    : M == TOUCH_NO_DRAW     ? "NDRW"                                          \
-                             : "NONE"
         printf("{%3d %3d} %s %s \n", XY.x_point, XY.y_point, MODE_S(XY.mode),
-                   GESTURE_S(XY.Gesture));
+               GESTURE_S(XY.Gesture));
         XY.x_point = (XY.x_point > 37) ? XY.x_point : 37;
         XY.y_point = (XY.y_point > 37) ? XY.y_point : 37;
 
         XY.x_point = (XY.x_point < 205) ? XY.x_point : 205;
         XY.y_point = (XY.y_point < 203) ? XY.y_point : 203;
         Paint_DrawLine(x, y, XY.x_point, XY.y_point, XY.color, DOT_PIXEL_2X2,
-                           LINE_STYLE_DOTTED);
+                       LINE_STYLE_DOTTED);
         const char* direction = "";
-        switch (XY.Gesture) {
-        case None:
-            if (x > 120) {
-                direction = "RIGHT";
-            } else {
-                direction = "LEFT";
-            }
-            if (y > 120) {
-                direction = "UP";
-            } else {
-                direction = "DOWN";
-            }
-        case UP: XY.color = BLUE;
-        case Down: XY.color = GREEN;
-        case LEFT: XY.color = BLACK;
-        case RIGHT:
-            XY.color = YELLOW;
-            Paint_DrawString_EN(85, 190, state_str[DRAWING_GESTURE], &Font20,
-                                    BLACK, GREEN);
-            break;
+
+        if (x > 120) {
+            direction = "RIGHT";
+        } else {
+            direction = "LEFT";
         }
+        if (y > 120) {
+            direction = "UP";
+        } else {
+            direction = "DOWN";
+        }
+        switch (XY.Gesture) {
+        case None: XY.color = RED; break;
+        case UP: XY.color = BLUE; break;
+        case Down: XY.color = GREEN; break;
+        case LEFT: XY.color = GRAY; break;
+        case RIGHT: XY.color = YELLOW; break;
+        }
+        Paint_DrawString_EN(85, 190, GESTURE_S(XY.Gesture), &Font20, BLACK,
+                            XY.color);
 
         Paint_DrawString_EN(35, 130, direction, &Font24, 0X647C, WHITE);
 

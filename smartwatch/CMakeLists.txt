@@ -1,4 +1,4 @@
-file(GLOB SOURCES src/*.c  src/**/*.c)
+file(GLOB SOURCES src/*.c)
 include_directories(include/)
 add_executable(smartwatch ${SOURCES})
 

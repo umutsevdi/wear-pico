@@ -126,7 +126,7 @@ enum MSGFMT sw_param_notify_new(SwReqNotify* notify, char* str, size_t str_s)
     if (index != 4 || notify->option_s > SW_PARAM_MAX_SIZE)
         return ERROR(MSGFMT_ERROR_NOTIFY_PARSE);
     index = 0;
-    memset(notify->option, NULL, SW_PARAM_MAX_SIZE);
+    memset(notify->option, 0, SW_PARAM_MAX_SIZE);
     while ((c = strchr(oldptr, '\n')) != NULL && notify->option_s > index) {
         *c = 0;
         notify->option[index] = oldptr;
@@ -241,7 +241,7 @@ enum MSGFMT sw_parse_request(SwRequest* req, char* msg, size_t msg_s)
     case SW_REQ_SYNC_BAT:
         return sw_bat_new(&req->pl.bat, req->_raw, req->_raw_s);
     case SW_REQ_SYNC_NOTIFY:
-        return sw_param_notify_new(&req->pl.notify, req->_raw, req->_raw_s);
+        // TODO add protocol to send multiple notifications
     case SW_REQ_OSC: return sw_osc_new(&req->pl.osc, req->_raw, req->_raw_s);
     default: break;
     }

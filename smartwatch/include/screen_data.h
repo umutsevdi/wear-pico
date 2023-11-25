@@ -8,7 +8,8 @@
 
 *****************************************************************************/
 
-#pragma once
+#ifndef SW_SCREEN_DATA
+#define SW_SCREEN_DATA
 
 extern const unsigned char Signal816[];
 extern const unsigned char Msg816[];
@@ -29,18 +30,25 @@ extern const unsigned char gImage_1inch28_1[];
                                Menu UI
 *****************************************************************************/
 
-/* List all alarms */
-extern const unsigned char menu_alarm[];
-/* List all events */
-extern const unsigned char menu_events[];
-/* Start/Stop a chronometer */
-extern const unsigned char menu_chrono[];
-/* Play/Stop or change tracks */
-extern const unsigned char menu_media[];
-/* List of notifications */
-extern const unsigned char menu_notify[];
-/* Current step counting and reset button */
-extern const unsigned char menu_step[];
+enum SW_MENU_T {
+    /* Displays incoming alarms */
+    SW_MENU_ALARM,
+    /* Chronometer UI: Start/Stop chornometer */
+    SW_MENU_CHRONO,
+    /* Lists events */
+    SW_MENU_EVENT,
+    /* Lists notifications */
+    SW_MENU_NOTIFY,
+    /* Play/Stop or change track */
+    SW_MENU_MEDIA,
+    /* Pedometer UI */
+    SW_MENU_STEP,
+
+    /*Max length of enum*/
+    SW_MENU_SIZE
+};
+extern const unsigned char* sw_menu_screen_base;
+extern const unsigned char* sw_menu_screens[SW_MENU_SIZE];
 
 /******************************************************************************
                               Screen Icons
@@ -77,3 +85,5 @@ extern const unsigned char top_menu_notify[];
 /* Connection status icons */
 extern const unsigned char top_menu_bth_dc[];
 extern const unsigned char top_menu_bth_ok[];
+
+#endif

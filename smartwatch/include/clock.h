@@ -8,6 +8,9 @@
 
 *****************************************************************************/
 
+#ifndef SW_ALARM
+#define SW_ALARM
+
 #include "pico/time.h"
 #include "pico/types.h"
 typedef struct SwAlarm {
@@ -24,3 +27,5 @@ absolute_time_t sw_chrono_stop();
 
 void sw_();
 void sw_();
+
+#endif

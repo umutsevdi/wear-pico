@@ -17,14 +17,16 @@
 
 *****************************************************************************/
 
-#pragma once
+#ifndef SW_PROTOCOL
+#define SW_PROTOCOL
+
 #include "util.h"
 
 /******************************************************************************
                                 Common
 *****************************************************************************/
 
-const uint16_t SW_PK_MAGIC_NUMBER = 2791;
+#define SW_PK_MAGIC_NUMBER 2791
 
 /* Status codes related to protocol */
 enum MSGFMT {
@@ -238,3 +240,5 @@ typedef struct {
     char* payload;
     size_t payload_s;
 } SwResponse;
+
+#endif

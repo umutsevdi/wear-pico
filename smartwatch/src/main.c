@@ -52,9 +52,7 @@ int64_t alarm_cb(int32_t r, void* data)
 int main(int argc, char* argv[])
 {
     stdio_init_all();
-    //    repeating_timer_t timer;
-    //   printf("OK\r\n");
-    //    add_repeating_timer_ms(5000, repeating_alarm_cb, "CALLBACK txt", &timer);
+    sw_scr_init();
     multicore_launch_core1(run);
 
     while (1) {

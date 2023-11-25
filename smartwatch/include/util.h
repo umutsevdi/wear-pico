@@ -7,7 +7,9 @@
  * Description: Common functions and data structures for the smartwatch
 
 *****************************************************************************/
-#pragma once
+#ifndef SW_UTIL
+#define SW_UTIL
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -27,3 +29,5 @@
 #define ERROR(CODE)                                                            \
     (fprintf(stderr, __FILE__ "#%s():%d " #CODE "\r\n", __func__, __LINE__),   \
      CODE)
+
+#endif

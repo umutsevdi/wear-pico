@@ -10,7 +10,6 @@
 
 void run()
 {
-    sleep_ms(2000);
     WARN(SW_SCR_BEGIN);
     sw_scr_run();
     WARN(SW_SCR_END);

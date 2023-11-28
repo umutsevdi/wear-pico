@@ -2,6 +2,7 @@
 #include "fonts.h"
 #include "global.h"
 #include "protocol.h"
+#include "watch_empty.h"
 #include "util.h"
 
 #include "DEV_Config.h"
@@ -194,6 +195,7 @@ static SCR_STATUS _sw_scr_clock()
 {
     // enable gesture mode
     XY.mode = TOUCH_GESTURE;
+    s.redraw = true;
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);
 
     // if up switch to menu
@@ -202,17 +204,16 @@ static SCR_STATUS _sw_scr_clock()
         case UP: _sw_scr_menu(); break;
         case DOUBLE_CLICK: /* TODO make screen black */ XY.color = WHITE; break;
         }
-        if (s.sstate != SCREEN_CLOCK) {
+        if (s.sstate != SCREEN_CLOCK || s.redraw) {
             s.sstate = SCREEN_CLOCK;
-            Paint_Clear(WHITE);
+            s.redraw = false;
+            Paint_DrawImage(watch_empty, 0, 0, 240, 240);
         }
         DateTime dt_v = sw_get_dt_v();
         DateTime* dt = &dt_v;
         char time[60] = {0};
         sprintf(time, "%u:%u:%u", dt->hour, dt->minute, dt->second);
-        Paint_DrawCircle(LCD_1IN28_WIDTH / 2, LCD_1IN28_HEIGHT / 2,
-                         LCD_1IN28_WIDTH / 3, BLUE, DOT_PIXEL_1X1,
-                         DRAW_FILL_EMPTY);
+        //        Paint_DrawCircle(LCD_1IN28_WIDTH / 2, LCD_1IN28_HEIGHT / 2, LCD_1IN28_WIDTH / 3, BLUE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
         Paint_DrawString_EN(40, 120, time, &Font20, BLACK, WHITE);
         Paint_DrawString_EN(30, 30, "0x0", &Font20, BLACK, WHITE);
         Paint_DrawString_EN(LCD_1IN28_WIDTH - 30, 30, "0xMAX", &Font8, BLACK,
@@ -227,15 +228,16 @@ static SCR_STATUS _sw_scr_clock()
     CURRENT == SW_MENU_ALARM    ? "MENU_ALARM"                                 \
     : CURRENT == SW_MENU_CHRONO ? "MENU_CHRONO"                                \
     : CURRENT == SW_MENU_EVENT  ? "MENU_EVENT"                                 \
-    : CURRENT == SW_MENU_NOTIFY ? "MENU_NOTIFY"                                \
     : CURRENT == SW_MENU_MEDIA  ? "MENU_MEDIA"                                 \
     : CURRENT == SW_MENU_STEP   ? "MENU_STEP"                                  \
                                 : "NONE"
 SCR_STATUS _sw_scr_menu()
 {
     s.sstate = SCREEN_MENU;
+    s.redraw = true;
     // enable gesture mode
     XY.mode = TOUCH_GESTURE;
+
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);
 
     enum SW_MENU_T current = SW_MENU_ALARM;
@@ -245,9 +247,11 @@ SCR_STATUS _sw_scr_menu()
         case Down: return SCR_STATUS_OK;
         case LEFT:
             current = current == SW_MENU_SIZE - 1 ? SW_MENU_ALARM : current + 1;
+            s.redraw = true;
             break;
         case RIGHT:
             current = current == 0 ? SW_MENU_SIZE - 1 : current - 1;
+            s.redraw = true;
             break;
         case DOUBLE_CLICK: /* TODO make screen black */ XY.color = WHITE; break;
         case LONG_PRESS:
@@ -255,9 +259,13 @@ SCR_STATUS _sw_scr_menu()
         case CLICK: break;
         }
         XY.Gesture = None;
-        Paint_Clear(WHITE);
-        Paint_DrawString_EN(50, 100, MENU_S(current), &Font20, BLACK, WHITE);
-        //        Paint_DrawImage(sw_menu_screens[current], 45, 30, 150, 150);
+        if (s.sstate != SCREEN_MENU || s.redraw) {
+            s.sstate = SCREEN_MENU;
+            s.redraw = false;
+            Paint_DrawImage(/*menu_frames[current]*/watch_empty, 0, 0, 240, 240);
+        }
+
+        //        Paint_DrawString_EN(50, 100, MENU_S(current), &Font20, BLACK, WHITE);
         LCD_1IN28_Display(s.buffer);
     }
 }

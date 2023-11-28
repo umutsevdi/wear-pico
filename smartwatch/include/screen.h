@@ -25,7 +25,6 @@ enum SCREEN_T {
     SCREEN_ALARM,
     SCREEN_CHRONO,
     SCREEN_EVENT,
-    SCREEN_NOTIFY,
     SCREEN_MEDIA,
     SCREEN_STEP,
 };
@@ -47,6 +46,7 @@ typedef struct {
 
     enum SCREEN_T sstate;
     enum POPUP_T pstate;
+    bool redraw;
 } SwScreen;
 
 extern SwScreen s;

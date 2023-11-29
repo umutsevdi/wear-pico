@@ -77,6 +77,30 @@ typedef struct {
     uint8_t second;
 } DateTime;
 
+#define DATETIME_DAY(d)                                                        \
+    d == 1   ? "Monday"                                                        \
+    : d == 2 ? "Tuesday"                                                       \
+    : d == 3 ? "Wednesday"                                                     \
+    : d == 4 ? "Thursday"                                                      \
+    : d == 5 ? "Friday"                                                        \
+    : d == 6 ? "Saturday"                                                      \
+    : d == 7 ? "Sunday"                                                        \
+             : "Null"
+#define DATETIME_MONTH(m)                                                      \
+    m == 1    ? "Jan"                                                          \
+    : m == 2  ? "Feb"                                                          \
+    : m == 3  ? "Mar"                                                          \
+    : m == 4  ? "Apr"                                                          \
+    : m == 5  ? "May"                                                          \
+    : m == 6  ? "Jun"                                                          \
+    : m == 7  ? "Jul"                                                          \
+    : m == 8  ? "Aug"                                                          \
+    : m == 9  ? "Sep"                                                          \
+    : m == 10 ? "Oct"                                                          \
+    : m == 11 ? "Nov"                                                          \
+    : m == 12 ? "Dec"                                                          \
+              : "Null"
+
 /**
  * Converts the given null terminated string of numbers into a DateTime struct.
  * @buffer - a string that contains 0-9 or ?. *

@@ -2,7 +2,6 @@
 #include "fonts.h"
 #include "global.h"
 #include "protocol.h"
-#include "watch_empty.h"
 #include "util.h"
 
 #include "DEV_Config.h"
@@ -10,7 +9,7 @@
 #include "GUI_Paint.h"
 #include "hardware/adc.h"
 #include "pico/stdlib.h"
-#include "screen_data.h"
+#include "resources.h"
 
 #include "LCD_1in28.h"
 #include "Touch_1in28.h"
@@ -21,9 +20,12 @@ Touch_1IN28_XY XY;
 
 #define TOUCH_GESTURE 0
 #define TOUCH_POINT 1
+#define COLOR_BG 0x42
+#define COLOR_FG 0xffff
 
 static SCR_STATUS _sw_scr_clock();
 static SCR_STATUS _sw_scr_menu();
+static void _paint_time(DateTime* dt, int base_x, int base_y);
 
 DateTime sw_get_dt_v() { return (DateTime){0, 2022, 5, 10, 9, 30, 25}; }
 
@@ -49,17 +51,6 @@ DateTime sw_get_dt_v() { return (DateTime){0, 2022, 5, 10, 9, 30, 25}; }
 UBYTE flag = 0, flgh = 0, l;
 UWORD x, y;
 struct repeating_timer timer_capture_t;
-
-char* state_str[] = {"IDLE", "DRAW", "GESTURE", "UP", "DOWN", "LEFT", "RIGHT"};
-enum DRAWING_STATE {
-    DRAWING_IDLE,
-    DRAWING_DRAW,
-    DRAWING_GESTURE,
-    DRAWING_UP,
-    DRAWING_DOWN,
-    DRAWING_LEFT,
-    DRAWING_RIGHT
-};
 
 bool sw_scr_refresh_cb(struct repeating_timer* t)
 {
@@ -166,7 +157,7 @@ SCR_STATUS sw_scr_init(void)
     s.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
     if (DEV_Module_Init() != 0) { return -1; }
     LCD_1IN28_Init(HORIZONTAL);
-    LCD_1IN28_Clear(WHITE);
+    LCD_1IN28_Clear(BLACK);
     //backlight settings
     DEV_SET_PWM(100);
     //open interrupt
@@ -181,9 +172,8 @@ SCR_STATUS sw_scr_init(void)
     }
 
     Paint_NewImage((UBYTE*)s.buffer, LCD_1IN28.WIDTH, LCD_1IN28.HEIGHT, 0,
-                   WHITE);
+                   COLOR_BG);
     Paint_SetScale(65);
-    Paint_Clear(WHITE);
     Paint_SetRotate(ROTATE_0);
     LCD_1IN28_Display(s.buffer);
 
@@ -201,38 +191,32 @@ static SCR_STATUS _sw_scr_clock()
     // if up switch to menu
     while (true) {
         switch (XY.Gesture) {
-        case UP: _sw_scr_menu(); break;
+        case Down: _sw_scr_menu(); break;
         case DOUBLE_CLICK: /* TODO make screen black */ XY.color = WHITE; break;
         }
         if (s.sstate != SCREEN_CLOCK || s.redraw) {
             s.sstate = SCREEN_CLOCK;
             s.redraw = false;
-            Paint_DrawImage(watch_empty, 0, 0, 240, 240);
+            Paint_DrawImage(watch, 0, 0, 240, 240);
         }
         DateTime dt_v = sw_get_dt_v();
         DateTime* dt = &dt_v;
-        char time[60] = {0};
-        sprintf(time, "%u:%u:%u", dt->hour, dt->minute, dt->second);
-        //        Paint_DrawCircle(LCD_1IN28_WIDTH / 2, LCD_1IN28_HEIGHT / 2, LCD_1IN28_WIDTH / 3, BLUE, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-        Paint_DrawString_EN(40, 120, time, &Font20, BLACK, WHITE);
-        Paint_DrawString_EN(30, 30, "0x0", &Font20, BLACK, WHITE);
-        Paint_DrawString_EN(LCD_1IN28_WIDTH - 30, 30, "0xMAX", &Font8, BLACK,
-                            WHITE);
-        Paint_DrawString_EN(30, LCD_1IN28_HEIGHT - 30, "MAXx0", &Font8, BLACK,
-                            WHITE);
+        Paint_DrawString_EN(20, 70, DATETIME_DAY(dt->day % 7 + 1), &Font16,
+                            COLOR_BG, COLOR_FG);
+        _paint_time(dt, 20, 90);
+        char bottom_str[100];
+        sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
+                dt->year % 100);
+        Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG, COLOR_FG);
         LCD_1IN28_Display(s.buffer);
     }
 }
 
-#define MENU_S(CURRENT)                                                        \
-    CURRENT == SW_MENU_ALARM    ? "MENU_ALARM"                                 \
-    : CURRENT == SW_MENU_CHRONO ? "MENU_CHRONO"                                \
-    : CURRENT == SW_MENU_EVENT  ? "MENU_EVENT"                                 \
-    : CURRENT == SW_MENU_MEDIA  ? "MENU_MEDIA"                                 \
-    : CURRENT == SW_MENU_STEP   ? "MENU_STEP"                                  \
-                                : "NONE"
 SCR_STATUS _sw_scr_menu()
 {
+    const unsigned char* menu_frames[] = {menu_alarm, menu_events, menu_media,
+                                          menu_pedometer, menu_stopwatch};
+
     s.sstate = SCREEN_MENU;
     s.redraw = true;
     // enable gesture mode
@@ -244,7 +228,7 @@ SCR_STATUS _sw_scr_menu()
     while (true) {
         /*Calling DOWN returns to clock*/
         switch (XY.Gesture) {
-        case Down: return SCR_STATUS_OK;
+        case UP: return SCR_STATUS_OK;
         case LEFT:
             current = current == SW_MENU_SIZE - 1 ? SW_MENU_ALARM : current + 1;
             s.redraw = true;
@@ -262,10 +246,28 @@ SCR_STATUS _sw_scr_menu()
         if (s.sstate != SCREEN_MENU || s.redraw) {
             s.sstate = SCREEN_MENU;
             s.redraw = false;
-            Paint_DrawImage(/*menu_frames[current]*/watch_empty, 0, 0, 240, 240);
+            Paint_DrawImage(menu_frames[current], 0, 0, 240, 240);
         }
-
-        //        Paint_DrawString_EN(50, 100, MENU_S(current), &Font20, BLACK, WHITE);
         LCD_1IN28_Display(s.buffer);
+    }
+}
+
+static void _paint_time(DateTime* dt, int base_x, int base_y)
+{
+    const int x_size = 40;
+    const int y_size = 60;
+    int x = base_x;
+    int y = base_y;
+    char date_str[6];
+    snprintf(date_str, 6, "%02d:%02d", dt->hour, dt->minute);
+    for (size_t i = 0; i < 5; i++) {
+        const unsigned char* img_ptr = NULL;
+        if (date_str[i] >= '0' && date_str[i] <= '9')
+            img_ptr = clockfont + 2 * (date_str[i] - '0') * x_size * y_size;
+        else if (date_str[i] == ':')
+            img_ptr = clockfont + 2 * 10 * x_size * y_size;
+
+        Paint_DrawImage(img_ptr, x, y, x_size, y_size);
+        x += x_size;
     }
 }

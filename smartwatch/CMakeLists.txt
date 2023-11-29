@@ -1,4 +1,4 @@
-file(GLOB SOURCES src/*.c)
+file(GLOB SOURCES src/*.c src/**/*.c)
 include_directories(include/)
 add_executable(smartwatch ${SOURCES})
 
@@ -9,6 +9,7 @@ add_subdirectory(./waveshare/lib/Config)
 add_subdirectory(./waveshare/lib/LCD)
 add_subdirectory(./waveshare/lib/Fonts)
 add_subdirectory(./waveshare/lib/GUI)
+add_subdirectory(./resources/)
 
 #添加头文件目录
 include_directories(./waveshare/lib/Config)
@@ -18,6 +19,7 @@ include_directories(./waveshare/lib/LCD)
 
 # pull in common dependencies
 target_link_libraries(smartwatch pico_stdlib
+    resources
     pico_time
     pico_multicore
     #    pico_btstack_ble # Needed for ble

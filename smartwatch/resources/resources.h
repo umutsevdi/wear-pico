@@ -10,7 +10,8 @@ extern const unsigned char menu_stopwatch[];
 extern const unsigned char* menu_frames[];
 extern const unsigned char watch[];
 
-extern const unsigned char clockfont[];
+extern const unsigned char font60[];
+extern const unsigned char font40[];
 
 enum SW_MENU_T {
     SW_MENU_ALARM,

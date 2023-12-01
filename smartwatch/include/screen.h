@@ -47,6 +47,7 @@ typedef struct {
     enum SCREEN_T sstate;
     enum POPUP_T pstate;
     bool redraw;
+    bool show_sec;
 } SwScreen;
 
 extern SwScreen s;

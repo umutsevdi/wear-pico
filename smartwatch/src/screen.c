@@ -155,6 +155,8 @@ int sw_scr_run(void)
 SCR_STATUS sw_scr_init(void)
 {
     s.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
+    s.show_sec = false;
+    s.redraw = true;
     if (DEV_Module_Init() != 0) { return -1; }
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);
@@ -185,40 +187,44 @@ static SCR_STATUS _sw_scr_clock()
 {
     // enable gesture mode
     XY.mode = TOUCH_GESTURE;
-    s.redraw = true;
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);
 
     // if up switch to menu
     while (true) {
         switch (XY.Gesture) {
         case Down: _sw_scr_menu(); break;
-        case DOUBLE_CLICK: /* TODO make screen black */ XY.color = WHITE; break;
+        case CLICK:
+            WARN(CLICK);
+            s.show_sec = !s.show_sec;
+            s.redraw = true;
+            break;
+        case DOUBLE_CLICK: /* TODO make screen black */ break;
         }
         if (s.sstate != SCREEN_CLOCK || s.redraw) {
+            WARN(REDRAW);
             s.sstate = SCREEN_CLOCK;
             s.redraw = false;
             Paint_DrawImage(watch, 0, 0, 240, 240);
+            DateTime dt_v = sw_get_dt_v();
+            DateTime* dt = &dt_v;
+            Paint_DrawString_EN(20, 70, DATETIME_DAY(dt->day % 7 + 1), &Font16,
+                                COLOR_BG, COLOR_FG);
+            _paint_time(dt, s.show_sec ? 0 : 20, s.show_sec ? 100 : 90);
+            char bottom_str[100];
+            sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
+                    dt->year % 100);
+            Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG,
+                                COLOR_FG);
+            LCD_1IN28_Display(s.buffer);
+            XY.Gesture = None;
         }
-        DateTime dt_v = sw_get_dt_v();
-        DateTime* dt = &dt_v;
-        Paint_DrawString_EN(20, 70, DATETIME_DAY(dt->day % 7 + 1), &Font16,
-                            COLOR_BG, COLOR_FG);
-        _paint_time(dt, 20, 90);
-        char bottom_str[100];
-        sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
-                dt->year % 100);
-        Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG, COLOR_FG);
-        LCD_1IN28_Display(s.buffer);
     }
 }
 
 SCR_STATUS _sw_scr_menu()
 {
-    const unsigned char* menu_frames[] = {menu_alarm, menu_events, menu_media,
-                                          menu_pedometer, menu_stopwatch};
-
-    s.sstate = SCREEN_MENU;
-    s.redraw = true;
+    static const unsigned char* menu_frames[] = {
+        menu_alarm, menu_events, menu_media, menu_pedometer, menu_stopwatch};
     // enable gesture mode
     XY.mode = TOUCH_GESTURE;
 
@@ -237,37 +243,52 @@ SCR_STATUS _sw_scr_menu()
             current = current == 0 ? SW_MENU_SIZE - 1 : current - 1;
             s.redraw = true;
             break;
-        case DOUBLE_CLICK: /* TODO make screen black */ XY.color = WHITE; break;
+        case DOUBLE_CLICK: /* TODO make screen black */
         case LONG_PRESS:
             /* TODO Clicking to one opens that application */
         case CLICK: break;
         }
-        XY.Gesture = None;
         if (s.sstate != SCREEN_MENU || s.redraw) {
-            s.sstate = SCREEN_MENU;
+            WARN(REDRAW);
+            PRINT("%s", , MENU_S(current));
             s.redraw = false;
+            s.sstate = SCREEN_MENU;
             Paint_DrawImage(menu_frames[current], 0, 0, 240, 240);
+            LCD_1IN28_Display(s.buffer);
+            XY.Gesture = None;
+            WARN(REDRAW_DONE);
         }
-        LCD_1IN28_Display(s.buffer);
+        WARN(LOOP_OK);
     }
 }
 
 static void _paint_time(DateTime* dt, int base_x, int base_y)
 {
+    WARN(TIME);
     const int x_size = 40;
-    const int y_size = 60;
+    const int y_size = s.show_sec ? 40 : 60;
+    int datestr_s = s.show_sec ? 9 : 6;
+    char datestr[9] = {0};
+    const unsigned char* font = s.show_sec ? font40 : font60;
+    if (s.show_sec) {
+        snprintf(datestr, datestr_s, "%02d:%02d:%02d", dt->hour, dt->minute,
+                 dt->second);
+        WARN(SHOW_SECS);
+    } else {
+        snprintf(datestr, datestr_s, "%02d:%02d", dt->hour, dt->minute);
+        WARN(SHOW_MIN);
+    }
+
     int x = base_x;
     int y = base_y;
-    char date_str[6];
-    snprintf(date_str, 6, "%02d:%02d", dt->hour, dt->minute);
-    for (size_t i = 0; i < 5; i++) {
+    for (int i = 0; i < datestr_s - 1; i++) {
         const unsigned char* img_ptr = NULL;
-        if (date_str[i] >= '0' && date_str[i] <= '9')
-            img_ptr = clockfont + 2 * (date_str[i] - '0') * x_size * y_size;
-        else if (date_str[i] == ':')
-            img_ptr = clockfont + 2 * 10 * x_size * y_size;
+        if (datestr[i] >= '0' && datestr[i] <= '9')
+            img_ptr = font + 2 * (datestr[i] - '0') * x_size * y_size;
+        else if (datestr[i] == ':')
+            img_ptr = font + 2 * 10 * x_size * y_size;
 
         Paint_DrawImage(img_ptr, x, y, x_size, y_size);
-        x += x_size;
+        x += s.show_sec ? 30 : 40;
     }
 }

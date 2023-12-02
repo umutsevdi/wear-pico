@@ -4,14 +4,14 @@
 #include <pico/multicore.h>
 #include <pico/stdlib.h>
 #include <pico/time.h>
+#include <ui/common.h>
 
-#include "screen.h"
 #include "util.h"
 
 void run()
 {
     WARN(SW_SCR_BEGIN);
-    sw_scr_run();
+    scr_load_clock();
     WARN(SW_SCR_END);
     while (true) {
         printf("CORE 1 running with %s\n", __func__);

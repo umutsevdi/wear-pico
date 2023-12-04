@@ -14,9 +14,6 @@ static void sw_scr_select(enum SW_MENU_T current);
 SCR_STATUS scr_load_menu()
 {
     SET_MODULE(SCREEN_MENU, TOUCH_GESTURE);
-    s.sstate = SCREEN_MENU;
-    s.redraw = true;
-
     static const unsigned char* menu_frames[] = {
         menu_alarm, menu_stopwatch, menu_events, menu_media, menu_pedometer};
 
@@ -27,22 +24,22 @@ SCR_STATUS scr_load_menu()
         case UP: return SCR_STATUS_OK;
         case LEFT:
             current = current == SW_MENU_SIZE - 1 ? SW_MENU_ALARM : current + 1;
-            s.redraw = true;
+            screen.redraw = true;
             break;
         case RIGHT:
             current = current == 0 ? SW_MENU_SIZE - 1 : current - 1;
-            s.redraw = true;
+            screen.redraw = true;
             break;
         case CLICK: sw_scr_select(current); break;
         case DOUBLE_CLICK: /* TODO make screen black */
         case LONG_PRESS: break;
         }
-        if (s.sstate != SCREEN_MENU || s.redraw) {
+        if (screen.sstate != SCREEN_MENU || screen.redraw) {
             PRINT("%s", , MENU_S(current));
-            s.redraw = false;
-            s.sstate = SCREEN_MENU;
+            screen.redraw = false;
+            screen.sstate = SCREEN_MENU;
             Paint_DrawImage(menu_frames[current], 0, 0, 240, 240);
-            LCD_1IN28_Display(s.buffer);
+            LCD_1IN28_Display(screen.buffer);
             XY.Gesture = None;
         }
     }
@@ -50,7 +47,6 @@ SCR_STATUS scr_load_menu()
 
 static void sw_scr_select(enum SW_MENU_T current)
 {
-    PRINT("%s", , MENU_S(current));
     switch (current) {
     /*case SW_MENU_ALARM:scr_load_alarm(); break;*/
     case SW_MENU_CHRONO:

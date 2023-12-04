@@ -6,6 +6,7 @@
 #include <pico/time.h>
 #include <ui/common.h>
 
+#include "global.h"
 #include "util.h"
 
 void run()
@@ -51,7 +52,8 @@ int64_t alarm_cb(int32_t r, void* data)
 int main(int argc, char* argv[])
 {
     stdio_init_all();
-    sw_scr_init();
+    sw_init_state();
+    scr_init();
     multicore_launch_core1(run);
 
     while (1) {

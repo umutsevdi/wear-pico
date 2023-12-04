@@ -10,23 +10,28 @@
 #ifndef SW_GLOBAL
 #define SW_GLOBAL
 
+#include "pico/time.h"
 #include "protocol.h"
 #include "util.h"
-typedef struct SW {
+typedef struct {
     DateTime dt;
     uint64_t dt_padding;
-    SwReqBat bat_clock;
-    SwReqBat bat_sw;
     bool is_connected;
     struct {
         char song[30];
         char album[30];
         char artist[30];
     } media;
-    uint64_t chrono;
+    bool clock_show_sec;
+    struct {
+        DateTime dt;
+        bool enabled;
+        repeating_timer_t timer;
+    } chrono;
+} SwState;
 
-} Smartwatch;
+extern SwState state;
 
-DateTime* sw_get_dt();
-
+DateTime sw_get_real_time();
+void sw_init_state();
 #endif

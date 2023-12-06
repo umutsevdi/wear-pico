@@ -5,10 +5,10 @@
 #include <pico/stdlib.h>
 #include <pico/time.h>
 
-#include "common.h"
-#include "global.h"
-#include "peripherals.h"
-#include "util.h"
+#include "sw_apps/apps.h"
+#include "sw_os/state.h"
+#include "sw_os/dev.h"
+#include "sw_utils/util.h"
 
 void run() { scr_load_clock(); }
 

@@ -1,4 +1,5 @@
-#include "menu.h"
+#include "sw_apps/apps.h"
+
 const unsigned char* menu_frames[] = {menu_alarm, menu_stopwatch, menu_events,
                                       menu_media, menu_pedometer};
 
@@ -42,7 +43,7 @@ SCR_STATUS scr_load_menu()
 
         if (screen.redraw) {
             screen.sstate = SCREEN_MENU;
-            SCR_FILL(menu_frames[current]);
+            Paint_DrawImage(menu_frames[current], SCR_SCREEN);
             LCD_1IN28_Display(screen.buffer);
             PRINT("%s", , MENU_S(current));
             screen.redraw = DISP_SYNC;

@@ -1,11 +1,7 @@
 -Wall
 -Wextra
 -I
-./ui/include/
--I
-./sw_utils/include/
--I
-./resources/include/
+./
 -I
 ./waveshare/lib/Config/
 -I

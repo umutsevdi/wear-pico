@@ -11,18 +11,13 @@
 #ifndef SW_SCREEN
 #define SW_SCREEN
 
-#include "global.h"
-#include "resources.h"
-#include "util.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
+#include "sw_utils/util.h"
 
 #include <DEV_Config.h>
-#include <Debug.h>
-#include <GUI_Paint.h>
 #include <LCD_1in28.h>
 #include <Touch_1in28.h>
-#include <fonts.h>
-#include <pico/stdlib.h>
-#include <stdio.h>
 
 typedef enum {
     SCR_STATUS_OK,
@@ -35,39 +30,6 @@ typedef enum {
 #define TOUCH_POINT 1
 #define COLOR_BG 0x42
 #define COLOR_FG 0xffff
-
-enum SCREEN_T {
-    SCREEN_CLOCK,
-    SCREEN_MENU,
-    SCREEN_ALARM,
-    SCREEN_CHRONO,
-    SCREEN_EVENT,
-    SCREEN_MEDIA,
-    SCREEN_STEP,
-};
-
-/* Whether a pop-up is enabled or not and its type */
-enum POPUP_T {
-    POPUP_NONE,   /* No Pop-Up is available */
-    POPUP_CALL,   /* Incoming call UI */
-    POPUP_NOTIFY, /* Notification UI */
-    POPUP_ALARM   /* Alarm UI */
-};
-
-/* Initializes the menu User Interface */
-SCR_STATUS scr_load_menu(void);
-/* Initializes the Alarm User Interface */
-SCR_STATUS scr_load_alarm(void);
-/* Initializes the Stopwatch User Interface */
-SCR_STATUS scr_load_chono(void);
-/* Initializes the Calendar User Interface */
-SCR_STATUS scr_load_event(void);
-/* Initializes the Media User Interface */
-SCR_STATUS scr_load_media(void);
-/* Initializes the Pedometer User Interface */
-SCR_STATUS scr_load_step(void);
-
-SCR_STATUS scr_load_clock(void);
 
 /******************************************************************************
                             UI Utils
@@ -90,14 +52,7 @@ void scr_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
  */
 bool scr_is_clicked(int x_start, int y_start, int width, int height);
 #define SCR_IS_CANCELLED scr_is_clicked(140, 20, 40, 40)
-
-#define SET_MODULE(M, TOUCH_TYPE)                                              \
-    printf(__FILE__ "#%s():%d MODULE " #M " \r\n", __func__, __LINE__);        \
-    XY.mode = TOUCH_TYPE;                                                      \
-    if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
-    screen.redraw = DISP_REDRAW
-
-#define SCR_FILL(img) Paint_DrawImage(img, 0, 0, 240, 240)
+#define SCR_SCREEN 0, 0, 240, 240
 
 enum DISP_T {
     DISP_SYNC,    /* The buffer and the screen are fully synchronized */
@@ -105,6 +60,25 @@ enum DISP_T {
                             screen data needs updating */
     DISP_REDRAW   /* The screen requires a complete redraw */
 };
+
+enum SCREEN_T {
+    SCREEN_CLOCK,
+    SCREEN_MENU,
+    SCREEN_ALARM,
+    SCREEN_CHRONO,
+    SCREEN_EVENT,
+    SCREEN_MEDIA,
+    SCREEN_STEP,
+};
+
+/* Whether a pop-up is enabled or not and its type */
+enum POPUP_T {
+    POPUP_NONE,   /* No Pop-Up is available */
+    POPUP_CALL,   /* Incoming call UI */
+    POPUP_NOTIFY, /* Notification UI */
+    POPUP_ALARM   /* Alarm UI */
+};
+
 /**
  * Screen state
  */

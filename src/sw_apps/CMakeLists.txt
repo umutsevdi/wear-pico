@@ -1,18 +1,16 @@
 file(GLOB SW_UI_RES src/*.c )
 
-include_directories(include/)
-
 include_directories(../waveshare/lib/Config)
 include_directories(../waveshare/lib/LCD)
 include_directories(../waveshare/lib/Fonts)
 include_directories(../waveshare/lib/GUI)
-include_directories(../resources/include/)
-include_directories(../sw_utils/include/)
+include_directories(../)
 
-add_library(sw_ui ${SW_UI_RES})
-target_link_libraries(sw_ui
-    sw_resources
+add_library(sw_apps ${SW_UI_RES})
+target_link_libraries(sw_apps
+    sw_res
     sw_utils
+    sw_os
     pico_stdlib
     pico_time
     pico_multicore

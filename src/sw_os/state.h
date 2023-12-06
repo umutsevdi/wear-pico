@@ -10,7 +10,6 @@
 #ifndef SW_GLOBAL
 #define SW_GLOBAL
 
-#include "util.h"
 #include <pico/time.h>
 
 typedef enum {

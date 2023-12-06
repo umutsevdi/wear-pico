@@ -1,8 +1,9 @@
-file(GLOB SW_UTIL_RES src/*.c )
+file(GLOB SW_OS_RES src/*.c )
 
-add_library(sw_utils ${SW_UTIL_RES})
+include_directories(..)
+add_library(sw_os ${SW_OS_RES})
 
-target_link_libraries(sw_utils
+target_link_libraries(sw_os
     pico_stdlib
     pico_time
     pico_multicore

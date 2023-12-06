@@ -1,4 +1,4 @@
-#include "global.h"
+#include "sw_os/state.h"
 
 SwState state;
 

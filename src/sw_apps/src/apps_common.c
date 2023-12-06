@@ -1,4 +1,4 @@
-#include "common.h"
+#include "sw_apps/apps_common.h"
 
 SwScreen screen = {0};
 Touch_1IN28_XY XY;

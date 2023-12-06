@@ -1,4 +1,4 @@
-#include "common.h"
+#include "sw_apps/apps.h"
 
 #include <pico/time.h>
 
@@ -44,7 +44,7 @@ SCR_STATUS scr_load_clock()
         }
         if (screen.redraw) {
             // If full redraw
-            SCR_FILL(watch);
+            Paint_DrawImage(watch, SCR_SCREEN);
             _scr_draw_partial();
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
@@ -80,8 +80,9 @@ SCR_STATUS scr_load_chono()
             /* Prevent full redraw to improve performance */
             if (screen.redraw == DISP_REDRAW) {
                 screen.sstate = SCREEN_CHRONO;
-                SCR_FILL(state.chrono.enabled ? app_stopwatch_stop
-                                              : app_stopwatch_start);
+                Paint_DrawImage(state.chrono.enabled ? app_stopwatch_stop
+                                                     : app_stopwatch_start,
+                                SCR_SCREEN);
                 XY.x_point = 0;
                 XY.y_point = 0;
             }

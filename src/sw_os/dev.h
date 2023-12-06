@@ -9,7 +9,7 @@
 *****************************************************************************/
 #ifndef SW_PERIPHERALS
 #define SW_PERIPHERALS
-#include "util.h"
+#include "sw_utils/util.h"
 
 #define BUZZER 18
 #define LED 19

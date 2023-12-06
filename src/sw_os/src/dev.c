@@ -1,4 +1,4 @@
-#include "peripherals.h"
+#include "sw_os/dev.h"
 #include "hardware/gpio.h"
 
 void sw_peripheral_init()

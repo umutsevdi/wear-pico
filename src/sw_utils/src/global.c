@@ -1,5 +1,4 @@
 #include "global.h"
-#include "protocol.h"
 
 SwState state;
 

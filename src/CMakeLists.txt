@@ -1,25 +1,31 @@
-file(GLOB SOURCES src/*.c src/**/*.c)
-include_directories(include/)
+file(GLOB SOURCES *.c)
 add_executable(smartwatch ${SOURCES})
-
 
 # Waveshare dependencies
 #添加编译子目录
-add_subdirectory(./waveshare/lib/Config)
-add_subdirectory(./waveshare/lib/LCD)
-add_subdirectory(./waveshare/lib/Fonts)
-add_subdirectory(./waveshare/lib/GUI)
-add_subdirectory(./resources/)
+add_subdirectory(waveshare/lib/Config)
+add_subdirectory(waveshare/lib/LCD)
+add_subdirectory(waveshare/lib/Fonts)
+add_subdirectory(waveshare/lib/GUI)
+add_subdirectory(resources/)
+add_subdirectory(sw_utils/)
+add_subdirectory(ui/)
 
 #添加头文件目录
-include_directories(./waveshare/lib/Config)
-include_directories(./waveshare/lib/Fonts)
-include_directories(./waveshare/lib/GUI)
-include_directories(./waveshare/lib/LCD)
+include_directories(waveshare/lib/Config)
+include_directories(waveshare/lib/Fonts)
+include_directories(waveshare/lib/GUI)
+include_directories(waveshare/lib/LCD)
+include_directories(resources/include/)
+include_directories(sw_utils/include/)
+include_directories(ui/include/)
 
 # pull in common dependencies
-target_link_libraries(smartwatch pico_stdlib
-    resources
+target_link_libraries(smartwatch
+    sw_resources
+    sw_utils
+    sw_ui
+    pico_stdlib
     pico_time
     pico_multicore
     #    pico_btstack_ble # Needed for ble

@@ -53,5 +53,5 @@ dkms.conf
 build/
 .idea/
 cmake-build-debug/
-.inc/
-smartwatch/waveshare
+src/.inc/
+src/waveshare

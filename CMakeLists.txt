@@ -17,7 +17,7 @@ set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 # Initialize the SDK
 pico_sdk_init()
 
-add_subdirectory(smartwatch)
+add_subdirectory(src)
 
 add_compile_options(-Wall
         -O3

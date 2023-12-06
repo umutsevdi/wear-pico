@@ -1,4 +1,4 @@
-#include "ui/common.h"
+#include "common.h"
 
 SwScreen screen = {0};
 Touch_1IN28_XY XY;
@@ -64,7 +64,7 @@ void sw_scr_touch_cb(uint gpio, uint32_t events)
 SCR_STATUS scr_init(void)
 {
     screen.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
-    screen.redraw = true;
+    screen.redraw = DISP_REDRAW;
     if (DEV_Module_Init() != 0) { return -1; }
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);

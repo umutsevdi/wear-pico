@@ -1,17 +1,16 @@
-#ifndef SW_RESOURCES
-#define SW_RESOURCES
-#define WATCH_HEIGHT 240
-#define WATCH_WIDTH 240
-extern const unsigned char menu_alarm[];
-extern const unsigned char menu_events[];
-extern const unsigned char menu_media[];
-extern const unsigned char menu_pedometer[];
-extern const unsigned char menu_stopwatch[];
-extern const unsigned char* menu_frames[];
-extern const unsigned char watch[];
+/******************************************************************************
 
-extern const unsigned char font60[];
-extern const unsigned char font40[];
+ * File: include/menu.h
+ *
+ * Author: Umut Sevdi
+ * Created: 12/01/23
+ * Description: App switch menu
+
+*****************************************************************************/
+#ifndef SW_MENU
+#define SW_MENU
+
+#include "common.h"
 
 enum SW_MENU_T {
     SW_MENU_ALARM,
@@ -21,7 +20,6 @@ enum SW_MENU_T {
     SW_MENU_STEP,
     SW_MENU_SIZE
 };
-
 #define MENU_S(CURRENT)                                                        \
     CURRENT == SW_MENU_ALARM    ? "MENU_ALARM"                                 \
     : CURRENT == SW_MENU_CHRONO ? "MENU_CHRONO"                                \
@@ -29,8 +27,5 @@ enum SW_MENU_T {
     : CURRENT == SW_MENU_MEDIA  ? "MENU_MEDIA"                                 \
     : CURRENT == SW_MENU_STEP   ? "MENU_STEP"                                  \
                                 : "NONE"
-
-extern const unsigned char app_stopwatch_start[];
-extern const unsigned char app_stopwatch_stop[];
-
+extern const unsigned char* menu_frames[];
 #endif

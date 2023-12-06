@@ -11,18 +11,17 @@
 #ifndef SW_SCREEN
 #define SW_SCREEN
 
-#include "DEV_Config.h"
-#include "Debug.h"
-#include "GUI_Paint.h"
-#include "LCD_1in28.h"
-#include "Touch_1in28.h"
-#include "fonts.h"
 #include "global.h"
-#include "hardware/adc.h"
-#include "pico/stdlib.h"
-#include "protocol.h"
 #include "resources.h"
 #include "util.h"
+
+#include <DEV_Config.h>
+#include <Debug.h>
+#include <GUI_Paint.h>
+#include <LCD_1in28.h>
+#include <Touch_1in28.h>
+#include <fonts.h>
+#include <pico/stdlib.h>
 #include <stdio.h>
 
 typedef enum {
@@ -90,13 +89,22 @@ void scr_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
  * @height  - of the selection rectangle
  */
 bool scr_is_clicked(int x_start, int y_start, int width, int height);
-#define SCR_IS_CANCELLED scr_is_clicked(145, 15, 45, 45)
+#define SCR_IS_CANCELLED scr_is_clicked(140, 20, 40, 40)
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
     printf(__FILE__ "#%s():%d MODULE " #M " \r\n", __func__, __LINE__);        \
     XY.mode = TOUCH_TYPE;                                                      \
-    if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED)
+    if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
+    screen.redraw = DISP_REDRAW
 
+#define SCR_FILL(img) Paint_DrawImage(img, 0, 0, 240, 240)
+
+enum DISP_T {
+    DISP_SYNC,    /* The buffer and the screen are fully synchronized */
+    DISP_PARTIAL, /* The buffer and screen are partially synchronized,
+                            screen data needs updating */
+    DISP_REDRAW   /* The screen requires a complete redraw */
+};
 /**
  * Screen state
  */
@@ -106,7 +114,7 @@ typedef struct {
     UDOUBLE buffer_s;
     enum SCREEN_T sstate; /* Active screen */
     enum POPUP_T pstate;
-    bool redraw; /* Should cause redraw or not */
+    enum DISP_T redraw; /* Should cause redraw or not */
 } SwScreen;
 
 /* SwScreen implementation. Singleton object. */

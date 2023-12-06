@@ -1,5 +1,4 @@
 #include "protocol.h"
-#include <stdlib.h>
 #define DT_STRLEN 14
 
 enum IDX {

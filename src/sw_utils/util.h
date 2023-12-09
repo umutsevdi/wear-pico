@@ -18,16 +18,23 @@
 #include <string.h>
 #include <unistd.h>
 
+const char* _file_fmt(const char* str);
 #define MAXLINE 256
-#define PRINT(FMT, ARGS...) printf(__FILE__ #FMT "\r\n" ARGS)
+#define PRINT(FMT, ARGS...) printf("%s" #FMT "\r\n", _file_fmt(__FILE__) ARGS)
 #define WARN(CODE)                                                             \
     do {                                                                       \
-        fprintf(stderr, __FILE__ "#%s():%d " #CODE "\r\n", __func__,           \
-                __LINE__);                                                     \
+        fprintf(stderr, "%s#%s():%d " #CODE "\r\n", _file_fmt(__FILE__),       \
+                __func__, __LINE__);                                           \
     } while (0)
 
 #define ERROR(CODE)                                                            \
-    (fprintf(stderr, __FILE__ "#%s():%d " #CODE "\r\n", __func__, __LINE__),   \
+    (fprintf(stderr, "%s#%s():%d " #CODE "\r\n", _file_fmt(__FILE__),          \
+             __func__, __LINE__),                                              \
      CODE)
 
+#define UNUSED(TYPE, ARGS...)                                                  \
+    do {                                                                       \
+        TYPE __args[] = {ARGS};                                                \
+        __args[0] = __args[0];                                                 \
+    } while (0);
 #endif

@@ -6,15 +6,15 @@ const unsigned char* menu_frames[] = {menu_alarm, menu_stopwatch, menu_events,
 /**
  * Loads the menu item and initializes it's context
  * @current - selected menu item
- * SCR_STATUS scr_load_alarm(void);
- * SCR_STATUS scr_load_chono(void);
- * SCR_STATUS scr_load_event(void);
- * SCR_STATUS scr_load_media(void);
- * SCR_STATUS scr_load_step(void);
+ * SCR_STATUS apps_load_alarm(void);
+ * SCR_STATUS apps_load_chono(void);
+ * SCR_STATUS apps_load_event(void);
+ * SCR_STATUS apps_load_media(void);
+ * SCR_STATUS apps_load_step(void);
  */
-static void _scr_menu_select(enum SW_MENU_T current);
+static void _apps_menu_select(enum SW_MENU_T current);
 
-SCR_STATUS scr_load_menu()
+SCR_STATUS apps_load_menu()
 {
     SET_MODULE(SCREEN_MENU, TOUCH_GESTURE);
 
@@ -31,7 +31,7 @@ SCR_STATUS scr_load_menu()
             current = current == 0 ? SW_MENU_SIZE - 1 : current - 1;
             screen.redraw = DISP_REDRAW;
             break;
-        case CLICK: _scr_menu_select(current); break;
+        case CLICK: _apps_menu_select(current); break;
         case DOUBLE_CLICK: /* TODO make screen black */
         case LONG_PRESS: break;
         }
@@ -44,6 +44,7 @@ SCR_STATUS scr_load_menu()
         if (screen.redraw) {
             screen.sstate = SCREEN_MENU;
             Paint_DrawImage(menu_frames[current], SCR_SCREEN);
+            apps_post_process(false);
             LCD_1IN28_Display(screen.buffer);
             PRINT("%s", , MENU_S(current));
             screen.redraw = DISP_SYNC;
@@ -52,12 +53,12 @@ SCR_STATUS scr_load_menu()
     }
 }
 
-static void _scr_menu_select(enum SW_MENU_T current)
+static void _apps_menu_select(enum SW_MENU_T current)
 {
     switch (current) {
     /*case SW_MENU_ALARM:scr_load_alarm(); break;*/
     case SW_MENU_CHRONO:
-        scr_load_chono();
+        apps_load_chono();
         break;
         /*
     case SW_MENU_EVENT:scr_load_event();break;

@@ -42,7 +42,7 @@ typedef enum {
  * @base_y   - starting position y
  * @show_sec - whether to reduce the font size and include seconds
  */
-void scr_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
+void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
 /**
  * Returns whether the selected area has been clicked
  * @x_start - starting position x
@@ -50,9 +50,17 @@ void scr_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
  * @width   -  of the selection rectangle
  * @height  - of the selection rectangle
  */
-bool scr_is_clicked(int x_start, int y_start, int width, int height);
-#define SCR_IS_CANCELLED scr_is_clicked(140, 20, 40, 40)
+bool apps_is_clicked(int x_start, int y_start, int width, int height);
+
+/**
+ * Retrieves the status from various sources and draws to the buffer
+ * @is_cb - Whether this function is called by a callback
+ */
+void apps_post_process(bool is_cb);
+
+#define SCR_IS_CANCELLED apps_is_clicked(140, 20, 40, 40)
 #define SCR_SCREEN 0, 0, 240, 240
+#define SCR_TRAY 20, 13
 
 enum DISP_T {
     DISP_SYNC,    /* The buffer and the screen are fully synchronized */
@@ -89,6 +97,9 @@ typedef struct {
     enum SCREEN_T sstate; /* Active screen */
     enum POPUP_T pstate;
     enum DISP_T redraw; /* Should cause redraw or not */
+    int post_time;      /* Post process timer */
+
+    repeating_timer_t __post_timer;
 } SwScreen;
 
 /* SwScreen implementation. Singleton object. */
@@ -97,5 +108,5 @@ extern SwScreen screen;
 /**
  * Initializes the screen
  */
-SCR_STATUS scr_init(void);
+SCR_STATUS apps_init(void);
 #endif

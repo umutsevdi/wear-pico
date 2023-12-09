@@ -13,22 +13,23 @@
 #include "apps_common.h"
 
 /* Initializes the menu User Interface */
-SCR_STATUS scr_load_menu(void);
+SCR_STATUS apps_load_menu(void);
 /* Initializes the Alarm User Interface */
-SCR_STATUS scr_load_alarm(void);
+SCR_STATUS apps_load_alarm(void);
 /* Initializes the Stopwatch User Interface */
-SCR_STATUS scr_load_chono(void);
+SCR_STATUS apps_load_chono(void);
 /* Initializes the Calendar User Interface */
-SCR_STATUS scr_load_event(void);
+SCR_STATUS apps_load_event(void);
 /* Initializes the Media User Interface */
-SCR_STATUS scr_load_media(void);
+SCR_STATUS apps_load_media(void);
 /* Initializes the Pedometer User Interface */
-SCR_STATUS scr_load_step(void);
+SCR_STATUS apps_load_step(void);
 
-SCR_STATUS scr_load_clock(void);
+SCR_STATUS apps_load_clock(void);
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
-    printf(__FILE__ "#%s():%d MODULE " #M " \r\n", __func__, __LINE__);        \
+    printf("%s#%s():%d MODULE " #M " \r\n", _file_fmt(__FILE__), __func__,     \
+           __LINE__);                                                          \
     XY.mode = TOUCH_TYPE;                                                      \
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
     screen.redraw = DISP_REDRAW

@@ -1,7 +1,5 @@
 #include "sw_apps/apps.h"
 
-#include <pico/time.h>
-
 #define CHRONO_CB_FREQUENCY 13
 
 /**
@@ -9,28 +7,19 @@
  * updates the timer
  * @return - timer status
  */
-static SCR_STATUS _scr_chrono_toggle();
+static SCR_STATUS _apps_chrono_toggle();
+/** Updates the values on the SCREEN_CLOCK */
+static void _apps_clock_partial();
 
-static void _scr_draw_partial()
-{
-    DateTime* dt = &state.dt;
-    Paint_DrawString_EN(20, 70, DATETIME_DAY(dt->day % 7 + 1), &Font16,
-                        COLOR_BG, COLOR_FG);
-    scr_paint_time(dt, state.clock_show_sec ? 0 : 20,
-                   state.clock_show_sec ? 100 : 90, state.clock_show_sec);
-    char bottom_str[100];
-    sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
-            dt->year % 100);
-    Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG, COLOR_FG);
-}
-
-SCR_STATUS scr_load_clock()
+SCR_STATUS apps_load_clock()
 {
     SET_MODULE(SCREEN_CLOCK, TOUCH_GESTURE);
 
+    int min = 0;
+    int sec = 0;
     while (true) {
         switch (XY.Gesture) {
-        case Down: scr_load_menu(); break;
+        case Down: apps_load_menu(); break;
         case CLICK:
             state.clock_show_sec = !state.clock_show_sec;
             screen.redraw = DISP_REDRAW;
@@ -41,11 +30,19 @@ SCR_STATUS scr_load_clock()
         if (screen.sstate != SCREEN_CLOCK) {
             screen.sstate = SCREEN_CLOCK;
             screen.redraw = DISP_REDRAW;
+        } else if (state.clock_show_sec) {
+            if (sec != state.dt.second) screen.redraw = DISP_PARTIAL;
+            sec = state.dt.second;
+        } else if (min != state.dt.minute) {
+            screen.redraw = DISP_PARTIAL;
+            min = state.dt.minute;
         }
+
         if (screen.redraw) {
             // If full redraw
             Paint_DrawImage(watch, SCR_SCREEN);
-            _scr_draw_partial();
+            _apps_clock_partial();
+            apps_post_process(false);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
             XY.Gesture = None;
@@ -53,8 +50,7 @@ SCR_STATUS scr_load_clock()
     }
 }
 
-void _scr_chrono_draw_partial() {}
-SCR_STATUS scr_load_chono()
+SCR_STATUS apps_load_chono()
 {
     SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
 
@@ -63,12 +59,12 @@ SCR_STATUS scr_load_chono()
         if (SCR_IS_CANCELLED) return SCR_STATUS_OK;
 
         // Start/Stop Button
-        if (scr_is_clicked(40, 160, 160, 40) && XY.x_point != x
+        if (apps_is_clicked(40, 160, 160, 40) && XY.x_point != x
             && XY.y_point != y) {
             x = XY.x_point;
             y = XY.y_point;
             screen.redraw = DISP_REDRAW;
-            SCR_STATUS status = _scr_chrono_toggle();
+            SCR_STATUS status = _apps_chrono_toggle();
             if (!status) return status;
         }
         if (screen.sstate != SCREEN_CHRONO) {
@@ -85,8 +81,9 @@ SCR_STATUS scr_load_chono()
                                 SCR_SCREEN);
                 XY.x_point = 0;
                 XY.y_point = 0;
+                apps_post_process(false);
             }
-            scr_paint_time(&state.chrono.dt, 0, 100, true);
+            apps_paint_time(&state.chrono.dt, 0, 100, true);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
@@ -121,7 +118,7 @@ static bool _scr_chrono_cb(repeating_timer_t* r)
         screen.redraw = DISP_PARTIAL;
 }
 
-static SCR_STATUS _scr_chrono_toggle()
+static SCR_STATUS _apps_chrono_toggle()
 {
     state.chrono.enabled = !state.chrono.enabled;
     if (state.chrono.enabled) {
@@ -137,4 +134,17 @@ static SCR_STATUS _scr_chrono_toggle()
         WARN(CANCEL_EVENT_scr_chrono_cb);
         cancel_repeating_timer(&state.chrono.timer);
     }
+}
+
+static void _apps_clock_partial()
+{
+    DateTime* dt = &state.dt;
+    Paint_DrawString_EN(20, 70, day_of_the_week(dt), &Font16, COLOR_BG,
+                        COLOR_FG);
+    apps_paint_time(dt, state.clock_show_sec ? 0 : 20,
+                    state.clock_show_sec ? 100 : 90, state.clock_show_sec);
+    char bottom_str[100];
+    sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
+            dt->year % 100);
+    Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG, COLOR_FG);
 }

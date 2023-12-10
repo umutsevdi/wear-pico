@@ -4,8 +4,10 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 #include "sw_os/dev.h"
+#include "sw_os/state.h"
 
 #include <hardware/i2c.h>
+#include <math.h>
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
 #include <stdio.h>
@@ -34,6 +36,7 @@ void os_gyro_init()
     bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
                                PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
     mpu6050_reset();
+    os_gyro_fetch();
 #endif
 }
 
@@ -42,6 +45,11 @@ GyroData os_gyro_fetch()
     GyroData data;
     mpu6050_read_raw(data.acc, data.gyro, &data.temp);
     data.temp = (data.temp / 340.0) + 36.53;
+    state.dev.temp = data.temp;
+    state.dev.dist_acc =
+        sqrt(pow(data.acc[0], 2) + pow(data.acc[1], 2) + pow(data.acc[2], 2));
+    state.dev.dist_gyro = sqrt(pow(data.gyro[0], 2) + pow(data.gyro[1], 2)
+                               + pow(data.gyro[2], 2));
     return data;
 }
 

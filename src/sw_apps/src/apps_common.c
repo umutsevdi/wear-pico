@@ -1,4 +1,5 @@
 #include "sw_apps/apps_common.h"
+#include "GUI_Paint.h"
 
 /**
  * A callback function that triggers post process automatically every 30
@@ -47,16 +48,20 @@ bool apps_is_clicked(int x_start, int y_start, int width, int height)
     const int pad = 10;// padding pixel
     int x = XY.x_point;
     int y = XY.y_point;
-    return (x_start + pad) < x && x < (x_start + width + pad)
-           && (y_start + pad) < y && y < (y_start + height + pad);
+    return (x_start - pad) < x && x < (x_start + width + pad)
+           && (y_start - pad) < y && y < (y_start + height + pad);
 }
 
 void apps_post_process(bool is_cb)
 {
+    if (screen.sstate == SCREEN_PSAVE) return;
+    char str[10];
     if (screen.sstate != SCREEN_CLOCK) {
-        char str[10];
         snprintf(str, 10, "%02d:%02d", state.dt.hour, state.dt.minute);
         Paint_DrawString_EN(102, 12, str, &Font12, COLOR_BG, COLOR_FG);
+    } else {
+        snprintf(str, 6, "%02d\'C", state.dev.temp);
+        Paint_DrawString_EN(170, 70, str, &Font16, COLOR_BG, COLOR_FG);
     }
     const unsigned char* bat_img;
     if (state.bat.on_charge)
@@ -83,8 +88,6 @@ void apps_post_process(bool is_cb)
     if (is_cb) {
         WARN(POST_PROCESS_BY_CB);
         LCD_1IN28_Display(screen.buffer);
-    } else {
-        WARN(POST_PROCESS);
     }
 }
 

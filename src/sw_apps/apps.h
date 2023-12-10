@@ -26,6 +26,7 @@ SCR_STATUS apps_load_media(void);
 SCR_STATUS apps_load_step(void);
 
 SCR_STATUS apps_load_clock(void);
+SCR_STATUS apps_load_power_save(void);
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
     printf("%s#%s():%d MODULE " #M " \r\n", _file_fmt(__FILE__), __func__,     \

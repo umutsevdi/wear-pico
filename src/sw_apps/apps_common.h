@@ -77,6 +77,7 @@ enum SCREEN_T {
     SCREEN_EVENT,
     SCREEN_MEDIA,
     SCREEN_STEP,
+    SCREEN_PSAVE,
 };
 
 /* Whether a pop-up is enabled or not and its type */

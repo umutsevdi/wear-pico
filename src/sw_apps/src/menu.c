@@ -32,7 +32,7 @@ SCR_STATUS apps_load_menu()
             screen.redraw = DISP_REDRAW;
             break;
         case CLICK: _apps_menu_select(current); break;
-        case DOUBLE_CLICK: /* TODO make screen black */
+        case DOUBLE_CLICK: apps_load_power_save(); break;
         case LONG_PRESS: break;
         }
 

@@ -74,6 +74,9 @@ typedef struct {
          * Each set or reset increases/decreases the value, gpio is disabled only at 0;
          */
         int stack[20];
+        int16_t temp;
+        int16_t dist_acc;
+        int16_t dist_gyro;
     } dev;
     struct {
         bool on_charge;

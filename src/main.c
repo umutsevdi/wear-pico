@@ -22,8 +22,7 @@ int main(int argc, char* argv[])
     while (1) {
         //        printf("CORE 0 running with %s\n", __func__);
         sleep_ms(1000);
-        GyroData d = os_gyro_fetch();
-        printf(GYRO_S(d));
+        os_gyro_fetch();
     }
 
     return 0;

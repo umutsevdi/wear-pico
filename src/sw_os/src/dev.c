@@ -8,13 +8,10 @@ static bool _notify_cb(repeating_timer_t* r);
 
 void os_dev_set(enum DEV_T dev, bool value)
 {
-    PRINT("SET %s TO %s", , DEV_S(dev), value ? "TRUE" : "FALSE");
     if (value)
         state.dev.stack[dev]++;
     else
         state.dev.stack[dev]--;
-
-    PRINT("%d", , state.dev.stack[dev]);
     if (state.dev.stack[dev] > 0) {
         gpio_put(dev, 1);
     } else {
@@ -24,7 +21,6 @@ void os_dev_set(enum DEV_T dev, bool value)
 
 void os_dev_set_for(enum DEV_T dev, unsigned long time_m)
 {
-    PRINT("REGISTER %s FOR %ld", , DEV_S(dev), time_m);
     int* dev_h = malloc(sizeof(enum DEV_T));
     *dev_h = dev;
     add_alarm_in_ms(time_m, _set_for_cb, dev_h, true);
@@ -41,7 +37,6 @@ void os_dev_notify()
 
 static int64_t _set_for_cb(int32_t id, void* dev_h)
 {
-    PRINT("COMPLETE %s timer", , DEV_S((*(enum DEV_T*)dev_h)));
     UNUSED(int, id);
     os_dev_set(*(enum DEV_T*)dev_h, false);
     free(dev_h);

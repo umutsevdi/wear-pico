@@ -25,7 +25,7 @@ SCR_STATUS apps_load_clock()
             screen.redraw = DISP_REDRAW;
             PRINT("show_seconds:%s", , state.clock_show_sec ? "true" : "false");
             break;
-        case DOUBLE_CLICK: /* TODO make screen black */ break;
+        case DOUBLE_CLICK: apps_load_power_save(); break;
         }
         if (screen.sstate != SCREEN_CLOCK) {
             screen.sstate = SCREEN_CLOCK;
@@ -47,6 +47,24 @@ SCR_STATUS apps_load_clock()
             screen.redraw = DISP_SYNC;
             XY.Gesture = None;
         }
+    }
+}
+
+SCR_STATUS apps_load_power_save()
+{
+    SET_MODULE(SCREEN_PSAVE, TOUCH_GESTURE);
+    screen.sstate = SCREEN_PSAVE;
+    Paint_Clear(BLACK);
+    DEV_SET_PWM(0);
+    LCD_1IN28_Display(screen.buffer);
+    XY.Gesture = None;
+    while (true) {
+        if (XY.Gesture == DOUBLE_CLICK) {
+            XY.Gesture = None;
+            DEV_SET_PWM(100);
+            return SCR_STATUS_OK;
+        }
+        sleep_ms(200);
     }
 }
 
@@ -89,6 +107,7 @@ SCR_STATUS apps_load_chono()
         }
     }
 }
+
 /**
  * The callback function for the stopwatch event. 
  * Periodically updates the timer, calls for redraw if the primary screen is

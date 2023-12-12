@@ -25,7 +25,7 @@ SCR_STATUS apps_load_clock()
             screen.redraw = DISP_REDRAW;
             PRINT("show_seconds:%s", , state.clock_show_sec ? "true" : "false");
             break;
-        case DOUBLE_CLICK: apps_load_power_save(); break;
+        case DOUBLE_CLICK: apps_lock_screen(); break;
         }
         if (screen.sstate != SCREEN_CLOCK) {
             screen.sstate = SCREEN_CLOCK;
@@ -50,7 +50,7 @@ SCR_STATUS apps_load_clock()
     }
 }
 
-SCR_STATUS apps_load_power_save()
+SCR_STATUS apps_lock_screen()
 {
     SET_MODULE(SCREEN_PSAVE, TOUCH_GESTURE);
     screen.sstate = SCREEN_PSAVE;
@@ -60,7 +60,10 @@ SCR_STATUS apps_load_power_save()
     XY.Gesture = None;
     while (true) {
         if (XY.Gesture == DOUBLE_CLICK) {
-            XY.Gesture = None;
+            /* Returns with up gesture to trigger down
+             * on menu and return to clock screen safely
+             */
+            XY.Gesture = UP;
             DEV_SET_PWM(100);
             return SCR_STATUS_OK;
         }
@@ -70,15 +73,15 @@ SCR_STATUS apps_load_power_save()
 
 SCR_STATUS apps_load_chono()
 {
+#define BTN_STOPWATCH 40, 160, 160, 40
     SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
 
     int x, y;
     while (true) {
-        if (SCR_IS_CANCELLED) return SCR_STATUS_OK;
+        if (apps_is_exited()) return SCR_STATUS_OK;
 
         // Start/Stop Button
-        if (apps_is_clicked(40, 160, 160, 40) && XY.x_point != x
-            && XY.y_point != y) {
+        if (apps_is_clicked(BTN_STOPWATCH)) {
             x = XY.x_point;
             y = XY.y_point;
             screen.redraw = DISP_REDRAW;
@@ -102,6 +105,48 @@ SCR_STATUS apps_load_chono()
                 apps_post_process(false);
             }
             apps_paint_time(&state.chrono.dt, 0, 100, true);
+            LCD_1IN28_Display(screen.buffer);
+            screen.redraw = DISP_SYNC;
+        }
+    }
+}
+
+SCR_STATUS apps_load_media()
+{
+#define BTN_PLAY_PAUSE 88, 120, 64, 64
+#define BTN_NEXT 152, 120, 48, 64
+#define BTN_PREV 40, 120, 48, 64
+    SET_MODULE(SCREEN_MEDIA, TOUCH_POINT);
+
+    while (true) {
+        if (apps_is_exited()) return SCR_STATUS_OK;
+
+        // Play/Pause Button
+        if (apps_is_clicked(BTN_PLAY_PAUSE)) {
+            state.media.is_playing = !state.media.is_playing;
+            screen.redraw = DISP_REDRAW;
+        } else if (apps_is_clicked(BTN_NEXT)) {
+            screen.redraw = DISP_PARTIAL;
+        } else if (apps_is_clicked(BTN_PREV)) {
+            screen.redraw = DISP_PARTIAL;
+        }
+
+        if (screen.sstate != SCREEN_MEDIA) {
+            screen.sstate = SCREEN_MEDIA;
+            screen.redraw = DISP_REDRAW;
+        }
+
+        if (screen.redraw) {
+            /* Prevent full redraw to improve performance */
+            if (screen.redraw == DISP_REDRAW) {
+                screen.sstate = SCREEN_CHRONO;
+                Paint_DrawImage(state.media.is_playing ? app_media_stop
+                                                       : app_media_start,
+                                SCR_SCREEN);
+                XY.x_point = 0;
+                XY.y_point = 0;
+                apps_post_process(false);
+            }
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }

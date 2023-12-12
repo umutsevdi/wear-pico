@@ -22,6 +22,8 @@ extern const unsigned char watch[];
 extern const unsigned char font60[];
 extern const unsigned char font40[];
 
+extern const unsigned char app_media_start[];
+extern const unsigned char app_media_stop[];
 extern const unsigned char app_stopwatch_start[];
 extern const unsigned char app_stopwatch_stop[];
 

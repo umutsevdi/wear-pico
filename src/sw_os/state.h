@@ -83,6 +83,7 @@ typedef struct {
         int pct;
     } bat;
     struct {
+        bool is_playing;
         char song[30];
         char album[30];
         char artist[30];

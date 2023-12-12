@@ -32,7 +32,7 @@ SCR_STATUS apps_load_menu()
             screen.redraw = DISP_REDRAW;
             break;
         case CLICK: _apps_menu_select(current); break;
-        case DOUBLE_CLICK: apps_load_power_save(); break;
+        case DOUBLE_CLICK: apps_lock_screen(); break;
         case LONG_PRESS: break;
         }
 
@@ -57,12 +57,12 @@ static void _apps_menu_select(enum SW_MENU_T current)
 {
     switch (current) {
     /*case SW_MENU_ALARM:scr_load_alarm(); break;*/
-    case SW_MENU_CHRONO:
-        apps_load_chono();
+    case SW_MENU_CHRONO: apps_load_chono(); break;
+    case SW_MENU_MEDIA:
+        apps_load_media();
         break;
         /*
     case SW_MENU_EVENT:scr_load_event();break;
-    case SW_MENU_MEDIA:scr_load_media();break;
     case SW_MENU_STEP:scr_load_step();
 */
     default: return;

@@ -58,7 +58,7 @@ bool apps_is_clicked(int x_start, int y_start, int width, int height);
  */
 void apps_post_process(bool is_cb);
 
-#define SCR_IS_CANCELLED apps_is_clicked(140, 20, 40, 40)
+#define apps_is_exited() apps_is_clicked(140, 20, 40, 40)
 #define SCR_SCREEN 0, 0, 240, 240
 #define SCR_TRAY 20, 13
 

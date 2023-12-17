@@ -27,6 +27,7 @@ typedef struct {
         int16_t temp;
         int16_t dist_acc;
         int16_t dist_gyro;
+        repeating_timer_t __step_timer;
     } dev;
     struct {
         bool on_charge;

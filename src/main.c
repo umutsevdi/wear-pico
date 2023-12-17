@@ -19,8 +19,10 @@ int main(int argc, char* argv[])
 
     while (1) {
         //        printf("CORE 0 running with %s\n", __func__);
-        sleep_ms(1000);
+        sleep_ms(100);
         os_gyro_fetch();
+        int demo_amount = (state.dev.dist_acc / 10000 - 2);
+        state.step += demo_amount > 0 ? demo_amount : 0;
     }
 
     return 0;

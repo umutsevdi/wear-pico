@@ -17,7 +17,7 @@ SCR_STATUS apps_load_menu(void);
 /* Initializes the Alarm User Interface */
 SCR_STATUS apps_load_alarm(void);
 /* Initializes the Stopwatch User Interface */
-SCR_STATUS apps_load_chono(void);
+SCR_STATUS apps_load_chrono(void);
 /* Initializes the Calendar User Interface */
 SCR_STATUS apps_load_event(void);
 /* Initializes the Media User Interface */
@@ -34,16 +34,10 @@ SCR_STATUS apps_lock_screen(void);
            __LINE__);                                                          \
     XY.mode = TOUCH_TYPE;                                                      \
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
-    screen.redraw = DISP_REDRAW
+    screen.redraw = DISP_REDRAW;                                               \
+    XY.x_point = 0;                                                            \
+    XY.y_point = 0;
 
-enum SW_MENU_T {
-    SW_MENU_ALARM,
-    SW_MENU_CHRONO,
-    SW_MENU_EVENT,
-    SW_MENU_MEDIA,
-    SW_MENU_STEP,
-    SW_MENU_SIZE
-};
 #define MENU_S(CURRENT)                                                        \
     CURRENT == SW_MENU_ALARM    ? "MENU_ALARM"                                 \
     : CURRENT == SW_MENU_CHRONO ? "MENU_CHRONO"                                \

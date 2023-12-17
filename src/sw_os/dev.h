@@ -40,7 +40,9 @@ void os_dev_notify();
 
 /**
  * Fetches and returns the current values
- * from the Gyroscope
+ * from the Gyroscope.
+ * Sets state.dev.dis_acc and state.dev.dis_acc
+ * to the square root of the X Y Z vectors.
  * @return GyroData
  */
 GyroData os_gyro_fetch();

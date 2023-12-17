@@ -1,5 +1,6 @@
 #include "sw_apps/apps_common.h"
 #include "GUI_Paint.h"
+#include "sw_res/resources.h"
 
 /**
  * A callback function that triggers post process automatically every 30
@@ -63,25 +64,23 @@ void apps_post_process(bool is_cb)
         snprintf(str, 6, "%02d\'C", state.dev.temp);
         Paint_DrawString_EN(170, 70, str, &Font16, COLOR_BG, COLOR_FG);
     }
-    const unsigned char* bat_img;
+    Resource tray;
     if (state.bat.on_charge)
-        bat_img = tray_bat_charge;
+        tray = res_get_tray(TRAY_BAT_CHARGE);
     else if (state.bat.pct > 80)
-        bat_img = tray_bat_high;
+        tray = res_get_tray(TRAY_BAT_HIGH);
     else if (state.bat.pct > 50)
-        bat_img = tray_bat_mid;
-
+        tray = res_get_tray(TRAY_BAT_MID);
     else if (state.bat.pct > 15)
-        bat_img = tray_bat_low;
+        tray = res_get_tray(TRAY_BAT_LOW);
     else
-        bat_img = tray_bat_crit;
-    Paint_DrawImage(bat_img, 66, 214, SCR_TRAY);
-
-    const unsigned char* bt_img = state.is_connected ? tray_bt_on : tray_bt_off;
-    Paint_DrawImage(bt_img, 152, 214, SCR_TRAY);
+        tray = res_get_tray(TRAY_BAT_CRIT);
+    apps_draw(tray, 66, 214);
+    apps_draw(res_get_tray(state.is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 152,
+              214);
     if (screen.sstate != SCREEN_CHRONO)
-        Paint_DrawImage(state.chrono.enabled ? tray_stopwatch : tray_none, 45,
-                        200, SCR_TRAY);
+        apps_draw(res_get_tray(state.chrono.enabled ? TRAY_CHRONO : TRAY_NONE),
+                  45, 200);
     // TODO notification
     // TODO alarm
     screen.post_time = 30;
@@ -153,4 +152,27 @@ bool _apps_refresh_cb(struct repeating_timer* t)
     l++;//Determine continuous or single point
     if (l == 253) { l = 252; }
     return true;
+}
+
+void apps_draw(Resource res, int start_x, int start_y)
+{
+    if (res.img != NULL)
+        Paint_DrawImage(res.img, start_x, start_y, res.width, res.height);
+}
+
+bool apps_set_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title)
+{
+    if (screen.pstate == POPUP_NONE) {
+        if (screen.sstate != s_title || screen.sstate == DISP_REDRAW) {
+            screen.sstate = s_title;
+            screen.redraw = DISP_REDRAW;
+            apps_draw(res_reset(), 0, 0);
+            apps_draw(res_get_titlebar(s_title, POPUP_NONE), 40, 30);
+            return true;
+        }
+    } else {
+        UNUSED(enum POPUP_T, p_title);
+        //TODO popups
+    }
+    return false;
 }

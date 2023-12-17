@@ -58,6 +58,7 @@ bool apps_is_clicked(int x_start, int y_start, int width, int height);
  */
 void apps_post_process(bool is_cb);
 
+void apps_draw(Resource img, int start_x, int start_y);
 #define apps_is_exited() apps_is_clicked(140, 20, 40, 40)
 #define SCR_SCREEN 0, 0, 240, 240
 #define SCR_TRAY 20, 13
@@ -91,4 +92,17 @@ extern SwScreen screen;
  * Initializes the screen
  */
 SCR_STATUS apps_init(void);
+
+/* Draws given resource to the screen */
+void apps_draw(Resource res, int start_x, int start_y);
+
+/* Inserts the titlebar of the application if the states don't match
+ * - If p_title is set to anything other than POPUP_NONE, it will
+ * overwrite the screen value
+ * @s_title - Title of the screen
+ * @p_title - Title of the pop-up, if any
+ *
+ * @returns - Whether titlebar is inserted or not
+ */
+bool apps_set_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title);
 #endif

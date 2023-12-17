@@ -64,10 +64,12 @@ enum SCREEN_T {
     SCREEN_MENU,
     SCREEN_ALARM,
     SCREEN_CHRONO,
-    SCREEN_EVENT,
     SCREEN_MEDIA,
+    SCREEN_EVENT,
     SCREEN_STEP,
     SCREEN_LOCK,
+
+    SCREEN_T_SIZE
 };
 
 /* Whether a pop-up is enabled or not and its type */
@@ -75,7 +77,9 @@ enum POPUP_T {
     POPUP_NONE,   /* No Pop-Up is available */
     POPUP_CALL,   /* Incoming call UI */
     POPUP_NOTIFY, /* Notification UI */
-    POPUP_ALARM   /* Alarm UI */
+    POPUP_ALARM,  /* Alarm UI */
+
+    POPUP_T_SIZE
 };
 
 #endif

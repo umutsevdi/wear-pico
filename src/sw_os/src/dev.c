@@ -1,6 +1,5 @@
 #include "sw_os/dev.h"
 #include "hardware/gpio.h"
-#include "pico/time.h"
 #include "sw_os/state.h"
 
 static int64_t _set_for_cb(int32_t id, void* dev_h);

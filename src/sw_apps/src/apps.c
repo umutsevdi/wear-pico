@@ -1,4 +1,5 @@
 #include "sw_apps/apps.h"
+#include "GUI_Paint.h"
 
 #define CHRONO_CB_FREQUENCY 13
 
@@ -10,6 +11,7 @@
 static SCR_STATUS _apps_chrono_toggle();
 /** Updates the values on the SCREEN_CLOCK */
 static void _apps_clock_partial();
+static void _step_display();
 
 SCR_STATUS apps_load_clock()
 {
@@ -17,11 +19,13 @@ SCR_STATUS apps_load_clock()
 
     int min = 0;
     int sec = 0;
+    bool old_show_sec = false;
     while (true) {
         switch (XY.Gesture) {
         case Down: apps_load_menu(); break;
         case CLICK:
             state.clock_show_sec = !state.clock_show_sec;
+            old_show_sec = !state.clock_show_sec;
             screen.redraw = DISP_REDRAW;
             PRINT("show_seconds:%s", , state.clock_show_sec ? "true" : "false");
             break;
@@ -40,7 +44,15 @@ SCR_STATUS apps_load_clock()
 
         if (screen.redraw) {
             // If full redraw
-            Paint_DrawImage(watch, SCR_SCREEN);
+            if (screen.redraw == DISP_REDRAW) {
+                apps_draw(res_reset(), 0, 0);
+                apps_draw(res_get_direction(GEST_DIR_U), 96, 20);
+            }
+            if (old_show_sec != state.clock_show_sec) {
+                old_show_sec = state.clock_show_sec;
+                Paint_DrawRectangle(0, 50, 240, 180, COLOR_BG, DOT_PIXEL_1X1,
+                                    DRAW_FILL_FULL);
+            }
             _apps_clock_partial();
             apps_post_process(false);
             LCD_1IN28_Display(screen.buffer);
@@ -71,43 +83,41 @@ SCR_STATUS apps_lock_screen()
     }
 }
 
-SCR_STATUS apps_load_chono()
+SCR_STATUS apps_load_chrono()
 {
 #define BTN_STOPWATCH 40, 160, 160, 40
     SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
 
-    int x, y;
+    bool clicked;
+    int x = 0, y = 0;
     while (true) {
+        if (x != XY.x_point || y != XY.y_point) {
+            x = XY.x_point;
+            y = XY.y_point;
+            clicked = true;
+        }
         if (apps_is_exited()) return SCR_STATUS_OK;
 
         // Start/Stop Button
-        if (apps_is_clicked(BTN_STOPWATCH)) {
-            x = XY.x_point;
-            y = XY.y_point;
+        if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
+            WARN(BTN_STOPWATCH);
             screen.redraw = DISP_REDRAW;
             SCR_STATUS status = _apps_chrono_toggle();
             if (!status) return status;
         }
-        if (screen.sstate != SCREEN_CHRONO) {
-            screen.sstate = SCREEN_CHRONO;
-            screen.redraw = DISP_REDRAW;
+        if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            apps_post_process(false);
         }
-
         if (screen.redraw) {
             /* Prevent full redraw to improve performance */
-            if (screen.redraw == DISP_REDRAW) {
-                screen.sstate = SCREEN_CHRONO;
-                Paint_DrawImage(state.chrono.enabled ? app_stopwatch_stop
-                                                     : app_stopwatch_start,
-                                SCR_SCREEN);
-                XY.x_point = 0;
-                XY.y_point = 0;
-                apps_post_process(false);
-            }
+            apps_draw(res_get_app_chrono_button(state.chrono.enabled), 40, 160);
             apps_paint_time(&state.chrono.dt, 0, 100, true);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
+        clicked = false;
     }
 }
 
@@ -118,38 +128,90 @@ SCR_STATUS apps_load_media()
 #define BTN_PREV 40, 120, 48, 64
     SET_MODULE(SCREEN_MEDIA, TOUCH_POINT);
 
+    bool clicked;
+    int x = 0, y = 0;
     while (true) {
+        if (x != XY.x_point || y != XY.y_point) {
+            x = XY.x_point;
+            y = XY.y_point;
+            clicked = true;
+        }
         if (apps_is_exited()) return SCR_STATUS_OK;
 
         // Play/Pause Button
-        if (apps_is_clicked(BTN_PLAY_PAUSE)) {
+        if (clicked && apps_is_clicked(BTN_PLAY_PAUSE)) {
+            WARN(BTN_PLAY_PAUSE);
             state.media.is_playing = !state.media.is_playing;
             screen.redraw = DISP_REDRAW;
-        } else if (apps_is_clicked(BTN_NEXT)) {
+        } else if (clicked && apps_is_clicked(BTN_NEXT)) {
+            WARN(BTN_NEXT);
             screen.redraw = DISP_PARTIAL;
-        } else if (apps_is_clicked(BTN_PREV)) {
+        } else if (clicked && apps_is_clicked(BTN_PREV)) {
+            WARN(BTN_PREV);
+            screen.redraw = DISP_PARTIAL;
             screen.redraw = DISP_PARTIAL;
         }
 
-        if (screen.sstate != SCREEN_MEDIA) {
-            screen.sstate = SCREEN_MEDIA;
-            screen.redraw = DISP_REDRAW;
+        if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            apps_post_process(false);
         }
 
         if (screen.redraw) {
-            /* Prevent full redraw to improve performance */
-            if (screen.redraw == DISP_REDRAW) {
-                screen.sstate = SCREEN_CHRONO;
-                Paint_DrawImage(state.media.is_playing ? app_media_stop
-                                                       : app_media_start,
-                                SCR_SCREEN);
-                XY.x_point = 0;
-                XY.y_point = 0;
-                apps_post_process(false);
-            }
+            apps_draw(res_get_app_media_button(!state.media.is_playing), 40,
+                      120);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
+        clicked = false;
+    }
+}
+
+SCR_STATUS apps_load_step()
+{
+    SET_MODULE(SCREEN_STEP, TOUCH_POINT);
+
+    int sec = 0;
+    while (true) {
+        if (apps_set_titlebar(SCREEN_STEP, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            apps_post_process(false);
+            apps_draw(res_get_app_step(), 40, 150);
+        }
+        if (sec != state.dt.second) {
+            screen.redraw = DISP_PARTIAL;
+            sec = state.dt.second;
+        }
+        if (apps_is_exited()) return SCR_STATUS_OK;
+
+        if (screen.redraw) {
+            _step_display();
+            LCD_1IN28_Display(screen.buffer);
+            screen.redraw = DISP_SYNC;
+        }
+    }
+}
+
+static void _step_display()
+{
+    int base_x = 50;
+    int base_y = 86;
+    char numstr[6] = {0};
+    const int x_size = 40;
+    const int y_size = 40;
+    snprintf(numstr, 6, "%d", state.step);
+    strcenter(numstr, strnlen(numstr, 6), 6);
+    int x = base_x;
+    int y = base_y;
+    for (int i = 0; i < 5; i++) {
+        const unsigned char* img_ptr = NULL;
+        if (numstr[i] >= '0' && numstr[i] <= '9') {
+            img_ptr = font40 + 2 * (numstr[i] - '0') * x_size * y_size;
+            Paint_DrawImage(img_ptr, x, y, x_size, y_size);
+        }
+        x += 30;
     }
 }
 

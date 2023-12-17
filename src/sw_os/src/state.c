@@ -26,6 +26,14 @@ static bool _os_timer_cb(repeating_timer_t* r)
     return true;
 }
 
+static bool _step_count_cb(repeating_timer_t* r)
+{
+    static int16_t old = 0;
+    GyroData d = os_gyro_fetch();
+    int16_t peak = state.dev.dist_acc;
+    return true;
+}
+
 void os_init()
 {
     state.clock_show_sec = false;
@@ -40,26 +48,6 @@ void os_init()
     os_gyro_init();
     //    os_dev_set_for(DEV_LED, 1000);
     add_repeating_timer_ms(-1000, _os_timer_cb, NULL, &state.__dt_timer);
+    add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
     os_dev_notify();
-}
-
-const char* day_of_the_week(DateTime* dt)
-{
-    int d = dt->day;
-    int m = dt->month;
-    int y = dt->year;
-    int dow = (d += m < 3 ? y-- : y - 2,
-               23 * m / 9 + d + 4 + y / 4 - y / 100 + y / 400)
-              % 7;
-
-    switch (dow) {
-    case 0: return "Sunday";
-    case 1: return "Monday";
-    case 2: return "Tuesday";
-    case 3: return "Wednesday";
-    case 4: return "Thursday";
-    case 5: return "Friday";
-    case 6: return "Saturday";
-    }
-    return "Null";
 }

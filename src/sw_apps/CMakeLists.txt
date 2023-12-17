@@ -9,7 +9,7 @@ include_directories(../)
 add_library(sw_apps ${SW_UI_RES})
 target_link_libraries(sw_apps
     sw_res
-    sw_utils
+    sw_common
     sw_os
     pico_stdlib
     pico_time

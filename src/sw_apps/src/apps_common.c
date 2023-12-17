@@ -54,7 +54,7 @@ bool apps_is_clicked(int x_start, int y_start, int width, int height)
 
 void apps_post_process(bool is_cb)
 {
-    if (screen.sstate == SCREEN_PSAVE) return;
+    if (screen.sstate == SCREEN_LOCK) return;
     char str[10];
     if (screen.sstate != SCREEN_CLOCK) {
         snprintf(str, 10, "%02d:%02d", state.dt.hour, state.dt.minute);

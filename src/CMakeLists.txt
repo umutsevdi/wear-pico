@@ -8,7 +8,7 @@ add_subdirectory(waveshare/lib/LCD)
 add_subdirectory(waveshare/lib/Fonts)
 add_subdirectory(waveshare/lib/GUI)
 add_subdirectory(sw_res/)
-add_subdirectory(sw_utils/)
+add_subdirectory(sw_common/)
 add_subdirectory(sw_os/)
 add_subdirectory(sw_apps/)
 
@@ -22,7 +22,7 @@ include_directories(./)
 # pull in common dependencies
 target_link_libraries(smartwatch
     sw_res
-    sw_utils
+    sw_common
     sw_os
     sw_apps
     pico_stdlib

@@ -9,7 +9,7 @@
 *****************************************************************************/
 #ifndef SW_DEV
 #define SW_DEV
-#include "sw_utils/util.h"
+#include "sw_common/util.h"
 
 enum DEV_T {
     DEV_BUZZER = 18,

@@ -11,9 +11,9 @@
 #ifndef SW_SCREEN
 #define SW_SCREEN
 
+#include "sw_common/util.h"
 #include "sw_os/state.h"
 #include "sw_res/resources.h"
-#include "sw_utils/util.h"
 
 #include <DEV_Config.h>
 #include <LCD_1in28.h>
@@ -67,25 +67,6 @@ enum DISP_T {
     DISP_PARTIAL, /* The buffer and screen are partially synchronized,
                             screen data needs updating */
     DISP_REDRAW   /* The screen requires a complete redraw */
-};
-
-enum SCREEN_T {
-    SCREEN_CLOCK,
-    SCREEN_MENU,
-    SCREEN_ALARM,
-    SCREEN_CHRONO,
-    SCREEN_EVENT,
-    SCREEN_MEDIA,
-    SCREEN_STEP,
-    SCREEN_PSAVE,
-};
-
-/* Whether a pop-up is enabled or not and its type */
-enum POPUP_T {
-    POPUP_NONE,   /* No Pop-Up is available */
-    POPUP_CALL,   /* Incoming call UI */
-    POPUP_NOTIFY, /* Notification UI */
-    POPUP_ALARM   /* Alarm UI */
 };
 
 /**

@@ -9,27 +9,14 @@
 *****************************************************************************/
 #ifndef SW_UTIL
 #define SW_UTIL
+#include "sw_common/types.h"
 
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-/**
- * Centers the given string in-place and returns it
- * @str - string to center
- * @str_s - length of the string
- * @str_cap - max length of the buffer
- */
-const char* strcenter(char* str, size_t str_s, size_t str_cap);
-/**
- * Trims the first 9 characters of a file URI
- * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
- */
-const char* _file_fmt(const char* str);
 #define PRINT(FMT, ARGS...) printf("%s" #FMT "\r\n", _file_fmt(__FILE__) ARGS)
 #define WARN(CODE)                                                             \
     do {                                                                       \
@@ -47,4 +34,20 @@ const char* _file_fmt(const char* str);
         TYPE __args[] = {ARGS};                                                \
         __args[0] = __args[0];                                                 \
     } while (0);
+
+/**
+ * Centers the given string in-place and returns it
+ * @str - string to center
+ * @str_s - length of the string
+ * @str_cap - max length of the buffer
+ */
+const char* strcenter(char* str, size_t str_s, size_t str_cap);
+/* Returns the string representation of the day of the week based on given day/month/year. */
+const char* day_of_the_week(DateTime* dt);
+
+/**
+ * Trims the first 9 characters of a file URI
+ * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
+ */
+const char* _file_fmt(const char* str);
 #endif

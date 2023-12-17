@@ -52,8 +52,8 @@ SCR_STATUS apps_load_clock()
 
 SCR_STATUS apps_lock_screen()
 {
-    SET_MODULE(SCREEN_PSAVE, TOUCH_GESTURE);
-    screen.sstate = SCREEN_PSAVE;
+    SET_MODULE(SCREEN_LOCK, TOUCH_GESTURE);
+    screen.sstate = SCREEN_LOCK;
     Paint_Clear(BLACK);
     DEV_SET_PWM(0);
     LCD_1IN28_Display(screen.buffer);

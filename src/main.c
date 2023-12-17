@@ -6,9 +6,9 @@
 #include <pico/time.h>
 
 #include "sw_apps/apps.h"
+#include "sw_common/util.h"
 #include "sw_os/dev.h"
 #include "sw_os/state.h"
-#include "sw_utils/util.h"
 
 int main(int argc, char* argv[])
 {

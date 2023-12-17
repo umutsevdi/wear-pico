@@ -18,8 +18,18 @@
 #include <string.h>
 #include <unistd.h>
 
+/**
+ * Centers the given string in-place and returns it
+ * @str - string to center
+ * @str_s - length of the string
+ * @str_cap - max length of the buffer
+ */
+const char* strcenter(char* str, size_t str_s, size_t str_cap);
+/**
+ * Trims the first 9 characters of a file URI
+ * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
+ */
 const char* _file_fmt(const char* str);
-#define MAXLINE 256
 #define PRINT(FMT, ARGS...) printf("%s" #FMT "\r\n", _file_fmt(__FILE__) ARGS)
 #define WARN(CODE)                                                             \
     do {                                                                       \

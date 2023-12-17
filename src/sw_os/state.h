@@ -94,6 +94,7 @@ typedef struct {
         bool enabled;
         repeating_timer_t timer;
     } chrono;
+    int32_t step;
 } SwState;
 
 extern SwState state;

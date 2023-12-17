@@ -10,14 +10,12 @@
 #include "sw_os/state.h"
 #include "sw_utils/util.h"
 
-void run() { apps_load_clock(); }
-
 int main(int argc, char* argv[])
 {
     stdio_init_all();
     os_init();
     apps_init();
-    multicore_launch_core1(run);
+    multicore_launch_core1((void (*)())apps_load_clock);
 
     while (1) {
         //        printf("CORE 0 running with %s\n", __func__);

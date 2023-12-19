@@ -77,8 +77,8 @@ typedef struct {
     UWORD* buffer;   /* pixel buffer for regular images*/
     UWORD* p_buffer; /* buffer for pop-ups.*/
     UDOUBLE buffer_s;
-    enum SCREEN_T sstate; /* Active screen */
-    enum POPUP_T pstate;
+    enum screen_t sstate; /* Active screen */
+    enum popup_t pstate;
     enum DISP_T redraw; /* Should cause redraw or not */
     int post_time;      /* Post process timer */
 
@@ -87,11 +87,6 @@ typedef struct {
 
 /* SwScreen implementation. Singleton object. */
 extern SwScreen screen;
-
-/**
- * Initializes the screen
- */
-SCR_STATUS apps_init(void);
 
 /* Draws given resource to the screen */
 void apps_draw(Resource res, int start_x, int start_y);
@@ -104,5 +99,5 @@ void apps_draw(Resource res, int start_x, int start_y);
  *
  * @returns - Whether titlebar is inserted or not
  */
-bool apps_set_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title);
+bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title);
 #endif

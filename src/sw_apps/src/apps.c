@@ -265,7 +265,7 @@ static SCR_STATUS _apps_chrono_toggle()
 static void _apps_clock_partial()
 {
     DateTime* dt = &state.dt;
-    Paint_DrawString_EN(20, 70, day_of_the_week(dt), &Font16, COLOR_BG,
+    Paint_DrawString_EN(20, 70, dt_get_day(dt), &Font16, COLOR_BG,
                         COLOR_FG);
     apps_paint_time(dt, state.clock_show_sec ? 0 : 20,
                     state.clock_show_sec ? 100 : 90, state.clock_show_sec);

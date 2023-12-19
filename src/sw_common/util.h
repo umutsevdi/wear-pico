@@ -43,11 +43,25 @@
  */
 const char* strcenter(char* str, size_t str_s, size_t str_cap);
 /* Returns the string representation of the day of the week based on given day/month/year. */
-const char* day_of_the_week(DateTime* dt);
+const char* dt_get_day(DateTime* dt);
 
+/**
+ * Compares given dates based on given flag
+ * Example:
+ * - date_cmp(dt1, dt2, dt1->flag);
+ * - date_cmp(dt1, dt2, dt1->flag | dt2->flag);
+ * - date_cmp(dt1, dt2, DT_WC_YEAR | DT_WC_MONTH);
+ * @returns
+ * *  1 if dt1 is after dt2
+ * *  0 if dt1 and dt2 are equal
+ * * -1 if dt1 is before dt2
+ *
+ */
+int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag);
 /**
  * Trims the first 9 characters of a file URI
  * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
  */
 const char* _file_fmt(const char* str);
+
 #endif

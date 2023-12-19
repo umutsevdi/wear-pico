@@ -29,7 +29,7 @@ extern const unsigned char _res_titlebar[];
 extern const unsigned char _res_tray[];
 extern const unsigned char _res_clear[];
 
-Resource res_get_tray(enum TRAY_T tray)
+Resource res_get_tray(enum tray_t tray)
 {
     const int w = 20;
     const int h = 13;
@@ -42,7 +42,7 @@ Resource res_get_tray(enum TRAY_T tray)
         .height = h,
     };
 }
-Resource res_get_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title)
+Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title)
 {
     if ((p_title < 0 && p_title >= POPUP_T_SIZE)
         || (s_title < 0 && s_title >= SCREEN_T_SIZE))
@@ -62,11 +62,11 @@ Resource res_get_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title)
         .height = h,
     };
 }
-Resource res_get_menu_screen(enum SW_MENU_T selected)
+Resource res_get_menu_screen(enum menu_t selected)
 {
     const int w = 160;
     const int h = 160;
-    if (selected < 0 && selected >= SW_MENU_T_SIZE)
+    if (selected < 0 && selected >= MENU_T_SIZE)
         return (Resource){.img = NULL, .width = 0, .height = 0};
 
     return (Resource){
@@ -75,7 +75,7 @@ Resource res_get_menu_screen(enum SW_MENU_T selected)
         .height = h,
     };
 }
-Resource res_get_direction(enum GEST_DIR_T direction)
+Resource res_get_direction(enum gest_dir_t direction)
 {
     const int w = 48;
     const int h = 48;

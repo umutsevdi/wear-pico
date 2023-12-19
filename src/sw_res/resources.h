@@ -7,8 +7,8 @@
  * Description: Access library to the UI resources
 
 *****************************************************************************/
-#ifndef SW_RESOURCES
-#define SW_RESOURCES
+#ifndef RESOURCES
+#define RESOURCES
 #define WATCH_HEIGHT 240
 #define WATCH_WIDTH 240
 #include "sw_common/util.h"
@@ -29,7 +29,7 @@ typedef struct {
 } Resource;
 #define res_C(r) r.width, r.height
 
-enum TRAY_T {
+enum tray_t {
     TRAY_NONE,
     TRAY_BT_ON,
     TRAY_BT_OFF,
@@ -44,19 +44,10 @@ enum TRAY_T {
 
     TRAY_T_SIZE
 };
-Resource res_get_tray(enum TRAY_T tray);
-Resource res_get_titlebar(enum SCREEN_T s_title, enum POPUP_T p_title);
-enum SW_MENU_T {
-    SW_MENU_ALARM,
-    SW_MENU_CHRONO,
-    SW_MENU_MEDIA,
-    SW_MENU_EVENT,
-    SW_MENU_STEP,
-
-    SW_MENU_T_SIZE
-};
-Resource res_get_menu_screen(enum SW_MENU_T selected);
-enum GEST_DIR_T {
+Resource res_get_tray(enum tray_t tray);
+Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title);
+Resource res_get_menu_screen(enum menu_t selected);
+enum gest_dir_t {
     GEST_DIR_L,
     GEST_DIR_D,
     GEST_DIR_U,
@@ -64,7 +55,7 @@ enum GEST_DIR_T {
 
     GEST_DIR_T_SIZE
 };
-Resource res_get_direction(enum GEST_DIR_T direction);
+Resource res_get_direction(enum gest_dir_t direction);
 
 Resource res_get_app_chrono_button(bool is_paused);
 Resource res_get_app_media_button(bool is_paused);

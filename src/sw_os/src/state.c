@@ -9,6 +9,22 @@ DateTime os_get_time() { return state.dt; }
 
 extern void os_gyro_init(void);
 
+/* Iterate over active alarms, process the first alarm that is about to
+ * trigger */
+static void _process_alarms()
+{
+    for (short i = 0; i < state.alarms.len; i++) {
+        if (state.alarms.list[i].is_active) {
+            if (dt_cmp(&state.dt, &state.alarms.list[i].at,
+                       state.alarms.list[i].at.flag)
+                == 0) {
+                // TODO run popup
+                break;
+            }
+        }
+    }
+}
+
 static bool _os_timer_cb(repeating_timer_t* r)
 {
     state.dt.second++;
@@ -22,6 +38,8 @@ static bool _os_timer_cb(repeating_timer_t* r)
                 state.dt.hour = 0;
             }
         }
+        /* Call every minute  */
+        _process_alarms();
     }
     return true;
 }

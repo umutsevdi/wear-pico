@@ -9,7 +9,9 @@
 *****************************************************************************/
 #ifndef SW_COMMON_TYPES
 #define SW_COMMON_TYPES
+#include <stdbool.h>
 #include <stdint.h>
+
 typedef enum {
     DT_WC_YEAR = 0b000001,
     DT_WC_MONTH = 0b000010,
@@ -17,7 +19,7 @@ typedef enum {
     DT_WC_HOUR = 0b001000,
     DT_WC_MIN = 0b010000,
     DT_WC_SEC = 0b100000,
-} DT_WC;
+} dtwc_t;
 
 /**
  * Represents any date or time with optional fields.
@@ -59,7 +61,7 @@ typedef struct {
     : m == 12 ? "Dec"                                                          \
               : "Null"
 
-enum SCREEN_T {
+enum screen_t {
     SCREEN_CLOCK,
     SCREEN_MENU,
     SCREEN_ALARM,
@@ -72,8 +74,18 @@ enum SCREEN_T {
     SCREEN_T_SIZE
 };
 
+enum menu_t {
+    MENU_ALARM,
+    MENU_CHRONO,
+    MENU_MEDIA,
+    MENU_EVENT,
+    MENU_STEP,
+
+    MENU_T_SIZE
+};
+
 /* Whether a pop-up is enabled or not and its type */
-enum POPUP_T {
+enum popup_t {
     POPUP_NONE,   /* No Pop-Up is available */
     POPUP_CALL,   /* Incoming call UI */
     POPUP_NOTIFY, /* Notification UI */
@@ -81,5 +93,10 @@ enum POPUP_T {
 
     POPUP_T_SIZE
 };
+
+typedef struct {
+    bool is_active;
+    DateTime at;
+} Alarm;
 
 #endif

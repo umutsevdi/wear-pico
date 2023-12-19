@@ -29,6 +29,9 @@ SCR_STATUS apps_load_clock(void);
 
 SCR_STATUS apps_lock_screen(void);
 
+/* Initializes the screen */
+SCR_STATUS apps_init(void);
+
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
     printf("%s#%s():%d MODULE " #M " \r\n", _file_fmt(__FILE__), __func__,     \
            __LINE__);                                                          \
@@ -37,14 +40,4 @@ SCR_STATUS apps_lock_screen(void);
     screen.redraw = DISP_REDRAW;                                               \
     XY.x_point = 0;                                                            \
     XY.y_point = 0;
-
-#define MENU_S(CURRENT)                                                        \
-    CURRENT == SW_MENU_ALARM    ? "MENU_ALARM"                                 \
-    : CURRENT == SW_MENU_CHRONO ? "MENU_CHRONO"                                \
-    : CURRENT == SW_MENU_EVENT  ? "MENU_EVENT"                                 \
-    : CURRENT == SW_MENU_MEDIA  ? "MENU_MEDIA"                                 \
-    : CURRENT == SW_MENU_STEP   ? "MENU_STEP"                                  \
-                                : "NONE"
-extern const unsigned char* menu_frames[];
-
 #endif

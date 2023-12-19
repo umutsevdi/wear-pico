@@ -33,18 +33,22 @@ typedef struct {
         bool on_charge;
         int pct;
     } bat;
+    bool clock_show_sec;
+    struct {
+        Alarm list[4];
+        short len;
+    } alarms;
+    struct {
+        DateTime dt;
+        bool enabled;
+        repeating_timer_t timer;
+    } chrono;
     struct {
         bool is_playing;
         char song[30];
         char album[30];
         char artist[30];
     } media;
-    bool clock_show_sec;
-    struct {
-        DateTime dt;
-        bool enabled;
-        repeating_timer_t timer;
-    } chrono;
     int32_t step;
 } SwState;
 

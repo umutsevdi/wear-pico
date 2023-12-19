@@ -13,7 +13,7 @@ const char* strcenter(char* str, size_t str_s, size_t str_cap)
     return str;
 }
 
-const char* day_of_the_week(DateTime* dt)
+const char* dt_get_day(DateTime* dt)
 {
     int d = dt->day;
     int m = dt->month;
@@ -32,4 +32,29 @@ const char* day_of_the_week(DateTime* dt)
     case 6: return "Saturday";
     }
     return "Null";
+}
+
+int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag)
+{
+    if (~flag & DT_WC_YEAR) {
+        if (dt1->year != dt2->year) return dt1->year > dt2->year ? 1 : -1;
+    }
+    if (~flag & DT_WC_MONTH) {
+        if (dt1->month != dt2->month) return dt1->month > dt2->month ? 1 : -1;
+    }
+    if (~flag & DT_WC_DAY) {
+        if (dt1->day != dt2->day) return dt1->day > dt2->day ? 1 : -1;
+    }
+    if (~flag & DT_WC_HOUR) {
+        if (dt1->hour != dt2->hour) return dt1->hour > dt2->hour ? 1 : -1;
+    }
+    if (~flag & DT_WC_MIN) {
+        if (dt1->minute != dt2->minute)
+            return dt1->minute > dt2->minute ? 1 : -1;
+    }
+    if (~flag & DT_WC_SEC) {
+        if (dt1->second != dt2->second)
+            return dt1->second > dt2->second ? 1 : -1;
+    }
+    return 0;
 }

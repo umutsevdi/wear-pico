@@ -1,4 +1,4 @@
-#include "sw_apps/apps_common.h"
+#include "sw_apps/apps.h"
 #include "GUI_Paint.h"
 
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)

@@ -1,5 +1,4 @@
 #include "sw_apps/apps.h"
-#include "GUI_Paint.h"
 
 #define CHRONO_CB_FREQUENCY 13
 
@@ -8,12 +7,12 @@
  * updates the timer
  * @return - timer status
  */
-static SCR_STATUS _apps_chrono_toggle();
+static enum scr_status_t _apps_chrono_toggle();
 /** Updates the values on the SCREEN_CLOCK */
 static void _apps_clock_partial();
 static void _step_display();
 
-SCR_STATUS apps_load_clock()
+enum scr_status_t apps_load_clock()
 {
     SET_MODULE(SCREEN_CLOCK, TOUCH_GESTURE);
 
@@ -62,7 +61,7 @@ SCR_STATUS apps_load_clock()
     }
 }
 
-SCR_STATUS apps_lock_screen()
+enum scr_status_t apps_lock_screen()
 {
     SET_MODULE(SCREEN_LOCK, TOUCH_GESTURE);
     screen.sstate = SCREEN_LOCK;
@@ -83,7 +82,7 @@ SCR_STATUS apps_lock_screen()
     }
 }
 
-SCR_STATUS apps_load_chrono()
+enum scr_status_t apps_load_chrono()
 {
 #define BTN_STOPWATCH 40, 160, 160, 40
     SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
@@ -102,7 +101,7 @@ SCR_STATUS apps_load_chrono()
         if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
             WARN(BTN_STOPWATCH);
             screen.redraw = DISP_REDRAW;
-            SCR_STATUS status = _apps_chrono_toggle();
+            enum scr_status_t status = _apps_chrono_toggle();
             if (!status) return status;
         }
         if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {
@@ -121,7 +120,7 @@ SCR_STATUS apps_load_chrono()
     }
 }
 
-SCR_STATUS apps_load_media()
+enum scr_status_t apps_load_media()
 {
 #define BTN_PLAY_PAUSE 88, 120, 64, 64
 #define BTN_NEXT 152, 120, 48, 64
@@ -168,7 +167,7 @@ SCR_STATUS apps_load_media()
     }
 }
 
-SCR_STATUS apps_load_step()
+enum scr_status_t apps_load_step()
 {
     SET_MODULE(SCREEN_STEP, TOUCH_POINT);
 
@@ -244,7 +243,7 @@ static bool _scr_chrono_cb(repeating_timer_t* r)
         screen.redraw = DISP_PARTIAL;
 }
 
-static SCR_STATUS _apps_chrono_toggle()
+static enum scr_status_t _apps_chrono_toggle()
 {
     state.chrono.enabled = !state.chrono.enabled;
     if (state.chrono.enabled) {
@@ -265,8 +264,7 @@ static SCR_STATUS _apps_chrono_toggle()
 static void _apps_clock_partial()
 {
     DateTime* dt = &state.dt;
-    Paint_DrawString_EN(20, 70, dt_get_day(dt), &Font16, COLOR_BG,
-                        COLOR_FG);
+    Paint_DrawString_EN(20, 70, dt_get_day(dt), &Font16, COLOR_BG, COLOR_FG);
     apps_paint_time(dt, state.clock_show_sec ? 0 : 20,
                     state.clock_show_sec ? 100 : 90, state.clock_show_sec);
     char bottom_str[100];

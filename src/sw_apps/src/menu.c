@@ -12,11 +12,11 @@
 /**
  * Loads the menu item and initializes it's context
  * @current - selected menu item
- * SCR_STATUS apps_load_alarm(void);
- * SCR_STATUS apps_load_chono(void);
- * SCR_STATUS apps_load_event(void);
- * SCR_STATUS apps_load_media(void);
- * SCR_STATUS apps_load_step(void);
+ * enum scr_status_t apps_load_alarm(void);
+ * enum scr_status_t apps_load_chono(void);
+ * enum scr_status_t apps_load_event(void);
+ * enum scr_status_t apps_load_media(void);
+ * enum scr_status_t apps_load_step(void);
  */
 static void _menu_select(enum menu_t current)
 {
@@ -54,7 +54,7 @@ static void _menu_display(enum menu_t current)
     XY.Gesture = None;
 }
 
-SCR_STATUS apps_load_menu()
+enum scr_status_t apps_load_menu()
 {
     SET_MODULE(SCREEN_MENU, TOUCH_GESTURE);
 

@@ -1,6 +1,6 @@
-#include "sw_apps/apps_common.h"
+#include "sw_apps/apps.h"
 
-SwScreen screen = {0};
+Display screen = {0};
 Touch_1IN28_XY XY;
 
 /* A callback function that triggers post process automatically every 30
@@ -15,7 +15,7 @@ UBYTE flag = 0, flgh = 0, l;
 UWORD x, y;
 struct repeating_timer timer_capture_t;
 
-SCR_STATUS apps_init(void)
+enum scr_status_t apps_init(void)
 {
     screen.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
     screen.redraw = DISP_REDRAW;

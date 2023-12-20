@@ -1,11 +1,27 @@
 #include "sw_os/dev.h"
 #include "hardware/gpio.h"
+#include "pico/time.h"
 #include "sw_os/state.h"
+#include <stdlib.h>
 
-static int64_t _set_for_cb(int32_t id, void* dev_h);
-static bool _notify_cb(repeating_timer_t* r);
+const int pins[] = {
+    [DEV_NONE] = 0,
+    [DEV_BUZZER] = 18,
+    [DEV_LED] = 19,
+    [DEV_VIB] = 20,
+};
 
-void os_dev_set(enum DEV_T dev, bool value)
+void os_dev_init(void)
+{
+    gpio_init(pins[DEV_LED]);
+    gpio_set_dir(pins[DEV_LED], true);
+    gpio_init(pins[DEV_BUZZER]);
+    gpio_set_dir(pins[DEV_BUZZER], true);
+    gpio_init(pins[DEV_VIB]);
+    gpio_set_dir(pins[DEV_VIB], true);
+}
+
+void os_dev_set(enum dev_t dev, bool value)
 {
     if (value)
         state.dev.stack[dev]++;
@@ -18,39 +34,54 @@ void os_dev_set(enum DEV_T dev, bool value)
     }
 }
 
-void os_dev_set_for(enum DEV_T dev, unsigned long time_m)
+static void _notify_iter(int32_t flag, int in)
 {
-    int* dev_h = malloc(sizeof(enum DEV_T));
-    *dev_h = dev;
-    add_alarm_in_ms(time_m, _set_for_cb, dev_h, true);
-    os_dev_set(dev, true);
+    if (flag & DEV_LED) os_dev_set(pins[DEV_LED], true);
+
+    bool value = true;
+    if (flag & DEV_BUZZER) {
+        for (int i = 0; i < in; i++) {
+            os_dev_set(pins[DEV_BUZZER], value);
+            value = !value;
+            sleep_ms(1);
+        }
+    } else
+        sleep_ms(in);
+
+    if (flag & DEV_LED) os_dev_set(pins[DEV_LED], false);
 }
 
-void os_dev_notify()
-{
-    int* data = malloc(sizeof(int));
-    *data = 6;
-    repeating_timer_t* timer = calloc(sizeof(repeating_timer_t), 1);
-    add_repeating_timer_ms(150, _notify_cb, data, timer);
-}
+struct _NotifyData {
+    int count;
+    int32_t flag;
+    int in;
+    int out;
+};
 
-static int64_t _set_for_cb(int32_t id, void* dev_h)
+int64_t _notify_cb(alarm_id_t id, void* data)
 {
-    UNUSED(int, id);
-    os_dev_set(*(enum DEV_T*)dev_h, false);
-    free(dev_h);
-    return 1;
-}
-
-static bool _notify_cb(repeating_timer_t* r)
-{
-    int v = *(int*)r->user_data;
-    os_dev_set(DEV_LED, v % 2 == 0);
-    (*(int*)r->user_data)--;
-    if (v - 1 == 0) {
-        cancel_repeating_timer(r);
-        free(r->user_data);
-        free(r);
+    UNUSED(alarm_id_t, id);
+    struct _NotifyData* d = (struct _NotifyData*)data;
+    for (int i = 0; i < (d->count); i++) {
+        _notify_iter(d->flag, d->in);
+        sleep_ms(d->out);
     }
-    return true;
+    os_dev_set(pins[DEV_BUZZER], false);
+    free(data);
+    return 0;
+}
+
+void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)
+{
+    struct _NotifyData* d = malloc(sizeof(struct _NotifyData));
+    d->count = count;
+    d->flag = flag;
+    d->in = in_ms;
+    d->out = out_ms;
+    add_alarm_in_ms(0, _notify_cb, d, true);
+}
+
+void os_dev_notify(int count, int32_t flag)
+{
+    os_dev_notify_d(count, flag, 150, 150);
 }

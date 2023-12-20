@@ -8,6 +8,7 @@ SwState state;
 DateTime os_get_time() { return state.dt; }
 
 extern void os_gyro_init(void);
+extern void os_dev_init(void);
 
 /* Iterate over active alarms, process the first alarm that is about to
  * trigger */
@@ -59,13 +60,12 @@ void os_init()
     state.bat.on_charge = true;
     state.dt = (DateTime){0, 2023, 12, 8, 9, 00, 00};
     state.chrono.dt.flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_YEAR | DT_WC_DAY;
-    gpio_init(DEV_BUZZER);
-    gpio_init(DEV_LED);
-    gpio_set_dir(DEV_BUZZER, true);
-    gpio_set_dir(DEV_LED, true);
+    os_dev_init();
     os_gyro_init();
     //    os_dev_set_for(DEV_LED, 1000);
     add_repeating_timer_ms(-1000, _os_timer_cb, NULL, &state.__dt_timer);
     add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
-    os_dev_notify();
+
+    os_dev_notify(8, DEV_BUZZER | DEV_LED);
+    os_dev_notify(2, DEV_BUZZER | DEV_LED);
 }

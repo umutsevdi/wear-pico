@@ -1,67 +1,8 @@
 #include "sw_apps/apps.h"
 
-#define CHRONO_CB_FREQUENCY 13
-
-/**
- * Starts/cancels a Stopwatch _scr_chrono_cb event which periodically
- * updates the timer
- * @return - timer status
- */
-static enum scr_status_t _apps_chrono_toggle();
-/** Updates the values on the SCREEN_CLOCK */
-static void _apps_clock_partial();
 static void _step_display();
 
-enum scr_status_t apps_load_clock()
-{
-    SET_MODULE(SCREEN_CLOCK, TOUCH_GESTURE);
-
-    int min = 0;
-    int sec = 0;
-    bool old_show_sec = false;
-    while (true) {
-        switch (XY.Gesture) {
-        case Down: apps_load_menu(); break;
-        case CLICK:
-            state.clock_show_sec = !state.clock_show_sec;
-            old_show_sec = !state.clock_show_sec;
-            screen.redraw = DISP_REDRAW;
-            PRINT("show_seconds:%s", , state.clock_show_sec ? "true" : "false");
-            break;
-        case DOUBLE_CLICK: apps_lock_screen(); break;
-        }
-        if (screen.sstate != SCREEN_CLOCK) {
-            screen.sstate = SCREEN_CLOCK;
-            screen.redraw = DISP_REDRAW;
-        } else if (state.clock_show_sec) {
-            if (sec != state.dt.second) screen.redraw = DISP_PARTIAL;
-            sec = state.dt.second;
-        } else if (min != state.dt.minute) {
-            screen.redraw = DISP_PARTIAL;
-            min = state.dt.minute;
-        }
-
-        if (screen.redraw) {
-            // If full redraw
-            if (screen.redraw == DISP_REDRAW) {
-                apps_draw(res_reset(), 0, 0);
-                apps_draw(res_get_direction(GEST_DIR_U), 96, 20);
-            }
-            if (old_show_sec != state.clock_show_sec) {
-                old_show_sec = state.clock_show_sec;
-                Paint_DrawRectangle(0, 50, 240, 180, COLOR_BG, DOT_PIXEL_1X1,
-                                    DRAW_FILL_FULL);
-            }
-            _apps_clock_partial();
-            apps_post_process(false);
-            LCD_1IN28_Display(screen.buffer);
-            screen.redraw = DISP_SYNC;
-            XY.Gesture = None;
-        }
-    }
-}
-
-enum scr_status_t apps_lock_screen()
+enum app_status_t apps_lock_screen()
 {
     SET_MODULE(SCREEN_LOCK, TOUCH_GESTURE);
     screen.sstate = SCREEN_LOCK;
@@ -70,57 +11,24 @@ enum scr_status_t apps_lock_screen()
     LCD_1IN28_Display(screen.buffer);
     XY.Gesture = None;
     while (true) {
+        if (state.popup.type != POPUP_NONE) {
+            XY.Gesture = UP;
+            DEV_SET_PWM(100);
+            if (!apps_poll_popup(POPUP_NONE)) return APP_OK;
+        }
         if (XY.Gesture == DOUBLE_CLICK) {
             /* Returns with up gesture to trigger down
              * on menu and return to clock screen safely
              */
             XY.Gesture = UP;
             DEV_SET_PWM(100);
-            return SCR_STATUS_OK;
+            return APP_OK;
         }
         sleep_ms(200);
     }
 }
 
-enum scr_status_t apps_load_chrono()
-{
-#define BTN_STOPWATCH 40, 160, 160, 40
-    SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
-
-    bool clicked;
-    int x = 0, y = 0;
-    while (true) {
-        if (x != XY.x_point || y != XY.y_point) {
-            x = XY.x_point;
-            y = XY.y_point;
-            clicked = true;
-        }
-        if (apps_is_exited()) return SCR_STATUS_OK;
-
-        // Start/Stop Button
-        if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
-            WARN(BTN_STOPWATCH);
-            screen.redraw = DISP_REDRAW;
-            enum scr_status_t status = _apps_chrono_toggle();
-            if (!status) return status;
-        }
-        if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {
-            XY.x_point = 0;
-            XY.y_point = 0;
-            apps_post_process(false);
-        }
-        if (screen.redraw) {
-            /* Prevent full redraw to improve performance */
-            apps_draw(res_get_app_chrono_button(state.chrono.enabled), 40, 160);
-            apps_paint_time(&state.chrono.dt, 0, 100, true);
-            LCD_1IN28_Display(screen.buffer);
-            screen.redraw = DISP_SYNC;
-        }
-        clicked = false;
-    }
-}
-
-enum scr_status_t apps_load_media()
+enum app_status_t apps_load_media()
 {
 #define BTN_PLAY_PAUSE 88, 120, 64, 64
 #define BTN_NEXT 152, 120, 48, 64
@@ -135,22 +43,22 @@ enum scr_status_t apps_load_media()
             y = XY.y_point;
             clicked = true;
         }
-        if (apps_is_exited()) return SCR_STATUS_OK;
-
-        // Play/Pause Button
-        if (clicked && apps_is_clicked(BTN_PLAY_PAUSE)) {
-            WARN(BTN_PLAY_PAUSE);
-            state.media.is_playing = !state.media.is_playing;
-            screen.redraw = DISP_REDRAW;
-        } else if (clicked && apps_is_clicked(BTN_NEXT)) {
-            WARN(BTN_NEXT);
-            screen.redraw = DISP_PARTIAL;
-        } else if (clicked && apps_is_clicked(BTN_PREV)) {
-            WARN(BTN_PREV);
-            screen.redraw = DISP_PARTIAL;
-            screen.redraw = DISP_PARTIAL;
+        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (apps_is_exited()) return APP_OK;
+        if (clicked) {
+            if (apps_is_clicked(BTN_PLAY_PAUSE)) {
+                WARN(BTN_PLAY_PAUSE);
+                state.media.is_playing = !state.media.is_playing;
+                screen.redraw = DISP_REDRAW;
+            } else if (apps_is_clicked(BTN_NEXT)) {
+                WARN(BTN_NEXT);
+                screen.redraw = DISP_PARTIAL;
+            } else if (apps_is_clicked(BTN_PREV)) {
+                WARN(BTN_PREV);
+                screen.redraw = DISP_PARTIAL;
+                screen.redraw = DISP_PARTIAL;
+            }
         }
-
         if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
@@ -167,12 +75,13 @@ enum scr_status_t apps_load_media()
     }
 }
 
-enum scr_status_t apps_load_step()
+enum app_status_t apps_load_step()
 {
     SET_MODULE(SCREEN_STEP, TOUCH_POINT);
 
     int sec = 0;
     while (true) {
+        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
         if (apps_set_titlebar(SCREEN_STEP, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
@@ -183,7 +92,7 @@ enum scr_status_t apps_load_step()
             screen.redraw = DISP_PARTIAL;
             sec = state.dt.second;
         }
-        if (apps_is_exited()) return SCR_STATUS_OK;
+        if (apps_is_exited()) return APP_OK;
 
         if (screen.redraw) {
             _step_display();
@@ -195,7 +104,7 @@ enum scr_status_t apps_load_step()
 
 static void _step_display()
 {
-    int base_x = 50;
+    int base_x = 40;
     int base_y = 86;
     char numstr[6] = {0};
     const int x_size = 40;
@@ -212,63 +121,4 @@ static void _step_display()
         }
         x += 30;
     }
-}
-
-/**
- * The callback function for the stopwatch event. 
- * Periodically updates the timer, calls for redraw if the primary screen is
- * SCREEN_CHRONO.
- * Inserts time results as follows:
- * - millisecond -> second
- * - second -> minute
- * - minute -> hour
- */
-static bool _scr_chrono_cb(repeating_timer_t* r)
-{
-    state.chrono.dt.second += CHRONO_CB_FREQUENCY;
-    if (state.chrono.dt.second > 99) {
-        state.chrono.dt.second -= 99;
-        if (++state.chrono.dt.minute > 59) {
-            state.chrono.dt.minute = 0;
-            if (++state.chrono.dt.hour > 59) {
-                state.chrono.dt.second = 0;
-                state.chrono.enabled = false;
-                cancel_repeating_timer(r);
-                WARN(END_EVENT_scr_chrono_cb);
-                screen.redraw = DISP_REDRAW;
-            }
-        }
-    }
-    if (screen.sstate == SCREEN_CHRONO && screen.pstate == POPUP_NONE)
-        screen.redraw = DISP_PARTIAL;
-}
-
-static enum scr_status_t _apps_chrono_toggle()
-{
-    state.chrono.enabled = !state.chrono.enabled;
-    if (state.chrono.enabled) {
-        state.chrono.dt.hour = 0;
-        state.chrono.dt.minute = 0;
-        state.chrono.dt.second = 0;
-        memset(&state.chrono.timer, 0, sizeof(repeating_timer_t));
-        if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _scr_chrono_cb,
-                                    NULL, &state.chrono.timer))
-            return ERROR(SCR_ERROR_TIMER_CREATE);
-        WARN(REGISTER_EVENT_scr_chrono_cb);
-    } else {
-        WARN(CANCEL_EVENT_scr_chrono_cb);
-        cancel_repeating_timer(&state.chrono.timer);
-    }
-}
-
-static void _apps_clock_partial()
-{
-    DateTime* dt = &state.dt;
-    Paint_DrawString_EN(20, 70, dt_get_day(dt), &Font16, COLOR_BG, COLOR_FG);
-    apps_paint_time(dt, state.clock_show_sec ? 0 : 20,
-                    state.clock_show_sec ? 100 : 90, state.clock_show_sec);
-    char bottom_str[100];
-    sprintf(bottom_str, "%d %s %d", dt->day, DATETIME_MONTH(dt->month),
-            dt->year % 100);
-    Paint_DrawString_EN(90, 160, bottom_str, &Font20, COLOR_BG, COLOR_FG);
 }

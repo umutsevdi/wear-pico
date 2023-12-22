@@ -1,5 +1,5 @@
-#include "sw_apps/apps.h"
 #include "GUI_Paint.h"
+#include "sw_apps/apps.h"
 
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)
 {
@@ -42,12 +42,9 @@ void apps_post_process(bool is_cb)
 {
     if (screen.sstate == SCREEN_LOCK) return;
     char str[10];
-    if (screen.sstate != SCREEN_CLOCK) {
+    if (screen.sstate != SCREEN_CLOCK || state.popup.type != POPUP_NONE) {
         snprintf(str, 10, "%02d:%02d", state.dt.hour, state.dt.minute);
         Paint_DrawString_EN(102, 12, str, &Font12, COLOR_BG, COLOR_FG);
-    } else {
-        snprintf(str, 6, "%02d\'C", state.dev.temp);
-        Paint_DrawString_EN(170, 70, str, &Font16, COLOR_BG, COLOR_FG);
     }
     Resource tray;
     if (state.bat.on_charge)
@@ -61,20 +58,27 @@ void apps_post_process(bool is_cb)
     else
         tray = res_get_tray(TRAY_BAT_CRIT);
     apps_draw(tray, 66, 214);
-    apps_draw(res_get_tray(state.is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 152,
-              214);
-    if (screen.sstate != SCREEN_CHRONO)
+    apps_draw(res_get_tray(state.is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 45,
+              200);
+
+    if (screen.sstate != SCREEN_CHRONO || state.popup.type != POPUP_NONE)
         apps_draw(res_get_tray(state.chrono.enabled ? TRAY_CHRONO : TRAY_NONE),
-                  45, 200);
-    // TODO notification
-    // TODO alarm
+                  175, 200);
+    if ((screen.sstate != SCREEN_ALARM || state.popup.type != POPUP_NONE)
+        && state.alarms.len > 0) {
+        for (short i = 0; i < state.alarms.len; i++) {
+            if (state.alarms.list[i].is_active) {
+                apps_draw(res_get_tray(TRAY_ALARM), 152, 214);
+                break;
+            }
+        }
+    }
     screen.post_time = 30;
     if (is_cb) {
         WARN(POST_PROCESS_BY_CB);
         LCD_1IN28_Display(screen.buffer);
     }
 }
-
 
 void apps_draw(Resource res, int start_x, int start_y)
 {
@@ -84,17 +88,29 @@ void apps_draw(Resource res, int start_x, int start_y)
 
 bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title)
 {
-    if (screen.pstate == POPUP_NONE) {
-        if (screen.sstate != s_title || screen.sstate == DISP_REDRAW) {
+    if (state.popup.type == POPUP_NONE) {
+        if (screen.sstate != s_title || screen.redraw == DISP_REDRAW) {
             screen.sstate = s_title;
             screen.redraw = DISP_REDRAW;
-            apps_draw(res_reset(), 0, 0);
+            apps_reset();
             apps_draw(res_get_titlebar(s_title, POPUP_NONE), 40, 30);
             return true;
         }
     } else {
-        UNUSED(enum popup_t, p_title);
-        //TODO popups
+
+        if (state.popup.type != p_title || screen.redraw == DISP_REDRAW) {
+            screen.redraw = DISP_REDRAW;
+            state.popup.type = p_title;
+            apps_reset();
+            apps_draw(res_get_titlebar(0, p_title), 40, 30);
+            return true;
+        }
     }
     return false;
+}
+
+void apps_reset()
+{
+    Paint_DrawRectangle(0, 0, 240, 240, COLOR_BG, DOT_PIXEL_1X1,
+                        DRAW_FILL_FULL);
 }

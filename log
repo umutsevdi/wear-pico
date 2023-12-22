@@ -1,0 +1,54 @@
+/sw_apps/src/clock.c#apps_load_clock():8 MODULE SCREEN_CLOCK 
+
+Success:Detected CST816T.
+
+CST816T Revision = 1
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/popup.c#               apps_poll_popup():26    "POPUP_POLL STARTS: p_current=0 p_state=3 s_state=0 mode=0"
+
+/sw_apps/src/popup.c#_load_call():53 MODULE POPUP_CALL 
+
+Success:Detected CST816T.
+
+CST816T Revision = 1
+
+/sw_apps/src/popup.c#                    _load_call():74    CALL_DISMISS
+
+Success:Detected CST816T.
+
+CST816T Revision = 1
+
+/sw_apps/src/popup.c#               apps_poll_popup():43    "POPUP_POLL STARTS: p_current=0 p_state=0 s_state=0 mode=0"
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+
+/sw_apps/src/clock.c#               apps_load_clock():14    CLOCK
+

@@ -14,15 +14,27 @@
 #include <pico/time.h>
 
 typedef struct {
+    enum popup_t type;
+    union {
+        char caller[30];
+        struct {
+            char title[30];
+            char text[128];
+        } notify;
+        DateTime alarm;
+    } value;
+} Popup;
+
+typedef struct {
     DateTime dt;
     uint64_t dt_padding;
     repeating_timer_t __dt_timer;
+    bool show_sec;
     bool is_connected;
+    Popup popup;
     struct {
-        /* stack values for the gpio pins
-         * to prevent early cancels;
-         * Each set or reset increases/decreases the value, gpio is disabled only at 0;
-         */
+        /* GPIO pin stack to prevent early cancels
+         * Each set/reset is added to the stack */
         int stack[20];
         int16_t temp;
         int16_t dist_acc;
@@ -33,7 +45,6 @@ typedef struct {
         bool on_charge;
         int pct;
     } bat;
-    bool clock_show_sec;
     struct {
         Alarm list[4];
         short len;

@@ -63,13 +63,13 @@ typedef struct {
 
 enum screen_t {
     SCREEN_CLOCK,
+    SCREEN_LOCK,
     SCREEN_MENU,
     SCREEN_ALARM,
     SCREEN_CHRONO,
     SCREEN_MEDIA,
     SCREEN_EVENT,
     SCREEN_STEP,
-    SCREEN_LOCK,
 
     SCREEN_T_SIZE
 };
@@ -87,9 +87,9 @@ enum menu_t {
 /* Whether a pop-up is enabled or not and its type */
 enum popup_t {
     POPUP_NONE,   /* No Pop-Up is available */
-    POPUP_CALL,   /* Incoming call UI */
     POPUP_NOTIFY, /* Notification UI */
     POPUP_ALARM,  /* Alarm UI */
+    POPUP_CALL,   /* Incoming call UI */
 
     POPUP_T_SIZE
 };

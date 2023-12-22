@@ -36,49 +36,27 @@ void os_dev_set(enum dev_t dev, bool value)
 
 static void _notify_iter(int32_t flag, int in)
 {
-    if (flag & DEV_LED) os_dev_set(pins[DEV_LED], true);
-
+    if (flag & DEV_LED) gpio_put(pins[DEV_LED], true);
     bool value = true;
     if (flag & DEV_BUZZER) {
         for (int i = 0; i < in; i++) {
-            os_dev_set(pins[DEV_BUZZER], value);
+            gpio_put(pins[DEV_BUZZER], value);
             value = !value;
             sleep_ms(1);
         }
     } else
         sleep_ms(in);
 
-    if (flag & DEV_LED) os_dev_set(pins[DEV_LED], false);
-}
-
-struct _NotifyData {
-    int count;
-    int32_t flag;
-    int in;
-    int out;
-};
-
-int64_t _notify_cb(alarm_id_t id, void* data)
-{
-    UNUSED(alarm_id_t, id);
-    struct _NotifyData* d = (struct _NotifyData*)data;
-    for (int i = 0; i < (d->count); i++) {
-        _notify_iter(d->flag, d->in);
-        sleep_ms(d->out);
-    }
-    os_dev_set(pins[DEV_BUZZER], false);
-    free(data);
-    return 0;
+    if (flag & DEV_LED) gpio_put(pins[DEV_LED], false);
 }
 
 void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)
 {
-    struct _NotifyData* d = malloc(sizeof(struct _NotifyData));
-    d->count = count;
-    d->flag = flag;
-    d->in = in_ms;
-    d->out = out_ms;
-    add_alarm_in_ms(0, _notify_cb, d, true);
+    for (short i = 0; i < count; i++) {
+        _notify_iter(flag, in_ms);
+        sleep_ms(out_ms);
+    }
+    os_dev_set(pins[DEV_BUZZER], false);
 }
 
 void os_dev_notify(int count, int32_t flag)

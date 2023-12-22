@@ -15,7 +15,7 @@ UBYTE flag = 0, flgh = 0, l;
 UWORD x, y;
 struct repeating_timer timer_capture_t;
 
-enum scr_status_t apps_init(void)
+enum app_status_t apps_init(void)
 {
     screen.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
     screen.redraw = DISP_REDRAW;
@@ -29,10 +29,10 @@ enum scr_status_t apps_init(void)
                 &_apps_touch_cb);
 
     if ((screen.buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
-        return ERROR(SCR_ERROR_ALLOC);
+        return ERROR(APP_ERROR_ALLOC);
     }
     if ((screen.p_buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
-        return ERROR(SCR_ERROR_ALLOC);
+        return ERROR(APP_ERROR_ALLOC);
     }
 
     Paint_NewImage((UBYTE*)screen.buffer, LCD_1IN28.WIDTH, LCD_1IN28.HEIGHT, 0,
@@ -43,7 +43,7 @@ enum scr_status_t apps_init(void)
 
     add_repeating_timer_ms(1000, _post_process_cb, NULL, &screen.__post_timer);
     add_repeating_timer_us(1000, _apps_refresh_cb, NULL, &timer_capture_t);
-    return SCR_STATUS_OK;
+    return APP_OK;
 }
 static bool _post_process_cb(repeating_timer_t* r)
 {

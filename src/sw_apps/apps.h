@@ -29,31 +29,29 @@
 *****************************************************************************/
 
 /* Error types for the applications */
-enum scr_status_t {
-    SCR_STATUS_OK,
-    SCR_ERROR_ALLOC,
-    SCR_WARN_TOUCH_FAILED,
-    SCR_ERROR_TIMER_CREATE,
+enum app_status_t {
+    APP_OK,
+    APP_WARN_TOUCH_FAILED,
+    APP_NO_POPUP,
+    APP_ERROR_ALLOC,
+    APP_ERROR_TIMER_CREATE,
+    APP_ERROR_INVALID_POPUP,
 };
 
 /* Initializes the display */
-enum scr_status_t apps_init(void);
-/* Initializes the menu User Interface */
-enum scr_status_t apps_load_menu(void);
-/* Initializes the Alarm User Interface */
-enum scr_status_t apps_load_alarm(void);
-/* Initializes the Stopwatch User Interface */
-enum scr_status_t apps_load_chrono(void);
-/* Initializes the Calendar User Interface */
-enum scr_status_t apps_load_event(void);
-/* Initializes the Media User Interface */
-enum scr_status_t apps_load_media(void);
-/* Initializes the Pedometer User Interface */
-enum scr_status_t apps_load_step(void);
-/* Initializes the clock User Interface */
-enum scr_status_t apps_load_clock(void);
-/* Shuts the screen off until its cancellation */
-enum scr_status_t apps_lock_screen(void);
+enum app_status_t apps_init(void);
+
+/**
+ * Checks for new pop-up events. Loads them as pop-up if there's any. Returns 
+ * @current - Current pop-up type, POPUP_NONE if there isn't
+ * @returns
+ *  - APP_NO_POPUP - When there is no pop-up event to display
+ *  - APP_ERROR_INVALID_POPUP - If there is an error occured
+ *  during the to display.
+ */
+enum app_status_t apps_poll_popup(enum popup_t current);
+/* Loads selected screen module */
+enum app_status_t apps_load(enum screen_t s);
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
     printf("%s#%s():%d MODULE " #M " \r\n", _file_fmt(__FILE__), __func__,     \
@@ -77,9 +75,8 @@ typedef struct {
     UWORD* p_buffer; /* buffer for pop-ups.*/
     UDOUBLE buffer_s;
     enum screen_t sstate; /* Active screen */
-    enum popup_t pstate;
-    enum disp_t redraw; /* Should cause redraw or not */
-    int post_time;      /* Post process timer */
+    enum disp_t redraw;   /* Should cause redraw or not */
+    int post_time;        /* Post process timer */
     repeating_timer_t __post_timer;
 } Display;
 
@@ -107,7 +104,7 @@ void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
  */
 bool apps_is_clicked(int x_start, int y_start, int width, int height);
 
-#define apps_is_exited() apps_is_clicked(140, 20, 40, 40)
+#define apps_is_exited() apps_is_clicked(160, 30, 30, 30)
 
 /**
  * Retrieves the status from various sources and draws to the buffer
@@ -117,6 +114,8 @@ void apps_post_process(bool is_cb);
 
 /* Draws given resource to the screen */
 void apps_draw(Resource res, int start_x, int start_y);
+/* Clears the screen */
+void apps_reset();
 
 /* Inserts the titlebar of the application if the states don't match
  * - If p_title is set to anything other than POPUP_NONE, it will

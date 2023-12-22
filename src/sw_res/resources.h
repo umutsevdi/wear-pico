@@ -60,9 +60,9 @@ Resource res_get_direction(enum gest_dir_t direction);
 Resource res_get_app_chrono_button(bool is_paused);
 Resource res_get_app_media_button(bool is_paused);
 Resource res_get_app_alarm_button(bool is_paused);
-
 Resource res_get_app_step();
-Resource res_reset();
+Resource res_get_popup_alarm();
+Resource res_get_popup_call();
 
 extern const unsigned char font60[];
 extern const unsigned char font40[];

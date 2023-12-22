@@ -17,15 +17,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define PRINT(FMT, ARGS...) printf("%s" #FMT "\r\n", _file_fmt(__FILE__) ARGS)
+#define PRINT(FMT, ARGS...)                                                    \
+    printf("%s#%30s():%-4d  " #FMT "\r\n", _file_fmt(__FILE__), __func__,      \
+           __LINE__ ARGS)
 #define WARN(CODE)                                                             \
-    do {                                                                       \
-        fprintf(stderr, "%s#%s():%d " #CODE "\r\n", _file_fmt(__FILE__),       \
-                __func__, __LINE__);                                           \
-    } while (0)
+    printf("%s#%30s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__), __func__,     \
+           __LINE__);
 
 #define ERROR(CODE)                                                            \
-    (fprintf(stderr, "%s#%s():%d " #CODE "\r\n", _file_fmt(__FILE__),          \
+    (fprintf(stderr, "%s#%30s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__),     \
              __func__, __LINE__),                                              \
      CODE)
 

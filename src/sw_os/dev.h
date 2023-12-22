@@ -62,6 +62,4 @@ GyroData os_gyro_fetch();
 #define GYRO_S(G)                                                              \
     "Acc{%d,%d,%d}, Gyro{%d,%d,%d}, Temp %d*C\n", G.acc[0], G.acc[1],          \
         G.acc[2], G.gyro[0], G.gyro[1], G.gyro[2], G.temp
-
-void beep_beep();
 #endif// !SW_PERIPHERALS

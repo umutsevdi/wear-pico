@@ -1,6 +1,7 @@
 #include "sw_os/state.h"
 #include "hardware/gpio.h"
 #include "pico/time.h"
+#include "sw_common/types.h"
 #include "sw_os/dev.h"
 
 SwState state;
@@ -86,6 +87,13 @@ void os_init()
     add_repeating_timer_ms(1000, _os_timer_cb, NULL, &state.__dt_timer);
     add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
 
-    strcpy(state.popup.value.caller, "Ron Swanson");
-    state.popup.type = POPUP_CALL;
+    //strcpy(state.popup.value.caller, "Ron Swanson");
+    //state.popup.type = POPUP_CALL;
+
+    strncpy(state.popup.value.notify.title, "Whatsapp", 12);
+    memcpy(state.popup.value.notify.text,
+           "Ahmet Yilmaz:\nHello this is a long text that should be wrapped at "
+           "some point. Hi, endline.\nHello\nThis is a really long answer too.",
+           127);
+    state.popup.type = POPUP_NOTIFY;
 }

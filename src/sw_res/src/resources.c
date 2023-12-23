@@ -47,7 +47,7 @@ Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title)
     if (p_title == POPUP_NONE)
         img = _res_titlebar + 2 * (s_title - 3) * w * h;
     else
-        img = _res_titlebar + 2 * (SCREEN_T_SIZE - 4) * w * h
+        img = _res_titlebar + 2 * (SCREEN_T_SIZE - 3) * w * h
               + 2 * (p_title - 1) * w * h;
     return (Resource){img, w, h};
 }
@@ -73,6 +73,8 @@ Resource res_get_popup_alarm()
 {
     return (Resource){_res_alarm_button, 160, 35};
 }
+
+Resource res_get_popup_notify() { return (Resource){_res_notify, 160, 138}; }
 
 Resource res_get_popup_call() { return (Resource){_res_call, 135, 48}; }
 

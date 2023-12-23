@@ -64,4 +64,22 @@ int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag);
  */
 const char* _file_fmt(const char* str);
 
+/**
+ * Splits the input string into an array of substrings, considering both the
+ * line width and '\n' character.
+ * When the line is split due to the it's width, last word will be wrapped as
+ * whole.
+ * @buffer   - input string to split
+ * @buffer_s - size of the buffer
+ * @width    - maximum line width
+ * @array    - array to store substrings.
+ * @array_s  - size of the array
+ *
+ * @return   - actual number of lines in the array, -1 when improper inputs are given
+ *
+ * strwrap handles the string in place and affects the original string.
+ */
+int strwrap(char* buffer, size_t buffer_s, int width, char** array,
+            int array_s);
+
 #endif

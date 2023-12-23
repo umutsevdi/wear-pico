@@ -16,9 +16,9 @@
 typedef struct {
     enum popup_t type;
     union {
-        char caller[30];
+        char caller[15];
         struct {
-            char title[30];
+            char title[13];
             char text[128];
         } notify;
         DateTime alarm;

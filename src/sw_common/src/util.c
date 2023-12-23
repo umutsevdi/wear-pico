@@ -58,3 +58,43 @@ int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag)
     }
     return 0;
 }
+
+int strwrap(char* buffer, size_t buffer_s, int width, char** array, int array_s)
+{
+    if (width <= 0 || array_s <= 0 || buffer == NULL || array == NULL)
+        return -1;
+
+    array[0] = buffer;
+    char* last_space = buffer;
+    int current_len = 0;
+    int current_idx = 1;
+    for (size_t i = 0; i < buffer_s; i++) {
+        if (buffer[i] == ' ') {
+            last_space = buffer + i;
+        } else if (buffer[i] == '\n') {
+            last_space = buffer + i;
+            /* Set the length to the width to trigger wrapping */
+            current_len = width;
+        }
+        if (current_len == width) { /* soft wrap the current word*/
+            *last_space = '\0';
+            array[current_idx] = (last_space + 1);
+            current_idx++;
+            current_len = 0;
+        } else {
+            current_len++;
+        }
+
+        if (current_idx > array_s) {
+            if (buffer_s > (uint64_t)(last_space - buffer + 4)) {
+                if (*(last_space - 1) != '.') last_space[0] = '.';
+                last_space[1] = '.';
+                last_space[2] = '.';
+                last_space[3] = '\0';
+            }
+            return array_s;
+        }
+    }
+
+    return current_idx;
+}

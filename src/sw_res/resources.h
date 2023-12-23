@@ -62,6 +62,7 @@ Resource res_get_app_media_button(bool is_paused);
 Resource res_get_app_alarm_button(bool is_paused);
 Resource res_get_app_step();
 Resource res_get_popup_alarm();
+Resource res_get_popup_notify();
 Resource res_get_popup_call();
 
 extern const unsigned char font60[];

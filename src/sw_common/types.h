@@ -87,9 +87,9 @@ enum menu_t {
 /* Whether a pop-up is enabled or not and its type */
 enum popup_t {
     POPUP_NONE,   /* No Pop-Up is available */
-    POPUP_NOTIFY, /* Notification UI */
     POPUP_ALARM,  /* Alarm UI */
     POPUP_CALL,   /* Incoming call UI */
+    POPUP_NOTIFY, /* Notification UI */
 
     POPUP_T_SIZE
 };

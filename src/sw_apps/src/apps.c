@@ -14,7 +14,7 @@ enum app_status_t apps_lock_screen()
         if (state.popup.type != POPUP_NONE) {
             XY.Gesture = UP;
             DEV_SET_PWM(100);
-            if (!apps_poll_popup(POPUP_NONE)) return APP_OK;
+            if (!apps_poll_popup()) return APP_OK;
         }
         if (XY.Gesture == DOUBLE_CLICK) {
             /* Returns with up gesture to trigger down
@@ -43,7 +43,7 @@ enum app_status_t apps_load_media()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
         if (apps_is_exited()) return APP_OK;
         if (clicked) {
             if (apps_is_clicked(BTN_PLAY_PAUSE)) {
@@ -81,7 +81,7 @@ enum app_status_t apps_load_step()
 
     int sec = 0;
     while (true) {
-        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
         if (apps_set_titlebar(SCREEN_STEP, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;

@@ -14,18 +14,23 @@ static enum app_status_t _load_notification();
 int64_t _call_notify(int32_t id, void* data);
 int64_t _call_ring(int32_t id, void* data);
 
-/*
- * Pop-ups have priority
- * POPUP_CALL > POPUP_ALARM > POPUP_NOTIFY
- * If higher priority pop-up is active it will not change
- */
-enum app_status_t apps_poll_popup(enum popup_t current)
+void apps_request_popup(Popup p) { state.__popup_req = p; }
+
+enum app_status_t apps_poll_popup()
 {
-    /* Do not trigger pop-up if the pop-up is invalid, equal to the current
-     * or it's priority is lower */
-    if (state.popup.type == POPUP_NONE || current >= state.popup.type)
+    /* Reject the pop-up request if when there is none or the requested pop-ups
+     * priority is lower */
+    if (state.__popup_req.type == POPUP_NONE
+        || state.popup.type >= state.__popup_req.type) {
+        state.__popup_req.type = POPUP_NONE;
         return APP_NO_POPUP;
-    int current_mode = XY.mode;
+    }
+    /* store the status to revert */
+    int mode_old = XY.mode;
+    Popup popup_old = state.popup;
+    state.popup = state.__popup_req;
+    state.__popup_req.type = POPUP_NONE;
+
     enum app_status_t r;
     switch (state.popup.type) {
     case POPUP_CALL: r = _load_call(); break;
@@ -34,12 +39,12 @@ enum app_status_t apps_poll_popup(enum popup_t current)
     default: return ERROR(APP_ERROR_INVALID_POPUP);
     }
     /* Revert the module configurations */
-    XY.mode = current_mode;
+    XY.mode = mode_old;
     XY.Gesture = None;
     XY.x_point = 0;
     XY.y_point = 0;
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);
-    state.popup.type = current;
+    state.popup = popup_old;
     return r;
 }
 
@@ -106,7 +111,7 @@ static enum app_status_t _load_alarm()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup(POPUP_ALARM)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
 
         if (apps_is_exited()) return APP_OK;
 
@@ -141,7 +146,7 @@ static enum app_status_t _load_notification()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup(POPUP_NOTIFY)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
 
         if (apps_is_exited()) return APP_OK;
 

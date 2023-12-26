@@ -10,6 +10,7 @@ DateTime os_get_time() { return state.dt; }
 
 extern void os_gyro_init(void);
 extern void os_dev_init(void);
+extern void apps_request_popup(Popup p);
 
 absolute_time_t then = {0};
 
@@ -23,10 +24,12 @@ static void _process_alarms()
                        DT_WC_YEAR | DT_WC_MONTH | DT_WC_DAY | DT_WC_SEC)
                 == 0) {
                 if (state.popup.type != POPUP_CALL) {
-                    state.popup.type = POPUP_ALARM;
-                    state.popup.value.alarm = state.alarms.list[i].at;
+                    apps_request_popup(
+                        (Popup){.type = POPUP_ALARM,
+                                .value = (union PopupValue){
+                                    .alarm = state.alarms.list[i].at}});
+                    break;
                 }
-                break;
             }
         }
     }
@@ -90,10 +93,15 @@ void os_init()
     //strcpy(state.popup.value.caller, "Ron Swanson");
     //state.popup.type = POPUP_CALL;
 
-    strncpy(state.popup.value.notify.title, "Whatsapp", 12);
-    memcpy(state.popup.value.notify.text,
-           "Ahmet Yilmaz:\nHello this is a long text that should be wrapped at "
-           "some point. Hi, endline.\nHello\nThis is a really long answer too.",
-           127);
-    state.popup.type = POPUP_NOTIFY;
+    apps_request_popup((Popup){
+        .type = POPUP_NOTIFY,
+        .value = (union PopupValue){.notify.title = "Whatsapp",
+                                    .notify.text =
+                                        "Ahmet Yilmaz:\nHello this is a long "
+                                        "text that should be "
+                                        "wrapped at. Hi, endline.\nHello\nThis "
+                                        "is a really long "
+                                        "answer too."},
+
+    });
 }

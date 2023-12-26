@@ -37,15 +37,25 @@ enum app_status_t {
 /* Initializes the display */
 enum app_status_t apps_init(void);
 
+void apps_request_popup(Popup p);
+
 /**
- * Checks for new pop-up events. Loads them as pop-up if there's any. Returns 
- * @current - Current pop-up type, POPUP_NONE if there isn't
+ * Checks for new pop-up events. If there is one loads it as pop-up.
+ *
+ * @current - Current pop-up type, POPUP_NONE if the current screen is not a
+ * pop-up.
+ *
  * @returns
+ *  - the app_status_t of the loaded pop-up if a pop-up is loaded.
  *  - APP_NO_POPUP - When there is no pop-up event to display
- *  - APP_ERROR_INVALID_POPUP - If there is an error occured
- *  during the to display.
+ *  - APP_ERROR_INVALID_POPUP - If the current pop-up state is invalid
+ *
+ * Pop-ups have priority. If higher priority pop-up is active it will not change
+ * POPUP_CALL > POPUP_ALARM > POPUP_NOTIFY
+ * If higher priority pop-up is active it will not change
+ *
  */
-enum app_status_t apps_poll_popup(enum popup_t current);
+enum app_status_t apps_poll_popup();
 /* Loads selected screen module */
 enum app_status_t apps_load(enum screen_t s);
 

@@ -19,7 +19,7 @@ enum app_status_t apps_load_alarm(void)
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
         if (apps_is_exited()) return APP_OK;
 
         if (clicked) {

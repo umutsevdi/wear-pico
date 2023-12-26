@@ -13,16 +13,18 @@
 #include "sw_common/util.h"
 #include <pico/time.h>
 
+union PopupValue {
+    char caller[15];
+    struct {
+        char title[13];
+        char text[128];
+    } notify;
+    DateTime alarm;
+};
+
 typedef struct {
     enum popup_t type;
-    union {
-        char caller[15];
-        struct {
-            char title[13];
-            char text[128];
-        } notify;
-        DateTime alarm;
-    } value;
+    union PopupValue value;
 } Popup;
 
 typedef struct {
@@ -32,6 +34,7 @@ typedef struct {
     bool show_sec;
     bool is_connected;
     Popup popup;
+    Popup __popup_req;
     struct {
         /* GPIO pin stack to prevent early cancels
          * Each set/reset is added to the stack */

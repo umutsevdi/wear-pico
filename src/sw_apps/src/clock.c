@@ -11,7 +11,7 @@ enum app_status_t apps_load_clock()
     int sec = 0;
     bool old_show_sec = false;
     while (true) {
-        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
         switch (XY.Gesture) {
         case Down: apps_load(SCREEN_MENU); break;
         case CLICK:

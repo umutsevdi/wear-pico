@@ -74,7 +74,7 @@ enum app_status_t apps_load_menu()
 
     enum menu_t current = MENU_ALARM;
     while (true) {
-        if (!apps_poll_popup(POPUP_NONE)) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
         switch (XY.Gesture) {
         case UP: return APP_OK; /*Calling DOWN returns to clock*/
         case LEFT:

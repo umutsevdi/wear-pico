@@ -1,22 +1,22 @@
 #include "sw_res/resources.h"
 
-static inline Resource _res_get_app_toggle_buttons(bool is_paused,
-                                                   const unsigned char* res,
-                                                   const int w, const int h);
+/**
+ * Returns a reference to the index in the given resource. 
+ * @idx - index of the image
+ * @res - Resource to partition
+ * @w - width of the image reference
+ * @h - width of the image reference
+ * @return a new reference
+ */
 
-#define _res_alarm_list_s 35424
-#define _res_alarm_buttons_s 30720
-#define _res_call_s 19440
-#define _res_gest_s 27648
-#define _res_media_s 57600
-#define _res_menu_s 460800
-#define _res_notify_s 85440
-#define _res_step_s 24480
-#define _res_stopwatch_s 38400
-#define _res_titlebar_s 115200
-#define _res_tray_s 8580
-extern const unsigned char _res_alarm_list[];
+static inline Resource _get_sprite(int idx, const unsigned char* res,
+                                   const int w, const int h)
+{
+    return (Resource){res + 2 * (idx)*w * h, w, h};
+}
+
 extern const unsigned char _res_alarm_button[];
+extern const unsigned char _res_alarm_popup[];
 extern const unsigned char _res_call[];
 extern const unsigned char _res_gest[];
 extern const unsigned char _res_media[];
@@ -56,8 +56,7 @@ Resource res_get_menu_screen(enum menu_t selected)
     const int w = 160;
     const int h = 160;
     if (selected < 0 && selected >= MENU_T_SIZE) return (Resource){NULL, 0, 0};
-
-    return (Resource){_res_menu + 2 * (selected)*w * h, w, h};
+    return _get_sprite(selected, _res_menu, w, h);
 }
 Resource res_get_direction(enum gest_dir_t direction)
 {
@@ -65,36 +64,25 @@ Resource res_get_direction(enum gest_dir_t direction)
     const int h = 48;
     if (direction < 0 && direction >= GEST_DIR_T_SIZE)
         return (Resource){NULL, 0, 0};
-
-    return (Resource){_res_gest + 2 * (direction)*w * h, w, h};
+    return _get_sprite(direction, _res_gest, w, h);
 }
 
-Resource res_get_popup_alarm()
+Resource res_get_app_alarm_button(bool is_paused)
 {
-    return (Resource){_res_alarm_button, 160, 35};
+    return _get_sprite(is_paused, _res_alarm_button, 164, 36);
 }
+Resource res_get_app_chrono_button(bool is_paused)
+{
+    return _get_sprite(is_paused, _res_stopwatch, 160, 40);
+}
+Resource res_get_app_media_button(bool is_paused)
+{
+    return _get_sprite(is_paused, _res_media, 160, 60);
+}
+Resource res_get_app_step() { return (Resource){_res_step, 160, 51}; }
+
+Resource res_get_popup_alarm() { return (Resource){_res_alarm_popup, 160, 35}; }
 
 Resource res_get_popup_notify() { return (Resource){_res_notify, 160, 138}; }
 
 Resource res_get_popup_call() { return (Resource){_res_call, 135, 48}; }
-
-Resource res_get_app_alarm_button(bool is_paused)
-{
-    return _res_get_app_toggle_buttons(is_paused, _res_alarm_list, 164, 36);
-}
-Resource res_get_app_chrono_button(bool is_paused)
-{
-    return _res_get_app_toggle_buttons(is_paused, _res_stopwatch, 160, 40);
-}
-Resource res_get_app_media_button(bool is_paused)
-{
-    return _res_get_app_toggle_buttons(is_paused, _res_media, 160, 60);
-}
-Resource res_get_app_step() { return (Resource){_res_step, 160, 51}; }
-
-static inline Resource _res_get_app_toggle_buttons(bool is_paused,
-                                                   const unsigned char* res,
-                                                   const int w, const int h)
-{
-    return (Resource){res + 2 * (is_paused)*w * h, w, h};
-}

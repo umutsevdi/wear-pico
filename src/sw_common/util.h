@@ -75,9 +75,10 @@ const char* _file_fmt(const char* str);
  * @array    - array to store substrings.
  * @array_s  - size of the array
  *
- * @return   - actual number of lines in the array, -1 when improper inputs are given
+ * @return   - actual number of lines in the array, -1 when improper inputs are given.
  *
  * strwrap handles the string in place and affects the original string.
+ * Inserts "..." if the array size is exceeded
  */
 int strwrap(char* buffer, size_t buffer_s, int width, char** array,
             int array_s);

@@ -19,10 +19,6 @@
 
 #define TOUCH_GESTURE 0
 #define TOUCH_POINT 1
-#define COLOR_BG 0x42
-#define COLOR_FG 0xffff
-#define SCR_SCREEN 0, 0, 240, 240
-#define SCR_TRAY 20, 13
 
 /******************************************************************************
                                 Modules

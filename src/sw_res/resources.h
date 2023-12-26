@@ -22,6 +22,7 @@
 #define SCREEN_C 0, 0, 240, 240
 /* Tray x and y coordinates */
 #define TRAY_C 20, 13
+
 typedef struct {
     const unsigned char* img;
     size_t width;

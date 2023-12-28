@@ -11,6 +11,7 @@ add_subdirectory(sw_res/)
 add_subdirectory(sw_common/)
 add_subdirectory(sw_os/)
 add_subdirectory(sw_apps/)
+add_subdirectory(sw_bt/)
 
 #添加头文件目录
 include_directories(waveshare/lib/Config)
@@ -25,12 +26,13 @@ target_link_libraries(smartwatch
     sw_common
     sw_os
     sw_apps
+    sw_bt
     pico_stdlib
     pico_time
     pico_multicore
-    #    pico_btstack_ble # Needed for ble
-    #    pico_btstack_cyw43 # Needed for ble
-    #   pico_cyw43_arch_none # Needed for pico_w
+   pico_btstack_ble # Needed for ble
+    pico_btstack_cyw43 # Needed for ble
+    pico_cyw43_arch_none # Needed for pico_w
     hardware_adc # don't think it's needed (but haven't tested)
     hardware_exception
     # waveshare_begin
@@ -39,8 +41,8 @@ target_link_libraries(smartwatch
 )
 
 # enable usb output, disable uart output
-pico_enable_stdio_usb(smartwatch 1)
-pico_enable_stdio_uart(smartwatch 0)
+pico_enable_stdio_usb(smartwatch 0)
+pico_enable_stdio_uart(smartwatch 1)
 
 # pico_btstack_make_gatt_header(smartwatch PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sw.gatt")
 # create map/bin/hex/uf2 file etc.

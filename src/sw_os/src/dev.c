@@ -36,6 +36,7 @@ void os_dev_set(enum dev_t dev, bool value)
 
 static void _notify_iter(int32_t flag, int in)
 {
+    if (flag & DEV_VIB) gpio_put(pins[DEV_VIB], true);
     if (flag & DEV_LED) gpio_put(pins[DEV_LED], true);
     bool value = true;
     if (flag & DEV_BUZZER) {
@@ -48,6 +49,7 @@ static void _notify_iter(int32_t flag, int in)
         sleep_ms(in);
 
     if (flag & DEV_LED) gpio_put(pins[DEV_LED], false);
+    if (flag & DEV_VIB) gpio_put(pins[DEV_VIB], false);
 }
 
 void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)

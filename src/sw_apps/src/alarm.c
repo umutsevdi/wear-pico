@@ -26,9 +26,10 @@ enum app_status_t apps_load_alarm(void)
             for (int i = 0; i < state.alarms.len; i++) {
                 if (apps_is_clicked(ALARM_X, ALARM_Y + i * 36,
                                     ALARM_BUTTON_SIZE)) {
-                    PRINT("ALARM_%d", , i);
                     state.alarms.list[i].is_active =
                         !state.alarms.list[i].is_active;
+                    PRINT("ALARM_%d = %s", , i,
+                          state.alarms.list[i].is_active ? "TRUE" : "FALSE");
                     _alarm_draw(i, &state.alarms.list[i]);
                     screen.redraw = DISP_PARTIAL;
                 }

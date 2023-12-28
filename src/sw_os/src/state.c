@@ -20,16 +20,13 @@ static void _process_alarms()
 {
     for (short i = 0; i < state.alarms.len; i++) {
         if (state.alarms.list[i].is_active) {
-            if (dt_cmp(&state.dt, &state.alarms.list[i].at,
-                       DT_WC_YEAR | DT_WC_MONTH | DT_WC_DAY | DT_WC_SEC)
-                == 0) {
-                if (state.popup.type != POPUP_CALL) {
-                    apps_request_popup(
-                        (Popup){.type = POPUP_ALARM,
-                                .value = (union PopupValue){
-                                    .alarm = state.alarms.list[i].at}});
-                    break;
-                }
+            if (!dt_cmp(&state.dt, &state.alarms.list[i].at,
+                        DT_WC_HOUR | DT_WC_MIN)) {
+                apps_request_popup((Popup){
+                    .type = POPUP_ALARM,
+                    .value =
+                        (union PopupValue){.alarm = state.alarms.list[i].at}});
+                break;
             }
         }
     }
@@ -93,6 +90,10 @@ void os_init()
     //strcpy(state.popup.value.caller, "Ron Swanson");
     //state.popup.type = POPUP_CALL;
 
+    /*    apps_request_popup((Popup){.type = POPUP_CALL,
+                               .value = (union PopupValue){
+                                   .caller = "Ron Swanson",
+                               }});*/
     apps_request_popup((Popup){
         .type = POPUP_NOTIFY,
         .value = (union PopupValue){.notify.title = "Whatsapp",
@@ -102,6 +103,6 @@ void os_init()
                                         "wrapped at. Hi, endline.\nHello\nThis "
                                         "is a really long "
                                         "answer too."},
-
     });
+    PRINT(OS_INIT);
 }

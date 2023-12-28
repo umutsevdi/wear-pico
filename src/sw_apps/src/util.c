@@ -73,7 +73,7 @@ void apps_post_process(bool is_cb)
             }
         }
     }
-    screen.post_time = 30;
+    screen.post_time = 60;
     if (is_cb) {
         WARN(POST_PROCESS_BY_CB);
         LCD_1IN28_Display(screen.buffer);

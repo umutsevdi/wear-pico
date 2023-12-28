@@ -17,6 +17,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+
+#undef __SW_DEBUG_USB__
+
+#ifdef __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
     printf("%s#%30s():%-4d  " #FMT "\r\n", _file_fmt(__FILE__), __func__,      \
            __LINE__ ARGS)
@@ -29,11 +34,19 @@
              __func__, __LINE__),                                              \
      CODE)
 
+#else
+#define PRINT(FMT, ARGS...) __strdump(0, "INF:" #FMT "\n" ARGS)
+#define WARN(CODE) __strdump(0, "WRN:" #CODE "\n")
+#define ERROR(CODE) __strdump(CODE, "ERR:" #CODE "\n")
+#endif
+
+#ifndef UNUSED
 #define UNUSED(TYPE, ARGS...)                                                  \
     do {                                                                       \
         TYPE __args[] = {ARGS};                                                \
         __args[0] = __args[0];                                                 \
     } while (0);
+#endif
 
 /**
  * Centers the given string in-place and returns it
@@ -48,14 +61,13 @@ const char* dt_get_day(DateTime* dt);
 /**
  * Compares given dates based on given flag
  * Example:
- * - date_cmp(dt1, dt2, dt1->flag);
- * - date_cmp(dt1, dt2, dt1->flag | dt2->flag);
- * - date_cmp(dt1, dt2, DT_WC_YEAR | DT_WC_MONTH);
+ * - date_cmp(dt1, dt2, DT_WC_YEAR | DT_WC_MONTH); -> Compare YEAR and MONTH
+ * - date_cmp(dt1, dt2, ~dt1->flag);               -> Compare valid dt1 fields
+ * - date_cmp(dt1, dt2, ~(dt2->flag | dt1->flag)); -> Compare common fields
  * @returns
  * *  1 if dt1 is after dt2
  * *  0 if dt1 and dt2 are equal
  * * -1 if dt1 is before dt2
- *
  */
 int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag);
 /**
@@ -82,5 +94,9 @@ const char* _file_fmt(const char* str);
  */
 int strwrap(char* buffer, size_t buffer_s, int width, char** array,
             int array_s);
+
+/* Dumps given text to the log buffer */
+int __strdump(int code, const char* fmt, ...);
+void get_log(char* str, size_t str_s);
 
 #endif

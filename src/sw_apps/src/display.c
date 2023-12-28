@@ -43,6 +43,7 @@ enum app_status_t apps_init(void)
 
     add_repeating_timer_ms(1000, _post_process_cb, NULL, &screen.__post_timer);
     add_repeating_timer_us(1000, _apps_refresh_cb, NULL, &timer_capture_t);
+    PRINT(APPS_INIT);
     return APP_OK;
 }
 static bool _post_process_cb(repeating_timer_t* r)

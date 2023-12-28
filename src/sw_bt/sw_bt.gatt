@@ -1,0 +1,3 @@
+PRIMARY_SERVICE, GAP_SERVICE
+CHARACTERISTIC, GAP_DEVICE_NAME, READ, "SW Watch 2191"
+#import <nordic_spp_service.gatt>

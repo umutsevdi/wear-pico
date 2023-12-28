@@ -92,9 +92,9 @@ static enum app_status_t _apps_chrono_toggle()
         if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _scr_chrono_cb,
                                     NULL, &state.chrono.timer))
             return ERROR(APP_ERROR_TIMER_CREATE);
-        WARN(REGISTER_EVENT_scr_chrono_cb);
+        WARN(REGISTER_EVENT scr_chrono_cb);
     } else {
-        WARN(CANCEL_EVENT_scr_chrono_cb);
+        WARN(CANCEL_EVENT scr_chrono_cb);
         cancel_repeating_timer(&state.chrono.timer);
     }
 }

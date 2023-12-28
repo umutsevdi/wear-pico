@@ -70,6 +70,7 @@ enum screen_t {
     SCREEN_MEDIA,
     SCREEN_EVENT,
     SCREEN_STEP,
+    SCREEN_LOG,
 
     SCREEN_T_SIZE
 };
@@ -80,6 +81,7 @@ enum menu_t {
     MENU_MEDIA,
     MENU_EVENT,
     MENU_STEP,
+    MENU_LOG,
 
     MENU_T_SIZE
 };

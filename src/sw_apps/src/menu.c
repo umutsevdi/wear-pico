@@ -1,4 +1,5 @@
 #include "sw_apps/apps.h"
+#include "sw_common/util.h"
 #include "sw_res/resources.h"
 
 /* Initializes the clock User Interface */
@@ -17,13 +18,28 @@ extern enum app_status_t apps_load_event(void);
 extern enum app_status_t apps_load_media(void);
 /* Initializes the Pedometer User Interface */
 extern enum app_status_t apps_load_step(void);
+/* Initializes the logger User Interface */
+extern enum app_status_t apps_load_log(void);
 
+const char* _menu_s(enum menu_t m)
+{
+    switch (m) {
+    case MENU_ALARM: return "MENU_ALARM";
+    case MENU_CHRONO: return "MENU_CHRONO";
+    case MENU_EVENT: return "MENU_EVENT";
+    case MENU_MEDIA: return "MENU_MEDIA";
+    case MENU_STEP: return "MENU_STEP";
+    case MENU_LOG: return "MENU_LOG";
+    default: return "NONE";
+    }
+}
 #define MENU_S(CURRENT)                                                        \
     CURRENT == MENU_ALARM    ? "MENU_ALARM"                                    \
     : CURRENT == MENU_CHRONO ? "MENU_CHRONO"                                   \
     : CURRENT == MENU_EVENT  ? "MENU_EVENT"                                    \
     : CURRENT == MENU_MEDIA  ? "MENU_MEDIA"                                    \
     : CURRENT == MENU_STEP   ? "MENU_STEP"                                     \
+    : CURRENT == MENU_LOG    ? "MENU_LOG"                                      \
                              : "NONE"
 
 enum app_status_t apps_load(enum screen_t s)
@@ -37,6 +53,7 @@ enum app_status_t apps_load(enum screen_t s)
     case SCREEN_ALARM: r = apps_load_alarm(); break;
     case SCREEN_CHRONO: r = apps_load_chrono(); break;
     case SCREEN_MEDIA: r = apps_load_media(); break;
+    case SCREEN_LOG: r = apps_load_log(); break;
     case SCREEN_STEP:
         r = apps_load_step();
         break;
@@ -63,7 +80,8 @@ static void _menu_display(enum menu_t current)
     apps_draw(res_get_menu_screen(current), 40, 40);
     apps_post_process(false);
     LCD_1IN28_Display(screen.buffer);
-    PRINT("%s", , MENU_S(current));
+
+    PRINT("SELECT %s", , _menu_s(current));
     screen.redraw = DISP_SYNC;
     XY.Gesture = None;
 }

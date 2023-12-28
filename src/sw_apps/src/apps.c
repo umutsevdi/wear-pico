@@ -1,4 +1,6 @@
 #include "sw_apps/apps.h"
+#include "GUI_Paint.h"
+#include <string.h>
 
 static void _step_display();
 
@@ -96,6 +98,46 @@ enum app_status_t apps_load_step()
 
         if (screen.redraw) {
             _step_display();
+            LCD_1IN28_Display(screen.buffer);
+            screen.redraw = DISP_SYNC;
+        }
+    }
+}
+
+extern enum app_status_t apps_load_log(void)
+{
+#define NOTIFY_COLOR 0x9ce5
+#define NOTIFY_TEXT_COLOR 0x8c7
+    static char log_data[128];
+
+    SET_MODULE(SCREEN_LOG, TOUCH_POINT);
+
+    int sec = 0;
+    while (true) {
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
+        if (apps_set_titlebar(SCREEN_LOG, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            apps_post_process(false);
+            apps_draw(res_get_popup_notify(), 40, 65);
+        }
+        if (sec != state.dt.second) {
+            screen.redraw = DISP_PARTIAL;
+            sec = state.dt.second;
+        }
+        if (apps_is_exited()) return APP_OK;
+
+        if (screen.redraw) {
+            get_log(log_data, 128);
+            char* array[13] = {0};
+            int array_s =
+                strwrap(log_data, strnlen(log_data, 128), 40, array, 12);
+            if (array_s != -1) {
+                for (int i = 0; i < array_s; i++)
+                    Paint_DrawString_EN(55, 70 + 8 * i, array[i], &Font8,
+                                        NOTIFY_TEXT_COLOR, COLOR_FG);
+            }
+
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }

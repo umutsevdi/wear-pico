@@ -10,6 +10,7 @@
 #include "sw_os/dev.h"
 #include "sw_os/state.h"
 
+extern int bt_main();
 void _core1_cb() { apps_load(SCREEN_CLOCK); }
 int main(int argc, char* argv[])
 {
@@ -18,9 +19,11 @@ int main(int argc, char* argv[])
     apps_init();
     multicore_launch_core1(_core1_cb);
 
+    bt_main();
     while (1) {
         //        printf("CORE 0 running with %s\n", __func__);
-        sleep_ms(100);
+        WARN(BT_CORE_LOOP);
+        sleep_ms(2000);
         os_gyro_fetch();
         int demo_amount = (state.dev.dist_acc / 10000 - 2);
         state.step += demo_amount > 0 ? demo_amount : 0;

@@ -4,6 +4,8 @@
 
 static const int POPUP_CALL_ITER = 3;
 static const int POPUP_ALARM_ITER = 2;
+static const int POPUP_CALL_FLAG = DEV_BUZZER | DEV_LED | DEV_VIB;
+static const int POPUP_NOTIFY_FLAG = DEV_BUZZER | DEV_VIB;
 static const int POPUP_ALARM_FLAG = DEV_BUZZER | DEV_LED;
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
@@ -93,7 +95,8 @@ static enum app_status_t _load_call()
             screen.redraw = DISP_SYNC;
         }
         clicked = false;
-        os_dev_notify_d(POPUP_CALL_ITER, POPUP_ALARM_FLAG, 250, 60);
+        os_dev_notify_d(POPUP_CALL_ITER, DEV_BUZZER | DEV_LED | DEV_VIB, 250,
+                        60);
         sleep_ms(125);
     }
 }
@@ -139,7 +142,7 @@ static enum app_status_t _load_notification()
 
     bool clicked;
     int x = 0, y = 0;
-    os_dev_notify(POPUP_ALARM_ITER, POPUP_ALARM_FLAG);
+    os_dev_notify(POPUP_ALARM_ITER, POPUP_NOTIFY_FLAG);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;

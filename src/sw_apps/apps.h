@@ -60,8 +60,7 @@ enum app_status_t apps_poll_popup();
 enum app_status_t apps_load(enum screen_t s);
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
-    printf("%s#%s():%d MODULE " #M " \r\n", _file_fmt(__FILE__), __func__,     \
-           __LINE__);                                                          \
+    PRINT(SET_MODULE_ ##M);                                                      \
     XY.mode = TOUCH_TYPE;                                                      \
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
     screen.redraw = DISP_REDRAW;                                               \

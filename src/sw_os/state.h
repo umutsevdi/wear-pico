@@ -14,7 +14,10 @@
 #include <pico/time.h>
 
 union PopupValue {
-    char caller[15];
+    struct caller {
+        char name[15];
+        bool is_over;
+    } caller;
     struct {
         char title[13];
         char text[128];
@@ -70,4 +73,7 @@ extern SwState state;
 
 DateTime os_get_time();
 void os_init();
+
+void os_request_popup(Popup p);
 #endif
+

@@ -2,8 +2,18 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#define DT_STRLEN 14
 
-char LOG_BUFFER[128] = {0};
+enum IDX {
+    IDX_YEAR = 0,
+    IDX_MONTH = 4,
+    IDX_DAY = 6,
+    IDX_HOUR = 8,
+    IDX_MIN = 10,
+    IDX_SEC = 12,
+};
+
+char LOG_BUFFER[LOG_BUFFER_S] = {0};
 int log_idx = 0;
 
 const char* _file_fmt(const char* str)
@@ -114,8 +124,8 @@ int __strdump(int code, const char* fmt, ...)
 
     int str_s = strnlen(str, 40);
     if (str_s > 40) str[39] = '\n';
-    if (str_s + log_idx > 128) {
-        memmove(LOG_BUFFER, LOG_BUFFER + str_s, 128 - str_s);
+    if (str_s + log_idx > LOG_BUFFER_S) {
+        memmove(LOG_BUFFER, LOG_BUFFER + str_s, LOG_BUFFER_S - str_s);
         log_idx -= str_s;
     }
 
@@ -124,7 +134,101 @@ int __strdump(int code, const char* fmt, ...)
     return code;
 }
 
-void get_log(char* str, size_t str_s)
+/* Parses the given buffer to generate the wildcard flag. Looks for '?' 
+ * characters. */
+static int16_t _dt_wildcard(const char* b);
+/**
+ * Maps the fields of given string array to the date time.
+ * @dt - to assign
+ * @date_s - a string array that contains each field of the struct in a
+ * different string.
+ * char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]}
+ * @return - whether mapping failed or not
+ */
+static bool _dt_map(DateTime* dt, char** str_p);
+
+bool str_to_date(const char buffer[15], DateTime* dt)
 {
-    memcpy(str, LOG_BUFFER, str_s < 128 ? str_s : 128);
+    if (buffer[DT_STRLEN] != '\0') return false;
+    char year[5] = {0};
+    char month[3] = {0};
+    char day[3] = {0};
+    char hour[3] = {0};
+    char min[3] = {0};
+    char sec[3] = {0};
+    dt->flag = _dt_wildcard(buffer);
+
+    for (size_t i = 0; i < DT_STRLEN; i++) {
+        if (i < IDX_MONTH)
+            year[i - IDX_YEAR] = buffer[i];
+        else if (IDX_MONTH <= i && i < IDX_DAY)
+            month[i - IDX_MONTH] = buffer[i];
+        else if (IDX_DAY <= i && i < IDX_HOUR)
+            day[i - IDX_DAY] = buffer[i];
+        else if (IDX_HOUR <= i && i < IDX_MIN)
+            hour[i - IDX_HOUR] = buffer[i];
+        else if (IDX_MIN <= i && i < IDX_SEC)
+            min[i - IDX_MIN] = buffer[i];
+        else if (IDX_SEC <= i)
+            sec[i - IDX_SEC] = buffer[i];
+    }
+    return _dt_map(dt, (char*[]){year, month, day, hour, min, sec});
+}
+
+bool date_to_str(const DateTime* dt, char buffer[15])
+{
+    snprintf(buffer, 14, "%04d%02d%02d%02d%02d%02d", dt->year, dt->month,
+             dt->day, dt->hour, dt->minute, dt->second);
+    if (dt->flag & DT_WC_YEAR) memset(buffer, 4, '?');
+    if (dt->flag & DT_WC_MONTH) memset(buffer + IDX_MONTH, '?', 2);
+    if (dt->flag & DT_WC_DAY) memset(buffer + IDX_DAY, '?', 2);
+    if (dt->flag & DT_WC_HOUR) memset(buffer + IDX_HOUR, '?', 2);
+    if (dt->flag & DT_WC_MIN) memset(buffer + IDX_MIN, '?', 2);
+    if (dt->flag & DT_WC_SEC) memset(buffer + IDX_SEC, '?', 2);
+    return true;
+}
+
+static int16_t _dt_wildcard(const char* b)
+{
+    int16_t wc = 0;
+    if (b[IDX_YEAR] == '?') wc |= DT_WC_YEAR;
+    if (b[IDX_MONTH] == '?') wc |= DT_WC_MONTH;
+    if (b[IDX_DAY] == '?') wc |= DT_WC_DAY;
+    if (b[IDX_HOUR] == '?') wc |= DT_WC_HOUR;
+    if (b[IDX_MIN] == '?') wc |= DT_WC_MIN;
+    if (b[IDX_SEC] == '?') wc |= DT_WC_SEC;
+    return wc;
+}
+
+static bool _dt_map(DateTime* dt, char** str_p)
+{
+    char* endptr = NULL;
+    if (!(DT_WC_YEAR & dt->flag)) {
+        dt->year = strtoul(str_p[0], &endptr, 10);
+        if (*endptr != '\0' || dt->year == 0 || dt->year > 9999) return false;
+    }
+    if (!(DT_WC_MONTH & dt->flag)) {
+        dt->month = strtoul(str_p[1], &endptr, 10);
+        if (*endptr != '\0' || dt->month == 0 || dt->month > 12) return false;
+    }
+    if (!(DT_WC_DAY & dt->flag)) {
+        dt->day = strtoul(str_p[2], &endptr, 10);
+        if (*endptr != '\0' || dt->day == 0 || dt->day > 30) return false;
+    }
+    if (!(DT_WC_HOUR & dt->flag)) {
+        dt->hour = strtoul(str_p[3], &endptr, 10);
+        if (*endptr != '\0' || dt->hour > 24)// danger
+            return false;
+    }
+    if (!(DT_WC_MIN & dt->flag)) {
+        dt->minute = strtoul(str_p[4], &endptr, 10);
+        if (*endptr != '\0' || dt->minute > 60)// danger
+            return false;
+    }
+    if (!(DT_WC_SEC & dt->flag)) {
+        dt->second = strtoul(str_p[5], &endptr, 10);
+        if (*endptr != '\0' || dt->second > 60)// danger
+            return false;
+    }
+    return true;
 }

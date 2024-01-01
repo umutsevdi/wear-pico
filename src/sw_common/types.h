@@ -46,6 +46,10 @@ typedef struct {
     uint8_t second;
 } DateTime;
 
+bool str_to_date(const char buffer[15], DateTime* dt);
+
+bool date_to_str(const DateTime* dt, char buffer[15]);
+
 #define DATETIME_MONTH(m)                                                      \
     m == 1    ? "Jan"                                                          \
     : m == 2  ? "Feb"                                                          \

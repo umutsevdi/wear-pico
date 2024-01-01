@@ -18,10 +18,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#define LOG_BUFFER_S 400
+extern char LOG_BUFFER[LOG_BUFFER_S];
 
-#undef __SW_DEBUG_USB__
+#define __SW_DEBUG_USB__ 0
 
-#ifdef __SW_DEBUG_USB__
+#if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
     printf("%s#%30s():%-4d  " #FMT "\r\n", _file_fmt(__FILE__), __func__,      \
            __LINE__ ARGS)
@@ -33,7 +35,6 @@
     (fprintf(stderr, "%s#%30s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__),     \
              __func__, __LINE__),                                              \
      CODE)
-
 #else
 #define PRINT(FMT, ARGS...) __strdump(0, "INF:" #FMT "\n" ARGS)
 #define WARN(CODE) __strdump(0, "WRN:" #CODE "\n")
@@ -97,6 +98,5 @@ int strwrap(char* buffer, size_t buffer_s, int width, char** array,
 
 /* Dumps given text to the log buffer */
 int __strdump(int code, const char* fmt, ...);
-void get_log(char* str, size_t str_s);
 
 #endif

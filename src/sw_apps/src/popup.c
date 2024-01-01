@@ -16,8 +16,6 @@ static enum app_status_t _load_notification();
 int64_t _call_notify(int32_t id, void* data);
 int64_t _call_ring(int32_t id, void* data);
 
-void apps_request_popup(Popup p) { state.__popup_req = p; }
-
 enum app_status_t apps_poll_popup()
 {
     /* Reject the pop-up request if when there is none or the requested pop-ups
@@ -63,10 +61,12 @@ static enum app_status_t _load_call()
             y = XY.y_point;
             clicked = true;
         }
+        if (state.popup.value.caller.is_over) return APP_OK;
         if (apps_is_exited()) return APP_OK;
 
         if (clicked) {
             if (apps_is_clicked(BTN_ACCEPT)) {
+                //                bt_respond((BtEvent){ BT_RESP_CALL_RESULT})
                 // TODO Respond with ACCEPT
                 WARN(CALL_ACCEPT);
                 return APP_OK;
@@ -81,12 +81,12 @@ static enum app_status_t _load_call()
             XY.x_point = 0;
             XY.y_point = 0;
             apps_draw(res_get_popup_call(), 52, 140);
-            PRINT("%s", , state.popup.value.caller);
-            Paint_DrawString_EN(0, 90,
-                                strcenter(state.popup.value.caller,
-                                          strnlen(state.popup.value.caller, 15),
-                                          15),
-                                &Font24, COLOR_BG, COLOR_FG);
+            PRINT("%s", , state.popup.value.caller.name);
+            Paint_DrawString_EN(
+                0, 90,
+                strcenter(state.popup.value.caller.name,
+                          strnlen(state.popup.value.caller.name, 15), 15),
+                &Font24, COLOR_BG, COLOR_FG);
             apps_post_process(false);
         }
 

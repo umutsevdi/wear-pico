@@ -108,8 +108,6 @@ extern enum app_status_t apps_load_log(void)
 {
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
-    static char log_data[128];
-
     SET_MODULE(SCREEN_LOG, TOUCH_POINT);
 
     int sec = 0;
@@ -128,13 +126,12 @@ extern enum app_status_t apps_load_log(void)
         if (apps_is_exited()) return APP_OK;
 
         if (screen.redraw) {
-            get_log(log_data, 128);
-            char* array[13] = {0};
-            int array_s =
-                strwrap(log_data, strnlen(log_data, 128), 40, array, 12);
+            char* array[15] = {0};
+            int array_s = strwrap(LOG_BUFFER, strnlen(LOG_BUFFER, LOG_BUFFER_S),
+                                  40, array, 14);
             if (array_s != -1) {
                 for (int i = 0; i < array_s; i++)
-                    Paint_DrawString_EN(55, 70 + 8 * i, array[i], &Font8,
+                    Paint_DrawString_EN(55, 70 + 9 * i, array[i], &Font8,
                                         NOTIFY_TEXT_COLOR, COLOR_FG);
             }
 

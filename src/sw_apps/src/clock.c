@@ -37,7 +37,6 @@ enum app_status_t apps_load_clock()
         if (screen.redraw) {
             // If full redraw
             if (screen.redraw == DISP_REDRAW) {
-                WARN(REDRAW_FULL);
                 apps_reset();
                 apps_draw(res_get_direction(GEST_DIR_U), 96, 20);
             }

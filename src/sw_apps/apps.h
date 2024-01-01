@@ -37,8 +37,6 @@ enum app_status_t {
 /* Initializes the display */
 enum app_status_t apps_init(void);
 
-void apps_request_popup(Popup p);
-
 /**
  * Checks for new pop-up events. If there is one loads it as pop-up.
  *
@@ -60,7 +58,7 @@ enum app_status_t apps_poll_popup();
 enum app_status_t apps_load(enum screen_t s);
 
 #define SET_MODULE(M, TOUCH_TYPE)                                              \
-    PRINT(SET_MODULE_ ##M);                                                      \
+    PRINT(SET_MODULE_##M);                                                     \
     XY.mode = TOUCH_TYPE;                                                      \
     if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
     screen.redraw = DISP_REDRAW;                                               \

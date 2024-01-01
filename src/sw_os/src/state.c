@@ -1,6 +1,7 @@
 #include "sw_os/state.h"
 #include "hardware/gpio.h"
 #include "pico/time.h"
+#include "sw_bt/bt.h"
 #include "sw_common/types.h"
 #include "sw_os/dev.h"
 
@@ -10,7 +11,7 @@ DateTime os_get_time() { return state.dt; }
 
 extern void os_gyro_init(void);
 extern void os_dev_init(void);
-extern void apps_request_popup(Popup p);
+extern void os_request_popup(Popup p);
 
 absolute_time_t then = {0};
 
@@ -22,7 +23,7 @@ static void _process_alarms()
         if (state.alarms.list[i].is_active) {
             if (!dt_cmp(&state.dt, &state.alarms.list[i].at,
                         DT_WC_HOUR | DT_WC_MIN)) {
-                apps_request_popup((Popup){
+                os_request_popup((Popup){
                     .type = POPUP_ALARM,
                     .value =
                         (union PopupValue){.alarm = state.alarms.list[i].at}});
@@ -50,7 +51,9 @@ static bool _os_timer_cb(repeating_timer_t* r)
                 state.dt.day++;
             }
         }
-        _process_alarms(); /* Call every minute  */
+        /* Call every minute  */
+        state.is_connected = bt_is_connected();
+        _process_alarms();
     }
     return true;
 }
@@ -94,7 +97,7 @@ void os_init()
                                .value = (union PopupValue){
                                    .caller = "Ron Swanson",
                                }});*/
-    apps_request_popup((Popup){
+    /*    apps_request_popup((Popup){
         .type = POPUP_NOTIFY,
         .value = (union PopupValue){.notify.title = "Whatsapp",
                                     .notify.text =
@@ -103,6 +106,8 @@ void os_init()
                                         "wrapped at. Hi, endline.\nHello\nThis "
                                         "is a really long "
                                         "answer too."},
-    });
+    });*/
     PRINT(OS_INIT);
 }
+
+void os_request_popup(Popup p) { state.__popup_req = p; }

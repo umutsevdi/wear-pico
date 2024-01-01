@@ -33,26 +33,6 @@ enum bt_status_t bt_init(void)
 }
 
 enum bt_fmt_t bt_encode(char* str, size_t str_s) {}
-enum bt_fmt_t bt_decode(bool is_req, char* str, size_t str_s)
-{
-    char* str_arr[5] = {0};
-    int str_arr_i = 0;
-    if (is_req) {
-        size_t i = 0;
-        size_t len = strnlen(str, str_s);
-        char* old_str = str;
-        while (i < len && str_arr_i < 5) {
-            if (str[i] == '|') {
-                str[i] = '\0';
-                str_arr[str_arr_i] = old_str;
-                old_str = &str[i + 1];
-                str_arr_i++;
-            }
-            i++;
-        }
-    }
-    return bt_req_parse(str_arr, str_arr_i);
-}
 
 bool bt_is_connected()
 {

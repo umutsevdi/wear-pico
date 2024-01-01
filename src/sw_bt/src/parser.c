@@ -24,18 +24,85 @@
 
 #define BT_MAGIC (27 ^ 91) /* 64 */
 
-static enum bt_fmt_t _route_request(char** str, int str_s, long request_type);
+/**
+ * Parses and splits the incoming request into tokens up to the size of the
+ * given array's size. Updates the size to match the actual number of tokens.
+ * @str - incoming data
+ * @str_s - size of the data
+ * @arr - array to insert into
+ * @array_s - size of the array
+ * @returns - error code
+ */
+static enum bt_fmt_t _decode_req(char* str, size_t str_s, char** arr,
+                                 int* arr_s);
 
-enum bt_fmt_t bt_req_parse(char** str, int str_s)
+/**
+ * Parses and validates the incoming request. Sets the request type,
+ * @arr - array of tokens
+ * @array_s - size of the array
+ * @req - request to set
+ * @returns - error code
+ */
+enum bt_fmt_t _parse_req(char** arr, int arr_s, enum bt_req_t* req);
+
+/**
+ * Executes the function corresponding to the request type
+ * @arr - array of tokens
+ * @arr_s - size of the array
+ * @req - request type to select
+ * @returns - error code
+ */
+static enum bt_fmt_t _route_req(char** arr, int arr_s,
+                                enum bt_req_t request_type);
+
+enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
 {
-    if (str_s > 5) return ERROR(BT_FMT_ERROR_INVALID_INPUT);
+    char* str_arr[5] = {0};
+    enum bt_fmt_t err;
+    int size = 5;
+    enum bt_req_t request_t;
+
+    err = _decode_req(str, str_s, str_arr, &size);
+    if (!err) return err;
+
+    err = _parse_req(str_arr, size, &request_t);
+    if (!err) return err;
+
+    return _route_req(str_arr, size, request_t);
+}
+
+static enum bt_fmt_t _decode_req(char* str, size_t str_s, char** arr,
+                                 int* arr_s)
+{
+    int str_arr_i = 0;
+    size_t i = 0;
+    size_t len = strnlen(str, str_s);
+    char* old_str = str;
+    while (i < len && str_arr_i < *arr_s) {
+        if (str[i] == '|') {
+            str[i] = '\0';
+            arr[str_arr_i] = old_str;
+            old_str = &str[i + 1];
+            str_arr_i++;
+        }
+        i++;
+    }
+    *arr_s = str_arr_i;
+    return BT_FMT_OK;
+}
+
+enum bt_fmt_t _parse_req(char** arr, int arr_s, enum bt_req_t* req)
+{
+    if (arr_s > 5) return ERROR(BT_FMT_ERROR_INVALID_INPUT);
     char* endptr;
-    long mgc = strtol(str[0], &endptr, 10);
+    long mgc = strtol(arr[0], &endptr, 10);
     if (*endptr != '\0' || mgc != BT_MAGIC) return ERROR(BT_FMT_ERROR_MAGIC);
 
-    long request_type = strtol(str[0], &endptr, 10);
+    long request_type = strtol(arr[0], &endptr, 10);
     if (*endptr != '\0') return ERROR(BT_FMT_ERROR_REQ_TYPE);
-    return _route_request(str, str_s, request_type);
+
+    *req = request_type;
+    return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_fetch_date(char** str, int str_s)
@@ -107,16 +174,17 @@ static enum bt_fmt_t _handle_fetch_alarm(char** str, int str_s)
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _route_request(char** str, int str_s, long request_type)
+static enum bt_fmt_t _route_req(char** arr, int arr_s,
+                                enum bt_req_t request_type)
 {
     switch (request_type) {
-    case BT_REQ_CALL_BEGIN: return _handle_call_begin(str, str_s);
-    case BT_REQ_CALL_END: return _handle_call_end(str, str_s);
-    case BT_REQ_NOTIFY: return _handle_notify(str, str_s);
-    case BT_REQ_REMINDER: return _handle_reminder(str, str_s);
-    case BT_REQ_OSC: return _handle_osc(str, str_s);
-    case BT_REQ_FETCH_DATE: return _handle_fetch_date(str, str_s);
-    case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(str, str_s);
+    case BT_REQ_CALL_BEGIN: return _handle_call_begin(arr, arr_s);
+    case BT_REQ_CALL_END: return _handle_call_end(arr, arr_s);
+    case BT_REQ_NOTIFY: return _handle_notify(arr, arr_s);
+    case BT_REQ_REMINDER: return _handle_reminder(arr, arr_s);
+    case BT_REQ_OSC: return _handle_osc(arr, arr_s);
+    case BT_REQ_FETCH_DATE: return _handle_fetch_date(arr, arr_s);
+    case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(arr, arr_s);
     default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
     }
 }

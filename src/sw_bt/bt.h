@@ -66,16 +66,19 @@ enum bt_status_t bt_init(void);
 
 /* Read up to str_s bytes from the Bluetooth connection */
 size_t bt_read(char* str, size_t str_s);
+
 /* Write up to str_s bytes to the Bluetooth connection */
 size_t bt_write(char* str, size_t str_s);
+
+/* Returns whether Bluetooth is connected to an external device */
 bool bt_is_connected();
 
 /**
- * Parses the given request. 
- * @e - Event to parse
- * @str - A string array
- * @str_s - Length of the str, no more than 5
+ * Parses and handles the incoming request.
+ * @str - string to parse
+ * @str_s - size of the string
+ * @returns - error code
  */
-enum bt_fmt_t bt_req_parse(char** str, int str_s);
+enum bt_fmt_t bt_handle_req(char* str, size_t str_s);
 
 #endif

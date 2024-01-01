@@ -2,37 +2,56 @@
 #include <hardware/uart.h>
 #include <pico/stdlib.h>
 
-#define UART_ID uart0
-// #define BAUD_RATE 115200
-#define BAUD_RATE 9600
-
-/* We are using pins 0 and 1, but see the GPIO function select table in the
- * data-sheet for information on which other pins can be used. */
-#define UART_TX_PIN 0
-#define UART_RX_PIN 1
-
 typedef struct __BT_FD {
     uart_inst_t* id;
     int baud_rate;
     int tx_pin;
     int rx_pin;
+    bool is_enabled;
+    char packet[240];// max size of a Bluetooth payload
+    bool packet_lock;
 } BtFd;
 
-BtFd bt;
+BtFd bt = {0};
 
-enum bt_status_t bt_init(void)
+void bt_init(void)
 {
-    uart_init(UART_ID, BAUD_RATE);
-    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
-    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
-    while (true) {
-        uart_puts(uart0, "hello world");
-        sleep_ms(1000);
-    }
-    return BT_OK;
+    bt = (BtFd){
+        .id = uart0,
+        .baud_rate = 9600,
+        .tx_pin = 0,
+        /* We are using pins 0 and 1, but see the GPIO function select table in the
+         * data-sheet for information on which other pins can be used. */
+        .rx_pin = 1,
+        .is_enabled = true,
+        .packet_lock = false,
+    };
+    uart_init(bt.id, bt.baud_rate);
+    gpio_set_function(bt.tx_pin, GPIO_FUNC_UART);
+    gpio_set_function(bt.rx_pin, GPIO_FUNC_UART);
 }
 
-enum bt_fmt_t bt_encode(char* str, size_t str_s) {}
+void bt_receive_req()
+{
+    if (!bt.is_enabled || bt.packet_lock) return;
+    bt.packet_lock = true;
+    size_t bytes = bt_read(bt.packet, 240);
+    if (bytes <= 0) return;
+
+    bt_handle_req(bt.packet, bytes);
+    bt.packet_lock = false;
+}
+
+bool bt_send_resp(enum bt_resp_t response)
+{
+    // respond the code
+    char err_str[10];
+    if (response != BT_RESP_STEP)
+        snprintf(err_str, 9, "%d|%d|", BT_MAGIC, response);
+    else
+        snprintf(err_str, 9, "%d|%d|%d|", BT_MAGIC, response, state.step);
+    return bt_write(err_str, 10) > 0;
+}
 
 bool bt_is_connected()
 {
@@ -40,23 +59,33 @@ bool bt_is_connected()
     bt_write(req, strlen(req));
     char response[20];
     bt_read(response, 20);
-    return (strstr(response, "CONNECTED") != NULL);
+    bool is_connected = (strstr(response, "CONNECTED") != NULL);
+    PRINT("conn [%s]", , is_connected ? "true" : "false");
+    return is_connected;
 }
 
 size_t bt_read(char* str, size_t str_s)
 {
+    if (!bt_is_readable()) return 0;
+    memset(str, 0, str_s);
     uint i = 0;
     size_t bytes_left;
     while ((bytes_left = uart_is_readable(bt.id)) > 0 && i < str_s)
         str[i++] = uart_getc(bt.id);
+    PRINT("rec  [%s]", , str);
     return i;
 }
 
 size_t bt_write(char* str, size_t str_s)
 {
+    if (!bt_is_writable()) return 0;
     uint i = 0;
     size_t bytes_left;
     while ((bytes_left = uart_is_writable(bt.id)) > 0 && i < str_s)
-        str[i++] = uart_getc(bt.id);
+        uart_putc(bt.id, str[i++]);
+    PRINT("sent [%s]", , str);
     return i;
 }
+
+bool bt_is_readable() { return uart_is_readable(bt.id); }
+bool bt_is_writable() { return uart_is_writable(bt.id); }

@@ -1,6 +1,6 @@
 #include "sw_apps/apps.h"
 #include "GUI_Paint.h"
-#include <string.h>
+#include "sw_bt/bt.h"
 
 static void _step_display();
 
@@ -39,6 +39,7 @@ enum app_status_t apps_load_media()
 
     bool clicked;
     int x = 0, y = 0;
+
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -49,16 +50,15 @@ enum app_status_t apps_load_media()
         if (apps_is_exited()) return APP_OK;
         if (clicked) {
             if (apps_is_clicked(BTN_PLAY_PAUSE)) {
-                WARN(BTN_PLAY_PAUSE);
                 state.media.is_playing = !state.media.is_playing;
                 screen.redraw = DISP_REDRAW;
+                bt_send_resp(BT_RESP_OSC_PLAY_PAUSE);
             } else if (apps_is_clicked(BTN_NEXT)) {
-                WARN(BTN_NEXT);
                 screen.redraw = DISP_PARTIAL;
+                bt_send_resp(BT_RESP_OSC_NEXT);
             } else if (apps_is_clicked(BTN_PREV)) {
-                WARN(BTN_PREV);
                 screen.redraw = DISP_PARTIAL;
-                screen.redraw = DISP_PARTIAL;
+                bt_send_resp(BT_RESP_OSC_PREV);
             }
         }
         if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
@@ -66,7 +66,15 @@ enum app_status_t apps_load_media()
             XY.y_point = 0;
             apps_post_process(false);
         }
+        if (state.media.is_fetched) {
+            state.media.is_fetched = !state.media.is_fetched;
+            Paint_DrawString_EN(20, 70, state.media.song, &Font24, COLOR_BG,
+                                COLOR_FG);
 
+            Paint_DrawString_EN(62, 190, state.media.artist, &Font12, COLOR_BG,
+                                COLOR_FG);
+            screen.redraw = DISP_PARTIAL;
+        }
         if (screen.redraw) {
             apps_draw(res_get_app_media_button(!state.media.is_playing), 40,
                       120);

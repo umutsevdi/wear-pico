@@ -1,5 +1,6 @@
 #include "GUI_Paint.h"
 #include "sw_apps/apps.h"
+#include "sw_bt/bt.h"
 #include "sw_os/dev.h"
 
 static const int POPUP_CALL_ITER = 3;
@@ -56,26 +57,27 @@ static enum app_status_t _load_call()
     bool clicked;
     int x = 0, y = 0;
     while (true) {
+        WARN(Hi);
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
             y = XY.y_point;
             clicked = true;
         }
+        WARN(Hi2);
         if (state.popup.value.caller.is_over) return APP_OK;
         if (apps_is_exited()) return APP_OK;
 
+        WARN(Hi3);
         if (clicked) {
             if (apps_is_clicked(BTN_ACCEPT)) {
-                //                bt_respond((BtEvent){ BT_RESP_CALL_RESULT})
-                // TODO Respond with ACCEPT
-                WARN(CALL_ACCEPT);
-                return APP_OK;
+                WARN(Hi4);
+                if (bt_send_resp(BT_RESP_CALL_OK)) return APP_OK;
             } else if (apps_is_clicked(BTN_DISMISS)) {
-                // TODO Respond with DISMISS
-                WARN(CALL_DISMISS);
-                return APP_OK;
+                WARN(Hi5);
+                if (bt_send_resp(BT_RESP_CALL_CANCEL)) return APP_OK;
             }
         }
+        WARN(Hi6);
 
         if (apps_set_titlebar(0, POPUP_CALL)) {
             XY.x_point = 0;
@@ -90,14 +92,18 @@ static enum app_status_t _load_call()
             apps_post_process(false);
         }
 
+        WARN(Hi7);
         if (screen.redraw) {
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
+        WARN(Hi8);
         clicked = false;
         os_dev_notify_d(POPUP_CALL_ITER, DEV_BUZZER | DEV_LED | DEV_VIB, 250,
                         60);
+        WARN(Hi9);
         sleep_ms(125);
+        WARN(Hi10);
     }
 }
 

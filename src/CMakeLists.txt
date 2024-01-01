@@ -44,7 +44,7 @@ target_link_libraries(smartwatch
 )
 
 # enable usb output, disable uart output
-pico_enable_stdio_usb(smartwatch 0)
+pico_enable_stdio_usb(smartwatch 1)
 pico_enable_stdio_uart(smartwatch 0)
 
 # pico_btstack_make_gatt_header(smartwatch PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sw.gatt")

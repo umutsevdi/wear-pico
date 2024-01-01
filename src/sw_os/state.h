@@ -63,8 +63,8 @@ typedef struct {
     struct {
         bool is_playing;
         char song[30];
-        char album[30];
         char artist[30];
+        bool is_fetched;
     } media;
     int32_t step;
 } SwState;
@@ -76,4 +76,3 @@ void os_init();
 
 void os_request_popup(Popup p);
 #endif
-

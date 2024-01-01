@@ -11,21 +11,7 @@
 #include "sw_os/dev.h"
 #include "sw_os/state.h"
 
-void _core1_cb()
-{
-    WARN(BT_INIT);
-    bt_init();
-    WARN(BT_ENABLED);
-
-    while (1) {
-        //        printf("CORE 0 running with %s\n", __func__);
-        //        WARN(BT_CORE_LOOP);
-        sleep_ms(2000);
-        os_gyro_fetch();
-        int demo_amount = (state.dev.dist_acc / 10000 - 2);
-        state.step += demo_amount > 0 ? demo_amount : 0;
-    }
-}
+void _core1_cb() { apps_load(SCREEN_CLOCK); }
 
 int main(int argc, char* argv[])
 {
@@ -33,8 +19,18 @@ int main(int argc, char* argv[])
     os_init();
     apps_init();
     multicore_launch_core1(_core1_cb);
-    apps_load(SCREEN_LOG);
-    apps_load(SCREEN_CLOCK);
+
+    WARN(BT_INIT);
+    bt_init();
+    WARN(BT_ENABLED);
+
+    while (1) {
+        bt_receive_req();
+        os_gyro_fetch();
+        int demo_amount = (state.dev.dist_acc / 10000 - 2);
+        state.step += demo_amount > 0 ? demo_amount : 0;
+        sleep_ms(200);
+    }
 
     return 0;
 }

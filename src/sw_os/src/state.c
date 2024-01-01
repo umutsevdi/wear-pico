@@ -43,6 +43,7 @@ static bool _os_timer_cb(repeating_timer_t* r)
     if (state.dt.second > 59) {
         state.dt.second = 0;
         state.dt.minute++;
+        if (state.dt.second % 10 == 0) state.is_connected = bt_is_connected();
         if (state.dt.minute > 59) {
             state.dt.minute = 0;
             state.dt.hour++;
@@ -52,7 +53,6 @@ static bool _os_timer_cb(repeating_timer_t* r)
             }
         }
         /* Call every minute  */
-        state.is_connected = bt_is_connected();
         _process_alarms();
     }
     return true;

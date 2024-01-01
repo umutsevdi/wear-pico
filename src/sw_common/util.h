@@ -21,7 +21,7 @@
 #define LOG_BUFFER_S 400
 extern char LOG_BUFFER[LOG_BUFFER_S];
 
-#define __SW_DEBUG_USB__ 0
+#define __SW_DEBUG_USB__ 1
 
 #if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \

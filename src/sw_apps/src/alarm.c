@@ -1,5 +1,5 @@
-#include "GUI_Paint.h"
 #include "sw_apps/apps.h"
+#include "sw_bt/bt.h"
 #include "sw_res/resources.h"
 #define ALARM_X 40
 #define ALARM_Y 66
@@ -10,6 +10,7 @@ void _alarm_draw(int idx, Alarm* alarm);
 enum app_status_t apps_load_alarm(void)
 {
     SET_MODULE(SCREEN_ALARM, TOUCH_POINT);
+    bt_send_resp(BT_RESP_FETCH_ALARM);
 
     bool clicked;
     int x = 0, y = 0;

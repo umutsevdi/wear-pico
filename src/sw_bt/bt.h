@@ -14,6 +14,8 @@
 #include "sw_common/util.h"
 #include "sw_os/state.h"
 
+#define BT_MAGIC (27 ^ 91) /* 64 */
+
 /* Status codes related to protocol */
 enum bt_fmt_t {
     BT_FMT_OK,
@@ -47,6 +49,7 @@ enum bt_req_t {
     BT_REQ_OSC,        /* On Song Change Event. Payload: "Song|Album|Artist" */
     BT_REQ_FETCH_DATE, /* Update request. Payload: "{DateTime}" */
     BT_REQ_FETCH_ALARM,
+    BT_REQ_STEP,
 
     BT_REQ_SIZE
 };
@@ -54,15 +57,23 @@ enum bt_req_t {
 enum bt_resp_t {
     BT_RESP_OK,
     BT_RESP_ERR,
-    BT_RESP_CALL_RESULT,
-    BT_RESP_OSC_RESULT,
-    BT_RESP_REMINDER,
+    BT_RESP_CALL_OK,
+    BT_RESP_CALL_CANCEL,
+    BT_RESP_OSC_PREV,
+    BT_RESP_OSC_PLAY_PAUSE,
+    BT_RESP_OSC_NEXT,
     BT_RESP_FETCH_ALARM,
-    BT_RESP_FETCH_BAT,
+    BT_RESP_STEP,
+    BT_RESP_SIZE
 };
 
 /* Initializes the Bluetooth connection */
-enum bt_status_t bt_init(void);
+void bt_init(void);
+
+/* Single Bluetooth iteration for a loop */
+void bt_receive_req();
+
+bool bt_send_resp(enum bt_resp_t response);
 
 /* Read up to str_s bytes from the Bluetooth connection */
 size_t bt_read(char* str, size_t str_s);
@@ -72,6 +83,9 @@ size_t bt_write(char* str, size_t str_s);
 
 /* Returns whether Bluetooth is connected to an external device */
 bool bt_is_connected();
+
+bool bt_is_readable();
+bool bt_is_writable();
 
 /**
  * Parses and handles the incoming request.

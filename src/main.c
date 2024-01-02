@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         os_gyro_fetch();
         int demo_amount = (state.dev.dist_acc / 10000 - 2);
         state.step += demo_amount > 0 ? demo_amount : 0;
-        sleep_ms(125);
+        sleep_ms(250);
     }
 
     return 0;

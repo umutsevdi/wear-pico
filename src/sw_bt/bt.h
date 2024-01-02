@@ -14,8 +14,6 @@
 #include "sw_common/util.h"
 #include "sw_os/state.h"
 
-#define BT_MAGIC (27 ^ 91) /* 64 */
-
 /* Status codes related to protocol */
 enum bt_fmt_t {
     BT_FMT_OK,

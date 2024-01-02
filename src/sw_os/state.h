@@ -15,7 +15,7 @@
 
 union PopupValue {
     struct caller {
-        char name[15];
+        char name[25];
         bool is_over;
     } caller;
     struct {

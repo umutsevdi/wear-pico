@@ -94,10 +94,7 @@ enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req)
 {
     if (arr_s > 5) return ERROR(BT_FMT_ERROR_INVALID_INPUT);
     char* endptr;
-    long mgc = strtol(arr[0], &endptr, 10);
-    if (*endptr != '\0' || mgc != BT_MAGIC) return ERROR(BT_FMT_ERROR_MAGIC);
-
-    long request_type = strtol(arr[1], &endptr, 10);
+    long request_type = strtol(arr[0], &endptr, 10);
     if (*endptr != '\0') return ERROR(BT_FMT_ERROR_REQ_TYPE);
 
     *req = request_type;
@@ -106,56 +103,62 @@ enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req)
 
 static enum bt_fmt_t _handle_fetch_date(char** str, int str_s)
 {
-    if (str_s < 3) return ERROR(BT_FMT_ERROR_PAYLOAD);
-    bool result = str_to_date(str[2], &state.dt);
+    if (str_s < 2) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    bool result = str_to_date(str[1], &state.dt);
     state.is_connected = true;
+    PRINT("fetch_date(%s) = %s", , str[1], result ? "true" : "false");
     return result ? BT_FMT_OK : ERROR(BT_FMT_ERROR_DATE_PARSE);
 }
 
 static enum bt_fmt_t _handle_call_begin(char** str, int str_s)
 {
-    if (str_s < 3) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str_s < 2) return ERROR(BT_FMT_ERROR_PAYLOAD);
     Popup p = (Popup){.type = POPUP_CALL, .value.caller.is_over = false};
-    strncpy(p.value.caller.name, str[2], strnlen(str[2], 15));
+    strncpy(p.value.caller.name, str[1], strnlen(str[1], 25));
     os_request_popup(p);
+    PRINT("received_call(%s)", , str[1]);
     return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_call_end()
 {
     if (state.popup.type == POPUP_CALL) state.popup.value.caller.is_over = true;
+    PRINT("ended_call()");
     return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_notify(char** str, int str_s)
 {
-    if (str_s < 4) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str_s < 3) return ERROR(BT_FMT_ERROR_PAYLOAD);
     Popup p = (Popup){.type = POPUP_NOTIFY};
-    strncpy(p.value.notify.title, str[2], strnlen(str[2], 15));
-    strncpy(p.value.notify.text, str[3], strnlen(str[3], 128));
+    strncpy(p.value.notify.title, str[1], strnlen(str[1], 15));
+    strncpy(p.value.notify.text, str[2], strnlen(str[2], 128));
     os_request_popup(p);
+    PRINT("notify(%s, %s)", , p.value.notify.title, p.value.notify.text);
     return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_reminder(char** str, int str_s)
 {
-    if (str_s < 3) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str_s < 2) return ERROR(BT_FMT_ERROR_PAYLOAD);
     Popup p = (Popup){.type = POPUP_NOTIFY};
     strncpy(p.value.notify.title, "Reminder", strlen("Reminder"));
-    strncpy(p.value.notify.text, str[2], strnlen(str[2], 128));
+    strncpy(p.value.notify.text, str[1], strnlen(str[1], 128));
     os_request_popup(p);
+    PRINT("reminder(%s)", , p.value.notify.text);
     return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_osc(char** str, int str_s)
 {
-    if (str_s < 5) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str_s < 4) return ERROR(BT_FMT_ERROR_PAYLOAD);
     state.media.is_playing =
-        str[2][0] == 't' || str[2][0] == 'T' || str[2][0] == '1';
-    strncpy(state.media.song, str[3], strnlen(str[3], 30));
-    strncpy(state.media.artist, str[4], strnlen(str[4], 30));
+        str[1][0] == 't' || str[1][0] == 'T' || str[1][0] == '1';
+    strncpy(state.media.song, str[2], strnlen(str[2], 30));
+    strncpy(state.media.artist, str[3], strnlen(str[3], 30));
 
     state.media.is_fetched = true;
+    PRINT("media(%s by %s)", , state.media.song, state.media.artist);
     return BT_FMT_OK;
 }
 
@@ -175,23 +178,34 @@ void str_to_alarm(const char* str, DateTime* dt)
 
 static enum bt_fmt_t _handle_fetch_alarm(char** str, int str_s)
 {
-    if (str_s < 5) return ERROR(BT_FMT_ERROR_PAYLOAD);
-    if (str[2][0] < '0' || str[2][0] > '4')
+    if (str_s < 2) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str[1][0] < '0' || str[1][0] > '4')
         return ERROR(BT_FMT_ERROR_ALARM_PARSE);
-    int alarm_count = str[2][0] - '0';
+    int alarm_count = str[1][0] - '0';
 
     state.alarms.len = alarm_count;
     for (int i = 0; i < alarm_count; i++) {
         /* is_active value is set by the watch */
-        str_to_alarm(str[i + 3], &state.alarms.list[i].at);
+        str_to_alarm(str[i + 2], &state.alarms.list[i].at);
+        PRINT("alarm_%d(%d:%d)", , i, state.alarms.list[i].at.hour,
+              state.alarms.list[i].at.minute);
     }
     return BT_FMT_OK;
 }
 
 static enum bt_fmt_t _handle_step(char** str, int str_s)
 {
-    if (str_s < 2) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    if (str_s < 1) return ERROR(BT_FMT_ERROR_PAYLOAD);
     bt_send_resp(BT_RESP_STEP);
+    PRINT("step()");
+    return BT_FMT_OK;
+}
+
+static enum bt_fmt_t _handle_hb(char** str, int str_s)
+{
+    if (str_s < 1) return ERROR(BT_FMT_ERROR_PAYLOAD);
+    bt_send_resp(BT_RESP_OK);
+    PRINT("heartbeat()");
     return BT_FMT_OK;
 }
 
@@ -207,6 +221,7 @@ static enum bt_fmt_t _req_route(char** arr, int arr_s,
     case BT_REQ_FETCH_DATE: return _handle_fetch_date(arr, arr_s);
     case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(arr, arr_s);
     case BT_REQ_STEP: return _handle_step(arr, arr_s);
+    case BT_REQ_HB: return _handle_hb(arr, arr_s);
     default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
     }
 }

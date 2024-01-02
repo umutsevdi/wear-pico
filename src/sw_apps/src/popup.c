@@ -26,6 +26,7 @@ enum app_status_t apps_poll_popup()
         state.__popup_req.type = POPUP_NONE;
         return APP_NO_POPUP;
     }
+    WARN(LOADING_POPUP);
     /* store the status to revert */
     int mode_old = XY.mode;
     Popup popup_old = state.popup;
@@ -81,7 +82,7 @@ static enum app_status_t _load_call()
             Paint_DrawString_EN(
                 0, 90,
                 strcenter(state.popup.value.caller.name,
-                          strnlen(state.popup.value.caller.name, 15), 15),
+                          strnlen(state.popup.value.caller.name, 25), 25),
                 &Font24, COLOR_BG, COLOR_FG);
             apps_post_process(false);
         }

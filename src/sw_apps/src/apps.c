@@ -12,8 +12,8 @@ enum app_status_t apps_lock_screen()
     LCD_1IN28_Display(screen.buffer);
     XY.Gesture = None;
     while (true) {
-        if (state.popup.type != POPUP_NONE) {
-            XY.Gesture = UP;
+        if (state.popup.type != POPUP_NONE
+            || state.__popup_req.type != POPUP_NONE) {
             DEV_SET_PWM(100);
             if (!apps_poll_popup()) return APP_OK;
         }
@@ -76,11 +76,12 @@ enum app_status_t apps_load_media()
             char center[30] = {0};
             int len = strnlen(state.media.song, 30);
             strncpy(center, state.media.song, len);
-            Paint_DrawString_EN(10, 84, strcenter(center, len, 20), &Font20,
+            Paint_DrawString_EN(5, 84, strcenter(center, len, 20), &Font20,
                                 COLOR_BG, COLOR_FG);
             len = strnlen(state.media.artist, 30);
+            memset(center, 0, 30);
             strncpy(center, state.media.artist, len);
-            Paint_DrawString_EN(40, 185, strcenter(center, len, 20), &Font12,
+            Paint_DrawString_EN(50, 185, strcenter(center, len, 20), &Font12,
                                 COLOR_BG, COLOR_FG);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;

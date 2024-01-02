@@ -48,9 +48,9 @@ bool bt_send_resp(enum bt_resp_t response)
 {
     char err_str[10];
     if (response != BT_RESP_STEP)
-        snprintf(err_str, 9, "%d|%d|", BT_MAGIC, response);
+        snprintf(err_str, 9, "%d|", response);
     else
-        snprintf(err_str, 9, "%d|%d|%d|", BT_MAGIC, response, state.step);
+        snprintf(err_str, 9, "%d|%d|", response, state.step);
     return bt_write(err_str, 10) > 0;
 }
 
@@ -60,18 +60,12 @@ size_t bt_read(char* str, size_t str_s)
     // respond the code
     if (!bt_is_readable()) return 0;
     memset(str, '\0', str_s);
-    int attempts = 10;
     uint i = 0;
     size_t bytes_left;
-    while (attempts && i < str_s) {
-        if ((bytes_left = uart_is_readable(bt.id)) > 0) {
-            str[i++] = uart_getc(bt.id);
-        } else {
-            attempts--;// wait and try again
-        }
-    }
-    state.__last_connected = get_absolute_time();
+    while ((bytes_left = uart_is_readable(bt.id)) > 0 && i < str_s)
+        str[i++] = uart_getc(bt.id);
     PRINT("rec  [%s]", , str);
+    if (i > 0) state.__last_connected = get_absolute_time();
     return i;
 }
 

@@ -152,9 +152,10 @@ static enum bt_fmt_t _handle_osc(char** str, int str_s)
     if (str_s < 5) return ERROR(BT_FMT_ERROR_PAYLOAD);
     state.media.is_playing =
         str[2][0] == 't' || str[2][0] == 'T' || str[2][0] == '1';
-
     strncpy(state.media.song, str[3], strnlen(str[3], 30));
     strncpy(state.media.artist, str[4], strnlen(str[4], 30));
+
+    state.media.is_fetched = true;
     return BT_FMT_OK;
 }
 
@@ -209,9 +210,3 @@ static enum bt_fmt_t _req_route(char** arr, int arr_s,
     default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
     }
 }
-
-// TODO add requests to send to the phone
-// TODO - On Change/Pause song
-// TODO - On Toggle alarm result
-// TODO - On Call response
-// TODO - On Request to fetch date

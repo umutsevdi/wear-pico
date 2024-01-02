@@ -1,5 +1,4 @@
 #include "sw_apps/apps.h"
-#include "GUI_Paint.h"
 #include "sw_bt/bt.h"
 
 static void _step_display();
@@ -67,17 +66,22 @@ enum app_status_t apps_load_media()
             apps_post_process(false);
         }
         if (state.media.is_fetched) {
+            PRINT(BT_OSC_FETCH);
             state.media.is_fetched = !state.media.is_fetched;
-            Paint_DrawString_EN(20, 70, state.media.song, &Font24, COLOR_BG,
-                                COLOR_FG);
-
-            Paint_DrawString_EN(62, 190, state.media.artist, &Font12, COLOR_BG,
-                                COLOR_FG);
             screen.redraw = DISP_PARTIAL;
         }
         if (screen.redraw) {
             apps_draw(res_get_app_media_button(!state.media.is_playing), 40,
                       120);
+            char center[30] = {0};
+            int len = strnlen(state.media.song, 30);
+            strncpy(center, state.media.song, len);
+            Paint_DrawString_EN(10, 84, strcenter(center, len, 20), &Font20,
+                                COLOR_BG, COLOR_FG);
+            len = strnlen(state.media.artist, 30);
+            strncpy(center, state.media.artist, len);
+            Paint_DrawString_EN(40, 185, strcenter(center, len, 20), &Font12,
+                                COLOR_BG, COLOR_FG);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }

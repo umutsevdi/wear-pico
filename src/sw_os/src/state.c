@@ -33,17 +33,22 @@ static void _process_alarms()
     }
 }
 
+static void _process_connection(absolute_time_t* now)
+{
+    state.is_connected = absolute_time_diff_us(*now, then) / 1000000 < 15;
+}
+
 static bool _os_timer_cb(repeating_timer_t* r)
 {
     absolute_time_t now = get_absolute_time();
     if ((absolute_time_diff_us(now, then) / 1000000)) {
         then = now;
         state.dt.second++;
+        _process_connection(&now);
     }
     if (state.dt.second > 59) {
         state.dt.second = 0;
         state.dt.minute++;
-        if (state.dt.second % 10 == 0) state.is_connected = bt_is_connected();
         if (state.dt.minute > 59) {
             state.dt.minute = 0;
             state.dt.hour++;

@@ -36,6 +36,7 @@ typedef struct {
     repeating_timer_t __dt_timer;
     bool show_sec;
     bool is_connected;
+    absolute_time_t __last_connected;
     Popup popup;
     Popup __popup_req;
     struct {

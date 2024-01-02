@@ -50,6 +50,7 @@ enum bt_req_t {
     BT_REQ_FETCH_DATE, /* Update request. Payload: "{DateTime}" */
     BT_REQ_FETCH_ALARM,
     BT_REQ_STEP,
+    BT_REQ_HB, /* Heartbeat request to show Pico connection is alive */
 
     BT_REQ_SIZE
 };
@@ -80,9 +81,6 @@ size_t bt_read(char* str, size_t str_s);
 
 /* Write up to str_s bytes to the Bluetooth connection */
 size_t bt_write(char* str, size_t str_s);
-
-/* Returns whether Bluetooth is connected to an external device */
-bool bt_is_connected();
 
 bool bt_is_readable();
 bool bt_is_writable();

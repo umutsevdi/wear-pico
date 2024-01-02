@@ -33,18 +33,19 @@ void bt_init(void)
 
 void bt_receive_req()
 {
-    if (!bt.is_enabled || bt.packet_lock) return;
+    if (bt.packet_lock) {
+        WARN(READ_PACKET_LOCK);
+        return;
+    }
+
     bt.packet_lock = true;
     size_t bytes = bt_read(bt.packet, 240);
-    if (bytes <= 0) return;
-
-    bt_handle_req(bt.packet, bytes);
+    if (bytes > 0) bt_handle_req(bt.packet, bytes);
     bt.packet_lock = false;
 }
 
 bool bt_send_resp(enum bt_resp_t response)
 {
-    // respond the code
     char err_str[10];
     if (response != BT_RESP_STEP)
         snprintf(err_str, 9, "%d|%d|", BT_MAGIC, response);
@@ -53,25 +54,23 @@ bool bt_send_resp(enum bt_resp_t response)
     return bt_write(err_str, 10) > 0;
 }
 
-bool bt_is_connected()
-{
-    char* req = "AT+STATE?\r\n";
-    bt_write(req, strlen(req));
-    char response[20];
-    bt_read(response, 20);
-    bool is_connected = (strstr(response, "CONNECTED") != NULL);
-    PRINT("conn [%s]", , is_connected ? "true" : "false");
-    return is_connected;
-}
-
 size_t bt_read(char* str, size_t str_s)
 {
+    //TODO Handle polling for data over 32 bytes
+    // respond the code
     if (!bt_is_readable()) return 0;
-    memset(str, 0, str_s);
+    memset(str, '\0', str_s);
+    int attempts = 10;
     uint i = 0;
     size_t bytes_left;
-    while ((bytes_left = uart_is_readable(bt.id)) > 0 && i < str_s)
-        str[i++] = uart_getc(bt.id);
+    while (attempts && i < str_s) {
+        if ((bytes_left = uart_is_readable(bt.id)) > 0) {
+            str[i++] = uart_getc(bt.id);
+        } else {
+            attempts--;// wait and try again
+        }
+    }
+    state.__last_connected = get_absolute_time();
     PRINT("rec  [%s]", , str);
     return i;
 }

@@ -17,12 +17,27 @@ static enum app_status_t _load_notification();
 int64_t _call_notify(int32_t id, void* data);
 int64_t _call_ring(int32_t id, void* data);
 
+static int _popup_value(enum popup_t p)
+{
+    switch (p) {
+    case POPUP_NOTIFY: return 1;
+    case POPUP_ALARM: return 2;
+    case POPUP_CALL: return 3;
+    default: return 0;
+    }
+}
+
+static int _popup_cmp(enum popup_t p1, enum popup_t p2)
+{
+    if (p1 == p2) return 0;
+    return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
+}
+
 enum app_status_t apps_poll_popup()
 {
     /* Reject the pop-up request if when there is none or the requested pop-ups
      * priority is lower */
-    if (state.__popup_req.type == POPUP_NONE
-        || state.popup.type >= state.__popup_req.type) {
+    if (_popup_cmp(state.popup.type, state.__popup_req.type) >= 0) {
         state.__popup_req.type = POPUP_NONE;
         return APP_NO_POPUP;
     }
@@ -163,7 +178,7 @@ static enum app_status_t _load_notification()
             char* array[8] = {0};
             int array_s = strwrap(state.popup.value.notify.text,
                                   strnlen(state.popup.value.notify.text, 128),
-                                  20, array, 7);
+                                  17, array, 7);
             if (array_s != -1) {
                 for (int i = 0; i < array_s; i++)
                     Paint_DrawString_EN(50, 70 + 12 * i, array[i], &Font12,

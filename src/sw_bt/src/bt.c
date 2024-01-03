@@ -1,6 +1,10 @@
 #include "sw_bt/bt.h"
+#include "hardware/regs/intctrl.h"
+#include <hardware/irq.h>
 #include <hardware/uart.h>
 #include <pico/stdlib.h>
+#define POLLING_ON 0
+#define POLLING_OFF 10
 
 typedef struct __BT_FD {
     uart_inst_t* id;
@@ -9,10 +13,32 @@ typedef struct __BT_FD {
     int rx_pin;
     bool is_enabled;
     char packet[240];// max size of a Bluetooth payload
+    uint cursor;
     bool packet_lock;
 } BtFd;
 
 BtFd bt = {0};
+
+static bool is_str_complete()
+{
+    if (bt.cursor < 4) return false;
+    return bt.packet[bt.cursor] == '\0' && bt.packet[bt.cursor - 1] == '\n'
+           && bt.packet[bt.cursor - 2] == '\r'
+           && bt.packet[bt.cursor - 3] == '|';
+}
+
+void on_uart_rx()
+{
+    size_t bytes_left = uart_is_readable(bt.id);
+    if (bytes_left > 0 && bt.cursor < 240)
+        bt.packet[bt.cursor++] = uart_getc(bt.id);
+    if (is_str_complete()) {
+        PRINT("handle str: [%s]%u", , bt.packet, bt.cursor);
+        bt_handle_req(bt.packet, bt.cursor - 2);
+        memset(bt.packet, '\0', bt.cursor);
+        bt.cursor = 0;
+    }
+}
 
 void bt_init(void)
 {
@@ -29,19 +55,10 @@ void bt_init(void)
     uart_init(bt.id, bt.baud_rate);
     gpio_set_function(bt.tx_pin, GPIO_FUNC_UART);
     gpio_set_function(bt.rx_pin, GPIO_FUNC_UART);
-}
 
-void bt_receive_req()
-{
-    if (bt.packet_lock) {
-        WARN(READ_PACKET_LOCK);
-        return;
-    }
-
-    bt.packet_lock = true;
-    size_t bytes = bt_read(bt.packet, 240);
-    if (bytes > 0) bt_handle_req(bt.packet, bytes);
-    bt.packet_lock = false;
+    irq_set_exclusive_handler(UART0_IRQ, on_uart_rx);
+    irq_set_enabled(UART0_IRQ, true);
+    uart_set_irq_enables(bt.id, true, false);
 }
 
 bool bt_send_resp(enum bt_resp_t response)
@@ -52,21 +69,6 @@ bool bt_send_resp(enum bt_resp_t response)
     else
         snprintf(err_str, 9, "%d|%d|", response, state.step);
     return bt_write(err_str, 10) > 0;
-}
-
-size_t bt_read(char* str, size_t str_s)
-{
-    //TODO Handle polling for data over 32 bytes
-    // respond the code
-    if (!bt_is_readable()) return 0;
-    memset(str, '\0', str_s);
-    uint i = 0;
-    size_t bytes_left;
-    while ((bytes_left = uart_is_readable(bt.id)) > 0 && i < str_s)
-        str[i++] = uart_getc(bt.id);
-    PRINT("rec  [%s]", , str);
-    if (i > 0) state.__last_connected = get_absolute_time();
-    return i;
 }
 
 size_t bt_write(char* str, size_t str_s)

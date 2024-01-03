@@ -69,13 +69,7 @@ enum bt_resp_t {
 /* Initializes the Bluetooth connection */
 void bt_init(void);
 
-/* Single Bluetooth iteration for a loop */
-void bt_receive_req();
-
 bool bt_send_resp(enum bt_resp_t response);
-
-/* Read up to str_s bytes from the Bluetooth connection */
-size_t bt_read(char* str, size_t str_s);
 
 /* Write up to str_s bytes to the Bluetooth connection */
 size_t bt_write(char* str, size_t str_s);

@@ -60,15 +60,15 @@ enum app_status_t apps_load_media()
                 bt_send_resp(BT_RESP_OSC_PREV);
             }
         }
+        if (state.media.is_fetched) {
+            PRINT(BT_OSC_FETCH);
+            state.media.is_fetched = false;
+            screen.redraw = DISP_REDRAW;
+        }
         if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
             apps_post_process(false);
-        }
-        if (state.media.is_fetched) {
-            PRINT(BT_OSC_FETCH);
-            state.media.is_fetched = !state.media.is_fetched;
-            screen.redraw = DISP_PARTIAL;
         }
         if (screen.redraw) {
             apps_draw(res_get_app_media_button(!state.media.is_playing), 40,

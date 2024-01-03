@@ -26,15 +26,18 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 #if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
     printf("%s#%30s():%-4d  " #FMT "\r\n", _file_fmt(__FILE__), __func__,      \
-           __LINE__ ARGS)
+           __LINE__ ARGS),                                                     \
+        __strdump(0, "INF:" #FMT "\n" ARGS)
+
 #define WARN(CODE)                                                             \
     printf("%s#%30s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__), __func__,     \
-           __LINE__);
+           __LINE__),                                                          \
+        __strdump(0, "WRN:" #CODE "\n")
 
 #define ERROR(CODE)                                                            \
     (fprintf(stderr, "%s#%30s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__),     \
              __func__, __LINE__),                                              \
-     CODE)
+     __strdump(CODE, "ERR:" #CODE "\n"))
 #else
 #define PRINT(FMT, ARGS...) __strdump(0, "INF:" #FMT "\n" ARGS)
 #define WARN(CODE) __strdump(0, "WRN:" #CODE "\n")

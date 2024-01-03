@@ -39,7 +39,8 @@ static bool _os_timer_cb(repeating_timer_t* r)
     if ((absolute_time_diff_us(now, then) / 1000000)) {
         then = now;
         state.dt.second++;
-        state.is_connected = absolute_time_diff_us(now, state.__last_connected) / 1000000 < 15;
+        state.is_connected =
+            absolute_time_diff_us(now, state.__last_connected) / 1000000 < 5;
     }
     if (state.dt.second > 59) {
         state.dt.second = 0;
@@ -72,7 +73,7 @@ void os_init()
     state.show_sec = false;
     state.is_connected = false;
     state.bat.on_charge = true;
-    state.dt = (DateTime){0, 2023, 12, 8, 9, 00, 00};
+    state.dt = (DateTime){0, 2024, 01, 01, 00, 00, 00};
     state.alarms.len = 3;
     for (int i = 0; i < state.alarms.len; i++) {
         state.alarms.list[i].is_active = i % 2;
@@ -86,27 +87,8 @@ void os_init()
     state.chrono.dt.flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_YEAR | DT_WC_DAY;
     os_dev_init();
     os_gyro_init();
-    //    os_dev_set_for(DEV_LED, 1000);
     add_repeating_timer_ms(1000, _os_timer_cb, NULL, &state.__dt_timer);
     add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
-
-    //strcpy(state.popup.value.caller, "Ron Swanson");
-    //state.popup.type = POPUP_CALL;
-
-    /*    apps_request_popup((Popup){.type = POPUP_CALL,
-                               .value = (union PopupValue){
-                                   .caller = "Ron Swanson",
-                               }});*/
-    /*    apps_request_popup((Popup){
-        .type = POPUP_NOTIFY,
-        .value = (union PopupValue){.notify.title = "Whatsapp",
-                                    .notify.text =
-                                        "Ahmet Yilmaz:\nHello this is a long "
-                                        "text that should be "
-                                        "wrapped at. Hi, endline.\nHello\nThis "
-                                        "is a really long "
-                                        "answer too."},
-    });*/
     PRINT(OS_INIT);
 }
 

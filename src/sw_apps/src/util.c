@@ -29,13 +29,18 @@ void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)
     }
 }
 
-bool apps_is_clicked(int x_start, int y_start, int width, int height)
+bool apps_is_clicked_d(int x, int y, int x_start, int y_start, int width,
+                       int height)
 {
     const int pad = 10;// padding pixel
-    int x = XY.x_point;
-    int y = XY.y_point;
     return (x_start - pad) < x && x < (x_start + width + pad)
            && (y_start - pad) < y && y < (y_start + height + pad);
+}
+
+bool apps_is_clicked(int x_start, int y_start, int width, int height)
+{
+    return apps_is_clicked_d(XY.x_point, XY.y_point, x_start, y_start, width,
+                             height);
 }
 
 void apps_post_process(bool is_cb)
@@ -44,7 +49,7 @@ void apps_post_process(bool is_cb)
     char str[10];
     if (screen.sstate != SCREEN_CLOCK || state.popup.type != POPUP_NONE) {
         snprintf(str, 10, "%02d:%02d", state.dt.hour, state.dt.minute);
-        Paint_DrawString_EN(102, 12, str, &Font12, COLOR_BG, COLOR_FG);
+        Paint_DrawString_EN(100, 12, str, &Font12, COLOR_BG, COLOR_FG);
     }
     Resource tray;
     if (state.bat.on_charge)
@@ -66,12 +71,17 @@ void apps_post_process(bool is_cb)
                   175, 200);
     if ((screen.sstate != SCREEN_ALARM || state.popup.type != POPUP_NONE)
         && state.alarms.len > 0) {
+        bool alarm_status = false;
         for (short i = 0; i < state.alarms.len; i++) {
             if (state.alarms.list[i].is_active) {
-                apps_draw(res_get_tray(TRAY_ALARM), 152, 214);
+                alarm_status = true;
                 break;
             }
         }
+        if (alarm_status)
+            apps_draw(res_get_tray(TRAY_ALARM), 152, 214);
+        else
+            apps_draw(res_get_tray(TRAY_NONE), 152, 214);
     }
     screen.post_time = 60;
     if (is_cb) {

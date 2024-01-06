@@ -1,4 +1,6 @@
 #include "sw_apps/apps.h"
+#define CANVAS_WIDTH 176
+#define CANVAS_HEIGHT 110
 
 Display screen = {0};
 Touch_1IN28_XY XY;
@@ -19,6 +21,7 @@ enum app_status_t apps_init(void)
 {
     screen.buffer_s = LCD_1IN28_HEIGHT * LCD_1IN28_WIDTH * 2;
     screen.redraw = DISP_REDRAW;
+
     if (DEV_Module_Init() != 0) { return -1; }
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);
@@ -31,7 +34,8 @@ enum app_status_t apps_init(void)
     if ((screen.buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
         return ERROR(APP_ERROR_ALLOC);
     }
-    if ((screen.p_buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
+
+    if ((screen.canvas_buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
         return ERROR(APP_ERROR_ALLOC);
     }
 

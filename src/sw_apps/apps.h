@@ -74,9 +74,10 @@ enum disp_t {
 
 /* Screen state */
 typedef struct {
-    UWORD* buffer;   /* pixel buffer for regular images*/
-    UWORD* p_buffer; /* buffer for pop-ups.*/
+    UWORD* buffer; /* pixel buffer for regular images*/
     UDOUBLE buffer_s;
+    UWORD* canvas_buffer;
+    bool is_saved;        /* whether canvas is saved or not */
     enum screen_t sstate; /* Active screen */
     enum disp_t redraw;   /* Should cause redraw or not */
     int post_time;        /* Post process timer */
@@ -98,6 +99,7 @@ extern Display screen;
  * @show_sec - whether to reduce the font size and include seconds
  */
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
+
 /**
  * Returns whether the selected area has been clicked
  * @x_start - starting position x
@@ -106,6 +108,18 @@ void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
  * @height  - of the selection rectangle
  */
 bool apps_is_clicked(int x_start, int y_start, int width, int height);
+
+/**
+ * apps_is_clicked with extra options
+ * @x - X position of the cursor
+ * @y - Y position of the cursor
+ * @x_start - starting position x
+ * @y_start - starting position y
+ * @width   -  of the selection rectangle
+ * @height  - of the selection rectangle
+ */
+bool apps_is_clicked_d(int x, int y, int x_start, int y_start, int width,
+                       int height);
 
 #define apps_is_exited() apps_is_clicked(160, 30, 30, 30)
 

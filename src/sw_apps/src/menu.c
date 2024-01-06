@@ -16,6 +16,8 @@ extern enum app_status_t apps_load_chrono(void);
 extern enum app_status_t apps_load_calendar(void);
 /* Initializes the Media User Interface */
 extern enum app_status_t apps_load_media(void);
+/* Initializes the notepad User Interface */
+extern enum app_status_t apps_load_notepad(void);
 /* Initializes the Pedometer User Interface */
 extern enum app_status_t apps_load_step(void);
 /* Initializes the logger User Interface */
@@ -39,6 +41,7 @@ const char* _menu_s(enum menu_t m)
     : CURRENT == MENU_CALENDAR ? "MENU_CALENDAR"                               \
     : CURRENT == MENU_MEDIA    ? "MENU_MEDIA"                                  \
     : CURRENT == MENU_STEP     ? "MENU_STEP"                                   \
+    : CURRENT == MENU_NOTE     ? "MENU_NOTE"                                   \
     : CURRENT == MENU_LOG      ? "MENU_LOG"                                    \
                                : "NONE"
 
@@ -54,6 +57,7 @@ enum app_status_t apps_load(enum screen_t s)
     case SCREEN_CHRONO: r = apps_load_chrono(); break;
     case SCREEN_MEDIA: r = apps_load_media(); break;
     case SCREEN_LOG: r = apps_load_log(); break;
+    case SCREEN_NOTE: r = apps_load_notepad(); break;
     case SCREEN_STEP: r = apps_load_step(); break;
     case SCREEN_CALENDAR: r = apps_load_calendar(); break;
     default: break;

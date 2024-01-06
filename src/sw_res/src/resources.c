@@ -23,6 +23,7 @@ extern const unsigned char _res_media[];
 extern const unsigned char _res_menu[];
 extern const unsigned char _res_notify[];
 extern const unsigned char _res_step[];
+extern const unsigned char _res_notepad[];
 extern const unsigned char _res_stopwatch[];
 extern const unsigned char _res_titlebar[];
 extern const unsigned char _res_tray[];
@@ -51,6 +52,7 @@ Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title)
               + 2 * (p_title - 1) * w * h;
     return (Resource){img, w, h};
 }
+
 Resource res_get_menu_screen(enum menu_t selected)
 {
     const int w = 160;
@@ -58,6 +60,7 @@ Resource res_get_menu_screen(enum menu_t selected)
     if (selected < 0 && selected >= MENU_T_SIZE) return (Resource){NULL, 0, 0};
     return _get_sprite(selected, _res_menu, w, h);
 }
+
 Resource res_get_direction(enum gest_dir_t direction)
 {
     const int w = 48;
@@ -66,6 +69,8 @@ Resource res_get_direction(enum gest_dir_t direction)
         return (Resource){NULL, 0, 0};
     return _get_sprite(direction, _res_gest, w, h);
 }
+
+Resource res_get_app_notepad() { return (Resource){_res_notepad, 240, 140}; }
 
 Resource res_get_app_alarm_button(bool is_paused)
 {

@@ -2,7 +2,16 @@
 #include "GUI_Paint.h"
 #include "sw_bt/bt.h"
 
+enum notepad_color_t {
+    NOTEPAD_COLOR_NONE = COLOR_BG,
+    NOTEPAD_COLOR_WHITE = WHITE,
+    NOTEPAD_COLOR_RED = RED,
+    NOTEPAD_COLOR_GREEN = GREEN,
+    NOTEPAD_COLOR_BLUE = BLUE
+};
+
 static void _step_display();
+static bool _notepad_get_color(enum notepad_color_t* color);
 
 enum app_status_t apps_lock_screen()
 {
@@ -120,30 +129,30 @@ enum app_status_t apps_load_calendar()
             snprintf(title, 12, "%3s %4d", DATETIME_MONTH(now.month), now.year);
             strcenter(title, strnlen(title, 12), 12);
 
-            Paint_DrawString_EN(32, 70, title, &Font20, COLOR_BG, COLOR_FG);
-            Paint_DrawString_EN(25, 90, "Mon Tue Wed Thu Fri Sat Sun", &Font12,
+            Paint_DrawString_EN(54, 60, title, &Font16, COLOR_BG, COLOR_FG);
+            Paint_DrawString_EN(25, 80, "Mon Tue Wed Thu Fri Sat Sun", &Font12,
                                 COLOR_BG, COLOR_FG);
-            int j = 110;
+            int j = 100;
 
-            Paint_DrawRectangle(20, 105, 220, 180, COLOR_FG, DOT_PIXEL_1X1,
+            Paint_DrawRectangle(20, 95, 228, 170, COLOR_FG, DOT_PIXEL_1X1,
                                 DRAW_FILL_EMPTY);
-            for (int i = 1; i <= number_of_days; i++) {
-                if (i >= dow_begin) {
-                    char str[4];
-                    snprintf(str, 4, " %02d", i);
-                    int fg_color;
-                    int bg_color = COLOR_BG;
-                    if (i == now.day)
-                        fg_color = YELLOW;
-                    else if (((i - 1) % 7) > 4) {
-                        fg_color = BLACK;
+            char str[4];
+            for (int i = dow_begin; i < number_of_days + dow_begin; i++) {
+                snprintf(str, 4, " %02d", i - dow_begin + 1);
+                int fg_color = COLOR_FG;
+                int bg_color = COLOR_BG;
+                if (((i - 1) % 7) > 4) {
+                    if ((i - dow == now.day))
+                        bg_color = YELLOW;
+                    else
                         bg_color = GBLUE;
-                    } else
-                        fg_color = COLOR_FG;
-                    Paint_DrawString_EN(25 + (i - 1) % 7 * 28, j, str, &Font12,
-                                        bg_color, fg_color);
-                    if (i % 7 == 0) j += 14;
+                    fg_color = BLACK;
+                } else if (i - dow == now.day) {
+                    fg_color = YELLOW;
                 }
+                Paint_DrawString_EN(25 + (i - 1) % 7 * 28, j, str, &Font12,
+                                    bg_color, fg_color);
+                if (i % 7 == 0) j += 14;
             }
             if (screen.redraw) {
                 apps_post_process(false);
@@ -153,7 +162,72 @@ enum app_status_t apps_load_calendar()
         }
     }
 }
+enum app_status_t apps_load_notepad()
+{
+#define PAINT_AREA 42, 79, 156, 95
+    SET_MODULE(SCREEN_NOTE, TOUCH_POINT);
+    enum notepad_color_t color = NOTEPAD_COLOR_WHITE;
+    bool clicked = false;
+    int x = 0, y = 0;
+    int old_x = 0;
+    int old_y = 0;
+    absolute_time_t now;
+    absolute_time_t then = get_absolute_time();
+    while (true) {
+        if (x != XY.x_point || y != XY.y_point) {
+            now = get_absolute_time();
+            if (absolute_time_diff_us(then, now) / 1000 < 250) {
+                old_x = x;
+                old_y = y;
+            } else {
+                old_x = 0;
+                old_y = 0;
+            }
+            then = now;
+            now = get_absolute_time();
+            x = XY.x_point;
+            y = XY.y_point;
+            clicked = true;
+        }
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
+        if (apps_is_exited()) {
+            // save to buffer
+            memcpy(screen.canvas_buffer, screen.buffer, screen.buffer_s);
+            screen.is_saved = true;
+            return APP_OK;
+        }
+        if (clicked) {
+            bool is_selected = _notepad_get_color(&color);
+            if (!is_selected && apps_is_clicked(PAINT_AREA)) {
+                DOT_PIXEL px_size =
+                    color == NOTEPAD_COLOR_NONE ? DOT_PIXEL_4X4 : DOT_PIXEL_2X2;
+                if (apps_is_clicked_d(old_x, old_y, PAINT_AREA))
+                    Paint_DrawLine(old_x, old_y, x, y, color, px_size,
+                                   LINE_STYLE_SOLID);
+                else
+                    Paint_DrawPoint(x, y, color, px_size, DOT_FILL_AROUND);
+            }
+            screen.redraw = DISP_PARTIAL;
+        }
 
+        if (apps_set_titlebar(SCREEN_NOTE, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            if (screen.is_saved)
+                memcpy(screen.buffer, screen.canvas_buffer, screen.buffer_s);
+            else
+                apps_draw(res_get_app_notepad(), 0, 64);
+
+            apps_post_process(false);
+        }
+
+        if (screen.redraw) {
+            LCD_1IN28_Display(screen.buffer);
+            screen.redraw = DISP_SYNC;
+        }
+        clicked = false;
+    }
+}
 enum app_status_t apps_load_step()
 {
     SET_MODULE(SCREEN_STEP, TOUCH_POINT);
@@ -181,7 +255,7 @@ enum app_status_t apps_load_step()
     }
 }
 
-extern enum app_status_t apps_load_log(void)
+enum app_status_t apps_load_log(void)
 {
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
@@ -216,6 +290,38 @@ extern enum app_status_t apps_load_log(void)
             screen.redraw = DISP_SYNC;
         }
     }
+}
+
+static bool _notepad_get_color(enum notepad_color_t* color)
+{
+#define BTN_WHITE 66, 204, 15, 15
+#define BTN_RED 92, 204, 15, 15
+#define BTN_BLUE 119, 204, 15, 15
+#define BTN_GREEN 148, 204, 15, 15
+#define BTN_ERASER 0, 112, 32, 32
+#define BTN_CLEAR 208, 112, 32, 32
+    if (apps_is_clicked(BTN_ERASER)) {
+        WARN(BTN_ERASER);
+        *color = NOTEPAD_COLOR_NONE;
+    } else if (apps_is_clicked(BTN_CLEAR)) {
+        WARN(BTN_CLEAR);
+        Paint_DrawRectangle(32, 69, 208, 179, NOTEPAD_COLOR_NONE, DOT_PIXEL_2X2,
+                            DRAW_FILL_FULL);
+    } else if (apps_is_clicked(BTN_WHITE)) {
+        WARN(BTN_WHITE);
+        *color = NOTEPAD_COLOR_WHITE;
+    } else if (apps_is_clicked(BTN_RED)) {
+        WARN(BTN_RED);
+        *color = NOTEPAD_COLOR_RED;
+    } else if (apps_is_clicked(BTN_BLUE)) {
+        WARN(BTN_BLUE);
+        *color = NOTEPAD_COLOR_BLUE;
+    } else if (apps_is_clicked(BTN_GREEN)) {
+        WARN(BTN_GREEN);
+        *color = NOTEPAD_COLOR_GREEN;
+    } else
+        return false;
+    return true;
 }
 
 static void _step_display()

@@ -57,7 +57,7 @@ enum gest_dir_t {
     GEST_DIR_T_SIZE
 };
 Resource res_get_direction(enum gest_dir_t direction);
-
+Resource res_get_app_notepad();
 Resource res_get_app_chrono_button(bool is_paused);
 Resource res_get_app_media_button(bool is_paused);
 Resource res_get_app_alarm_button(bool is_paused);

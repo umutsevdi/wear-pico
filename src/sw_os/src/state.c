@@ -40,7 +40,7 @@ static bool _os_timer_cb(repeating_timer_t* r)
         then = now;
         state.dt.second++;
         state.is_connected =
-            absolute_time_diff_us(now, state.__last_connected) / 1000000 < 5;
+            absolute_time_diff_us(state.__last_connected, now) / 1000000 < 5;
     }
     if (state.dt.second > 59) {
         state.dt.second = 0;
@@ -73,7 +73,7 @@ void os_init()
     state.show_sec = false;
     state.is_connected = false;
     state.bat.on_charge = true;
-    state.dt = (DateTime){0, 2024, 01, 12, 00, 00, 00};
+    state.dt = (DateTime){0, 2024, 1, 7, 00, 00, 00};
     state.alarms.len = 3;
     for (int i = 0; i < state.alarms.len; i++) {
         state.alarms.list[i].is_active = i % 2;

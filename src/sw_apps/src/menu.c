@@ -13,7 +13,7 @@ extern enum app_status_t apps_load_alarm(void);
 /* Initializes the Stopwatch User Interface */
 extern enum app_status_t apps_load_chrono(void);
 /* Initializes the Calendar User Interface */
-extern enum app_status_t apps_load_event(void);
+extern enum app_status_t apps_load_calendar(void);
 /* Initializes the Media User Interface */
 extern enum app_status_t apps_load_media(void);
 /* Initializes the Pedometer User Interface */
@@ -26,7 +26,7 @@ const char* _menu_s(enum menu_t m)
     switch (m) {
     case MENU_ALARM: return "MENU_ALARM";
     case MENU_CHRONO: return "MENU_CHRONO";
-    case MENU_EVENT: return "MENU_EVENT";
+    case MENU_CALENDAR: return "MENU_CALENDAR";
     case MENU_MEDIA: return "MENU_MEDIA";
     case MENU_STEP: return "MENU_STEP";
     case MENU_LOG: return "MENU_LOG";
@@ -34,13 +34,13 @@ const char* _menu_s(enum menu_t m)
     }
 }
 #define MENU_S(CURRENT)                                                        \
-    CURRENT == MENU_ALARM    ? "MENU_ALARM"                                    \
-    : CURRENT == MENU_CHRONO ? "MENU_CHRONO"                                   \
-    : CURRENT == MENU_EVENT  ? "MENU_EVENT"                                    \
-    : CURRENT == MENU_MEDIA  ? "MENU_MEDIA"                                    \
-    : CURRENT == MENU_STEP   ? "MENU_STEP"                                     \
-    : CURRENT == MENU_LOG    ? "MENU_LOG"                                      \
-                             : "NONE"
+    CURRENT == MENU_ALARM      ? "MENU_ALARM"                                  \
+    : CURRENT == MENU_CHRONO   ? "MENU_CHRONO"                                 \
+    : CURRENT == MENU_CALENDAR ? "MENU_CALENDAR"                               \
+    : CURRENT == MENU_MEDIA    ? "MENU_MEDIA"                                  \
+    : CURRENT == MENU_STEP     ? "MENU_STEP"                                   \
+    : CURRENT == MENU_LOG      ? "MENU_LOG"                                    \
+                               : "NONE"
 
 enum app_status_t apps_load(enum screen_t s)
 {
@@ -54,10 +54,8 @@ enum app_status_t apps_load(enum screen_t s)
     case SCREEN_CHRONO: r = apps_load_chrono(); break;
     case SCREEN_MEDIA: r = apps_load_media(); break;
     case SCREEN_LOG: r = apps_load_log(); break;
-    case SCREEN_STEP:
-        r = apps_load_step();
-        break;
-        /*    case SCREEN_EVENT: r = apps_load_event();break; */
+    case SCREEN_STEP: r = apps_load_step(); break;
+    case SCREEN_CALENDAR: r = apps_load_calendar(); break;
     default: break;
     }
 

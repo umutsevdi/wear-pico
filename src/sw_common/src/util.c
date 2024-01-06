@@ -29,7 +29,21 @@ const char* strcenter(char* str, size_t str_s, size_t str_cap)
     return str;
 }
 
-const char* dt_get_day(DateTime* dt)
+int dt_number_of_days(DateTime* dt)
+{
+    if (dt->month == 2) {
+        return ((dt->year % 4 == 0 && dt->year % 100 != 0)
+                || (dt->year % 400 == 0))
+                   ? 29
+                   : 28;
+    }
+    if (dt->month == 1 || dt->month == 3 || dt->month == 5 || dt->month == 7
+        || dt->month == 8 || dt->month == 10 || dt->month == 12)
+        return 31;
+    return 30;
+}
+
+int dt_get_day_int(DateTime* dt)
 {
     int d = dt->day;
     int m = dt->month;
@@ -38,7 +52,12 @@ const char* dt_get_day(DateTime* dt)
                23 * m / 9 + d + 4 + y / 4 - y / 100 + y / 400)
               % 7;
 
-    switch (dow) {
+    return dow;
+}
+
+const char* dt_get_day(DateTime* dt)
+{
+    switch (dt_get_day_int(dt)) {
     case 0: return "Sunday";
     case 1: return "Monday";
     case 2: return "Tuesday";

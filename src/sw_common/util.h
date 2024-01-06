@@ -59,6 +59,11 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
  * @str_cap - max length of the buffer
  */
 const char* strcenter(char* str, size_t str_s, size_t str_cap);
+
+/* Returns how many days in given month/year combination */
+int dt_number_of_days(DateTime* dt);
+/* Returns the day of the week based on given day/month/year. */
+int dt_get_day_int(DateTime* dt);
 /* Returns the string representation of the day of the week based on given day/month/year. */
 const char* dt_get_day(DateTime* dt);
 

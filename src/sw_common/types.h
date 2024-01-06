@@ -72,7 +72,7 @@ enum screen_t {
     SCREEN_ALARM,
     SCREEN_CHRONO,
     SCREEN_MEDIA,
-    SCREEN_EVENT,
+    SCREEN_CALENDAR,
     SCREEN_STEP,
     SCREEN_LOG,
 
@@ -83,7 +83,7 @@ enum menu_t {
     MENU_ALARM,
     MENU_CHRONO,
     MENU_MEDIA,
-    MENU_EVENT,
+    MENU_CALENDAR,
     MENU_STEP,
     MENU_LOG,
 

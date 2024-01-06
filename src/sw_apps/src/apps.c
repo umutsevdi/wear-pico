@@ -1,4 +1,5 @@
 #include "sw_apps/apps.h"
+#include "GUI_Paint.h"
 #include "sw_bt/bt.h"
 
 static void _step_display();
@@ -68,7 +69,6 @@ enum app_status_t apps_load_media()
         if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
-            apps_post_process(false);
         }
         if (screen.redraw) {
             apps_draw(res_get_app_media_button(!state.media.is_playing), 40,
@@ -83,10 +83,74 @@ enum app_status_t apps_load_media()
             strncpy(center, state.media.artist, len);
             Paint_DrawString_EN(50, 185, strcenter(center, len, 20), &Font12,
                                 COLOR_BG, COLOR_FG);
+            apps_post_process(false);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
         clicked = false;
+    }
+}
+
+enum app_status_t apps_load_calendar()
+{
+    SET_MODULE(SCREEN_EVENTS, TOUCH_POINT);
+    int x = 0, y = 0;
+
+    while (true) {
+        if (x != XY.x_point || y != XY.y_point) {
+            x = XY.x_point;
+            y = XY.y_point;
+        }
+        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
+        if (apps_is_exited()) return APP_OK;
+        if (apps_set_titlebar(SCREEN_CALENDAR, POPUP_NONE)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            DateTime now = state.dt;
+            int number_of_days = dt_number_of_days(&now);
+            int dow = dt_get_day_int(&now);
+            if (dow == 0) dow = 7;
+
+            DateTime beginning = {.day = 1,
+                                  .month = now.month,
+                                  .year = now.year};
+            int dow_begin = dt_get_day_int(&beginning);
+            if (dow == 0) dow = 7;
+            char title[12];
+            snprintf(title, 12, "%3s %4d", DATETIME_MONTH(now.month), now.year);
+            strcenter(title, strnlen(title, 12), 12);
+
+            Paint_DrawString_EN(32, 70, title, &Font20, COLOR_BG, COLOR_FG);
+            Paint_DrawString_EN(25, 90, "Mon Tue Wed Thu Fri Sat Sun", &Font12,
+                                COLOR_BG, COLOR_FG);
+            int j = 110;
+
+            Paint_DrawRectangle(20, 105, 220, 180, COLOR_FG, DOT_PIXEL_1X1,
+                                DRAW_FILL_EMPTY);
+            for (int i = 1; i <= number_of_days; i++) {
+                if (i >= dow_begin) {
+                    char str[4];
+                    snprintf(str, 4, " %02d", i);
+                    int fg_color;
+                    int bg_color = COLOR_BG;
+                    if (i == now.day)
+                        fg_color = YELLOW;
+                    else if (((i - 1) % 7) > 4) {
+                        fg_color = BLACK;
+                        bg_color = GBLUE;
+                    } else
+                        fg_color = COLOR_FG;
+                    Paint_DrawString_EN(25 + (i - 1) % 7 * 28, j, str, &Font12,
+                                        bg_color, fg_color);
+                    if (i % 7 == 0) j += 14;
+                }
+            }
+            if (screen.redraw) {
+                apps_post_process(false);
+                LCD_1IN28_Display(screen.buffer);
+                screen.redraw = DISP_SYNC;
+            }
+        }
     }
 }
 

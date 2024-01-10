@@ -80,6 +80,18 @@ enum screen_t {
     SCREEN_T_SIZE
 };
 
+#define screen_to_str(screen)                                                  \
+    screen == SCREEN_CLOCK      ? "SCREEN_CLOCK"                               \
+    : screen == SCREEN_LOCK     ? "SCREEN_LOCK"                                \
+    : screen == SCREEN_MENU     ? "SCREEN_MENU"                                \
+    : screen == SCREEN_ALARM    ? "SCREEN_ALARM"                               \
+    : screen == SCREEN_CHRONO   ? "SCREEN_CHRONO"                              \
+    : screen == SCREEN_MEDIA    ? "SCREEN_MEDIA"                               \
+    : screen == SCREEN_STEP     ? "SCREEN_STEP"                                \
+    : screen == SCREEN_CALENDAR ? "SCREEN_CALENDAR"                            \
+    : screen == SCREEN_NOTE     ? "SCREEN_NOTE"                                \
+    : screen == SCREEN_LOG      ? "SCREEN_LOG"                                 \
+                                : "SCREEN_NONE"
 enum menu_t {
     MENU_ALARM,
     MENU_CHRONO,
@@ -92,6 +104,16 @@ enum menu_t {
     MENU_T_SIZE
 };
 
+#define menu_to_str(menu)                                                      \
+    menu == MENU_ALARM      ? "MENU_ALARM"                                     \
+    : menu == MENU_CHRONO   ? "MENU_CHRONO"                                    \
+    : menu == MENU_MEDIA    ? "MENU_MEDIA"                                     \
+    : menu == MENU_STEP     ? "MENU_STEP"                                      \
+    : menu == MENU_CALENDAR ? "MENU_CALENDAR"                                  \
+    : menu == MENU_NOTE     ? "MENU_NOTE"                                      \
+    : menu == MENU_LOG      ? "MENU_LOG"                                       \
+                            : "MENU_NONE"
+
 /* Whether a pop-up is enabled or not and its type */
 enum popup_t {
     POPUP_NONE,   /* No Pop-Up is available */
@@ -101,6 +123,13 @@ enum popup_t {
 
     POPUP_T_SIZE
 };
+
+#define popup_to_str(popup)                                                    \
+    popup == POPUP_NONE     ? "POPUP_NONE"                                     \
+    : popup == POPUP_ALARM  ? "POPUP_ALARM"                                    \
+    : popup == POPUP_CALL   ? "POPUP_CALL"                                     \
+    : popup == POPUP_NOTIFY ? "POPUP_NOTIFY"                                   \
+                            : "POPUP_NONE"
 
 typedef struct {
     bool is_active;

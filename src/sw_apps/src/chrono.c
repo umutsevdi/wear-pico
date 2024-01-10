@@ -24,8 +24,6 @@ static bool _scr_chrono_cb(repeating_timer_t* r);
 enum app_status_t apps_load_chrono()
 {
 #define BTN_STOPWATCH 40, 160, 160, 40
-    SET_MODULE(SCREEN_CHRONO, TOUCH_POINT);
-
     bool clicked;
     int x = 0, y = 0;
     while (true) {

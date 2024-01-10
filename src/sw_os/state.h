@@ -32,7 +32,6 @@ typedef struct {
 
 typedef struct {
     DateTime dt;
-    uint64_t dt_padding;
     repeating_timer_t __dt_timer;
     bool show_sec;
     bool is_connected;

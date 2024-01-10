@@ -1,5 +1,4 @@
 #include "sw_apps/apps.h"
-#include "sw_common/util.h"
 #include "sw_res/resources.h"
 
 /* Initializes the clock User Interface */
@@ -23,35 +22,19 @@ extern enum app_status_t apps_load_step(void);
 /* Initializes the logger User Interface */
 extern enum app_status_t apps_load_log(void);
 
-const char* _menu_s(enum menu_t m)
-{
-    switch (m) {
-    case MENU_ALARM: return "MENU_ALARM";
-    case MENU_CHRONO: return "MENU_CHRONO";
-    case MENU_CALENDAR: return "MENU_CALENDAR";
-    case MENU_MEDIA: return "MENU_MEDIA";
-    case MENU_STEP: return "MENU_STEP";
-    case MENU_LOG: return "MENU_LOG";
-    default: return "NONE";
-    }
-}
-#define MENU_S(CURRENT)                                                        \
-    CURRENT == MENU_ALARM      ? "MENU_ALARM"                                  \
-    : CURRENT == MENU_CHRONO   ? "MENU_CHRONO"                                 \
-    : CURRENT == MENU_CALENDAR ? "MENU_CALENDAR"                               \
-    : CURRENT == MENU_MEDIA    ? "MENU_MEDIA"                                  \
-    : CURRENT == MENU_STEP     ? "MENU_STEP"                                   \
-    : CURRENT == MENU_NOTE     ? "MENU_NOTE"                                   \
-    : CURRENT == MENU_LOG      ? "MENU_LOG"                                    \
-                               : "NONE"
+/* Returns whether given screen requires TOUCH_GESTURE or TOUCH_POINT */
+static int _get_touch_type(enum screen_t s);
 
 enum app_status_t apps_load(enum screen_t s)
 {
+    if (s < 0 || s >= SCREEN_T_SIZE) { return ERROR(APP_ERROR_INVALID_APP); }
     int current_mode = XY.mode;
+    apps_set_module(s, POPUP_NONE, _get_touch_type(s));
+
     enum app_status_t r;
     switch (s) {
-    case SCREEN_LOCK: r = apps_lock_screen(); break;
     case SCREEN_CLOCK: r = apps_load_clock(); break;
+    case SCREEN_LOCK: r = apps_lock_screen(); break;
     case SCREEN_MENU: r = apps_load_menu(); break;
     case SCREEN_ALARM: r = apps_load_alarm(); break;
     case SCREEN_CHRONO: r = apps_load_chrono(); break;
@@ -83,15 +66,13 @@ static void _menu_display(enum menu_t current)
     apps_post_process(false);
     LCD_1IN28_Display(screen.buffer);
 
-    PRINT("SELECT %s", , _menu_s(current));
+    PRINT("SELECT %s", , menu_to_str(current));
     screen.redraw = DISP_SYNC;
     XY.Gesture = None;
 }
 
 enum app_status_t apps_load_menu()
 {
-    SET_MODULE(SCREEN_MENU, TOUCH_GESTURE);
-
     enum menu_t current = MENU_ALARM;
     while (true) {
         if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
@@ -116,4 +97,16 @@ enum app_status_t apps_load_menu()
         }
         if (screen.redraw) _menu_display(current);
     }
+}
+
+static int _get_touch_type(enum screen_t s)
+{
+    static const int touch_types[SCREEN_T_SIZE] = {
+        [SCREEN_CLOCK] = TOUCH_GESTURE, [SCREEN_LOCK] = TOUCH_GESTURE,
+        [SCREEN_MENU] = TOUCH_GESTURE,  [SCREEN_ALARM] = TOUCH_POINT,
+        [SCREEN_CHRONO] = TOUCH_POINT,  [SCREEN_MEDIA] = TOUCH_POINT,
+        [SCREEN_STEP] = TOUCH_POINT,    [SCREEN_CALENDAR] = TOUCH_POINT,
+        [SCREEN_NOTE] = TOUCH_POINT,    [SCREEN_LOG] = TOUCH_POINT,
+    };
+    return touch_types[s];
 }

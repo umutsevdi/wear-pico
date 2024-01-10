@@ -1,4 +1,3 @@
-#include "GUI_Paint.h"
 #include "sw_apps/apps.h"
 #include "sw_bt/bt.h"
 #include "sw_os/dev.h"
@@ -11,11 +10,44 @@ static const int POPUP_ALARM_FLAG = DEV_BUZZER | DEV_LED;
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
 
+/** Returns the priority of the pop-up type as an integer:
+ * - CALL > ALARM > NOTIFY */
+static int _popup_value(enum popup_t p);
+
+/* Compares two pop-up types based on their @_popup_value */
+static int _popup_cmp(enum popup_t p1, enum popup_t p2);
+
+/* Loads the given pop-up */
+static enum app_status_t _popup_load(enum popup_t popup);
+
+/* Load function for the call pop-up module */
 static enum app_status_t _load_call();
+/* Load function for the alarm pop-up module */
 static enum app_status_t _load_alarm();
+/* Load function for the notify pop-up module */
 static enum app_status_t _load_notification();
-int64_t _call_notify(int32_t id, void* data);
-int64_t _call_ring(int32_t id, void* data);
+
+enum app_status_t apps_poll_popup()
+{
+    /* Reject the pop-up request if when there is none or the requested pop-ups
+     * priority is lower */
+    if (_popup_cmp(state.popup.type, state.__popup_req.type) >= 0) {
+        state.__popup_req.type = POPUP_NONE;
+        return APP_NO_POPUP;
+    }
+    WARN(LOADING_POPUP);
+    /* store the status to revert */
+    int mode_old = XY.mode;
+    Popup popup_old = state.popup;
+    state.popup = state.__popup_req;
+    state.__popup_req.type = POPUP_NONE;
+
+    enum app_status_t r = _popup_load(state.popup.type);
+    /* Revert the module configurations */
+    apps_set_module(SCREEN_T_SIZE, popup_old.type, mode_old);
+    state.popup = popup_old;
+    return r;
+}
 
 static int _popup_value(enum popup_t p)
 {
@@ -33,35 +65,18 @@ static int _popup_cmp(enum popup_t p1, enum popup_t p2)
     return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
 }
 
-enum app_status_t apps_poll_popup()
+static enum app_status_t _popup_load(enum popup_t popup)
 {
-    /* Reject the pop-up request if when there is none or the requested pop-ups
-     * priority is lower */
-    if (_popup_cmp(state.popup.type, state.__popup_req.type) >= 0) {
-        state.__popup_req.type = POPUP_NONE;
-        return APP_NO_POPUP;
-    }
-    WARN(LOADING_POPUP);
-    /* store the status to revert */
-    int mode_old = XY.mode;
-    Popup popup_old = state.popup;
-    state.popup = state.__popup_req;
-    state.__popup_req.type = POPUP_NONE;
-
     enum app_status_t r;
-    switch (state.popup.type) {
+
+    if (!_popup_value(popup)) { return ERROR(APP_ERROR_INVALID_POPUP); }
+    apps_set_module(SCREEN_T_SIZE, popup, TOUCH_POINT);
+    switch (popup) {
     case POPUP_CALL: r = _load_call(); break;
     case POPUP_ALARM: r = _load_alarm(); break;
     case POPUP_NOTIFY: r = _load_notification(); break;
-    default: return ERROR(APP_ERROR_INVALID_POPUP);
+    default: break;
     }
-    /* Revert the module configurations */
-    XY.mode = mode_old;
-    XY.Gesture = None;
-    XY.x_point = 0;
-    XY.y_point = 0;
-    if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);
-    state.popup = popup_old;
     return r;
 }
 
@@ -69,7 +84,6 @@ static enum app_status_t _load_call()
 {
 #define BTN_ACCEPT 52, 140, 48, 48
 #define BTN_DISMISS 140, 140, 48, 48
-    SET_MODULE(POPUP_CALL, TOUCH_POINT);
     bool clicked;
     int x = 0, y = 0;
     while (true) {
@@ -116,8 +130,6 @@ static enum app_status_t _load_call()
 static enum app_status_t _load_alarm()
 {
 #define BTN_ALARM_DISMISS 40, 156, 160, 35
-    SET_MODULE(POPUP_ALARM, TOUCH_POINT);
-
     bool clicked;
     int x = 0, y = 0;
     while (true) {
@@ -150,8 +162,6 @@ static enum app_status_t _load_alarm()
 
 static enum app_status_t _load_notification()
 {
-    SET_MODULE(POPUP_NOTIFY, TOUCH_POINT);
-
     bool clicked;
     int x = 0, y = 0;
     os_dev_notify(POPUP_ALARM_ITER, POPUP_NOTIFY_FLAG);

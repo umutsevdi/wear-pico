@@ -124,3 +124,20 @@ void apps_reset()
     Paint_DrawRectangle(0, 0, 240, 240, COLOR_BG, DOT_PIXEL_1X1,
                         DRAW_FILL_FULL);
 }
+
+enum app_status_t apps_set_module(enum screen_t screen_type, enum popup_t popup_type,
+                             int touch_type)
+{
+    if (popup_type != POPUP_NONE)
+        PRINT("SET_MODULE_%s", , screen_to_str(screen_type));
+    else
+        PRINT("SET_MODULE_%s", , popup_to_str(popup_type));
+    XY.mode = touch_type;
+    if (Touch_1IN28_init(XY.mode) != 1) { return ERROR(APP_WARN_TOUCH_FAILED); }
+    screen.redraw = DISP_REDRAW;
+    XY.x_point = 0;
+    XY.y_point = 0;
+    XY.Gesture = None;
+    return APP_OK;
+}
+

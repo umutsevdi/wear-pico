@@ -154,8 +154,13 @@ static enum bt_fmt_t _handle_osc(char** str, int str_s)
     if (str_s < 4) return ERROR(BT_FMT_ERROR_PAYLOAD);
     state.media.is_playing =
         str[1][0] == 't' || str[1][0] == 'T' || str[1][0] == '1';
-    strncpy(state.media.song, str[2], strnlen(str[2], 30));
-    strncpy(state.media.artist, str[3], strnlen(str[3], 30));
+
+    int len_song = strnlen(str[2], 30);
+    strncpy(state.media.song, str[2], len_song);
+    if (len_song < 30) state.media.song[len_song] = '\0';
+    int len_artist = strnlen(str[3], 30);
+    strncpy(state.media.artist, str[3], len_artist);
+    if (len_artist < 30) state.media.artist[len_artist] = '\0';
 
     state.media.is_fetched = true;
     PRINT("media(%s by %s)", , state.media.song, state.media.artist);

@@ -10,12 +10,14 @@ enum notepad_color_t {
     NOTEPAD_COLOR_BLUE = BLUE
 };
 
+/* Displays the current step amount */
 static void _step_display();
+
+/* Assigns the currently selected color. Returns false if no color is selected */
 static bool _notepad_get_color(enum notepad_color_t* color);
 
 enum app_status_t apps_lock_screen()
 {
-    SET_MODULE(SCREEN_LOCK, TOUCH_GESTURE);
     screen.sstate = SCREEN_LOCK;
     Paint_Clear(BLACK);
     DEV_SET_PWM(0);
@@ -44,8 +46,6 @@ enum app_status_t apps_load_media()
 #define BTN_PLAY_PAUSE 88, 120, 64, 64
 #define BTN_NEXT 152, 120, 48, 64
 #define BTN_PREV 40, 120, 48, 64
-    SET_MODULE(SCREEN_MEDIA, TOUCH_POINT);
-
     bool clicked;
     int x = 0, y = 0;
 
@@ -102,7 +102,6 @@ enum app_status_t apps_load_media()
 
 enum app_status_t apps_load_calendar()
 {
-    SET_MODULE(SCREEN_EVENTS, TOUCH_POINT);
     int x = 0, y = 0;
 
     while (true) {
@@ -162,10 +161,10 @@ enum app_status_t apps_load_calendar()
         }
     }
 }
+
 enum app_status_t apps_load_notepad()
 {
 #define PAINT_AREA 42, 79, 156, 95
-    SET_MODULE(SCREEN_NOTE, TOUCH_POINT);
     enum notepad_color_t color = NOTEPAD_COLOR_WHITE;
     bool clicked = false;
     int x = 0, y = 0;
@@ -228,10 +227,9 @@ enum app_status_t apps_load_notepad()
         clicked = false;
     }
 }
+
 enum app_status_t apps_load_step()
 {
-    SET_MODULE(SCREEN_STEP, TOUCH_POINT);
-
     int sec = 0;
     while (true) {
         if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
@@ -259,8 +257,6 @@ enum app_status_t apps_load_log(void)
 {
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
-    SET_MODULE(SCREEN_LOG, TOUCH_POINT);
-
     int sec = 0;
     while (true) {
         if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;

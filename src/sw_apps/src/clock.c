@@ -5,8 +5,6 @@ static void _clock_partial();
 
 enum app_status_t apps_load_clock()
 {
-    SET_MODULE(SCREEN_CLOCK, TOUCH_GESTURE);
-
     int min = 0;
     int sec = 0;
     bool old_show_sec = false;

@@ -35,7 +35,7 @@ void on_uart_rx()
     if (is_str_complete()) {
         PRINT("handle str: [%s]%u", , bt.packet, bt.cursor);
         bt_handle_req(bt.packet, bt.cursor - 2);
-        memset(bt.packet, '\0', bt.cursor);
+        memset(bt.packet, '\0', 240);
         bt.cursor = 0;
     }
 }
@@ -74,12 +74,10 @@ bool bt_send_resp(enum bt_resp_t response)
 size_t bt_write(char* str, size_t str_s)
 {
     if (!bt_is_writable()) return 0;
-    uint i = 0;
-    size_t bytes_left;
-    while ((bytes_left = uart_is_writable(bt.id)) > 0 && i < str_s)
-        uart_putc(bt.id, str[i++]);
+    size_t bytes = strnlen(str, str_s);
+    uart_write_blocking(bt.id, (uint8_t*)str, bytes);
     PRINT("sent [%s]", , str);
-    return i;
+    return bytes;
 }
 
 bool bt_is_readable() { return uart_is_readable(bt.id); }

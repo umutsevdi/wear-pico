@@ -32,38 +32,14 @@ enum app_status_t {
     APP_ERROR_ALLOC,
     APP_ERROR_TIMER_CREATE,
     APP_ERROR_INVALID_POPUP,
+    APP_ERROR_INVALID_APP,
 };
 
 /* Initializes the display */
 enum app_status_t apps_init(void);
 
-/**
- * Checks for new pop-up events. If there is one loads it as pop-up.
- *
- * @current - Current pop-up type, POPUP_NONE if the current screen is not a
- * pop-up.
- *
- * @returns
- *  - the app_status_t of the loaded pop-up if a pop-up is loaded.
- *  - APP_NO_POPUP - When there is no pop-up event to display
- *  - APP_ERROR_INVALID_POPUP - If the current pop-up state is invalid
- *
- * Pop-ups have priority. If higher priority pop-up is active it will not change
- * POPUP_CALL > POPUP_ALARM > POPUP_NOTIFY
- * If higher priority pop-up is active it will not change
- *
- */
-enum app_status_t apps_poll_popup();
 /* Loads selected screen module */
 enum app_status_t apps_load(enum screen_t s);
-
-#define SET_MODULE(M, TOUCH_TYPE)                                              \
-    PRINT(SET_MODULE_##M);                                                     \
-    XY.mode = TOUCH_TYPE;                                                      \
-    if (Touch_1IN28_init(XY.mode) != 1) WARN(SCR_WARN_TOUCH_FAILED);           \
-    screen.redraw = DISP_REDRAW;                                               \
-    XY.x_point = 0;                                                            \
-    XY.y_point = 0;
 
 enum disp_t {
     DISP_SYNC,    /* The buffer is fully synchronized */
@@ -87,6 +63,23 @@ typedef struct {
 /* Display implementation. Singleton object. */
 extern Display screen;
 
+/**
+ * Checks for new pop-up events. If there is one loads it as pop-up.
+ *
+ * @current - Current pop-up type, POPUP_NONE if the current screen is not a
+ * pop-up.
+ *
+ * @returns
+ *  - the app_status_t of the loaded pop-up if a pop-up is loaded.
+ *  - APP_NO_POPUP - When there is no pop-up event to display
+ *  - APP_ERROR_INVALID_POPUP - If the current pop-up state is invalid
+ *
+ * Pop-ups have priority. If higher priority pop-up is active it will not change
+ * POPUP_CALL > POPUP_ALARM > POPUP_NOTIFY
+ * If higher priority pop-up is active it will not change
+ *
+ */
+enum app_status_t apps_poll_popup();
 /******************************************************************************
                                 UI Utilities
 *****************************************************************************/
@@ -131,6 +124,7 @@ void apps_post_process(bool is_cb);
 
 /* Draws given resource to the screen */
 void apps_draw(Resource res, int start_x, int start_y);
+
 /* Clears the screen */
 void apps_reset();
 
@@ -143,4 +137,15 @@ void apps_reset();
  * @returns - Whether titlebar is inserted or not
  */
 bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title);
+
+/**
+ * Initializes the given module
+ * @screen_type - Type of the screen, if there is
+ * @popup_type - Type of the popup, if there is
+ * @touch_type - Touch type to set, either TOUCH_GESTURE or TOUCH_POINT
+ * @return - APP_OK if configuration is successful, APP_WARN_TOUCH_FAILED on
+ * failure
+ */
+enum app_status_t apps_set_module(enum screen_t screen_type, enum popup_t popup_type,
+                             int touch_type);
 #endif

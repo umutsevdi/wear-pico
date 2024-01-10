@@ -5,11 +5,11 @@
 #define ALARM_Y 66
 #define ALARM_BUTTON_SIZE 164, 36
 
+/* Draws the idx'th alarm to the screen. */
 void _alarm_draw(int idx, Alarm* alarm);
 
 enum app_status_t apps_load_alarm(void)
 {
-    SET_MODULE(SCREEN_ALARM, TOUCH_POINT);
     bt_send_resp(BT_RESP_FETCH_ALARM);
 
     bool clicked;

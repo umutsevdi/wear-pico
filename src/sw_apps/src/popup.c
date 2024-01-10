@@ -61,7 +61,7 @@ static int _popup_value(enum popup_t p)
 
 static int _popup_cmp(enum popup_t p1, enum popup_t p2)
 {
-    if (p1 == p2) return 0;
+    if (p1 == p2) { return 0; }
     return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
 }
 
@@ -92,8 +92,8 @@ static enum app_status_t _load_call()
             y = XY.y_point;
             clicked = true;
         }
-        if (state.popup.value.caller.is_over) return APP_OK;
-        if (apps_is_exited()) return APP_OK;
+        if (state.popup.value.caller.is_over) { return APP_OK; }
+        if (apps_is_exited()) { return APP_OK; }
 
         if (clicked) {
             if (apps_is_clicked(BTN_ACCEPT)) {
@@ -138,9 +138,9 @@ static enum app_status_t _load_alarm()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
 
-        if (apps_is_exited()) return APP_OK;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
 
         if (clicked && apps_is_clicked(BTN_ALARM_DISMISS)) { return APP_OK; }
         if (apps_set_titlebar(0, POPUP_ALARM)) {
@@ -171,9 +171,8 @@ static enum app_status_t _load_notification()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
-
-        if (apps_is_exited()) return APP_OK;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
 
         if (apps_set_titlebar(0, POPUP_NOTIFY)) {
             XY.x_point = 0;

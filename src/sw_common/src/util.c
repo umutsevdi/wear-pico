@@ -38,8 +38,9 @@ int dt_number_of_days(DateTime* dt)
                    : 28;
     }
     if (dt->month == 1 || dt->month == 3 || dt->month == 5 || dt->month == 7
-        || dt->month == 8 || dt->month == 10 || dt->month == 12)
+        || dt->month == 8 || dt->month == 10 || dt->month == 12) {
         return 31;
+    }
     return 30;
 }
 
@@ -72,32 +73,37 @@ const char* dt_get_day(DateTime* dt)
 int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag)
 {
     if (flag & DT_WC_YEAR) {
-        if (dt1->year != dt2->year) return dt1->year > dt2->year ? 1 : -1;
+        if (dt1->year != dt2->year) { return dt1->year > dt2->year ? 1 : -1; }
     }
     if (flag & DT_WC_MONTH) {
-        if (dt1->month != dt2->month) return dt1->month > dt2->month ? 1 : -1;
+        if (dt1->month != dt2->month) {
+            return dt1->month > dt2->month ? 1 : -1;
+        }
     }
     if (flag & DT_WC_DAY) {
-        if (dt1->day != dt2->day) return dt1->day > dt2->day ? 1 : -1;
+        if (dt1->day != dt2->day) { return dt1->day > dt2->day ? 1 : -1; }
     }
     if (flag & DT_WC_HOUR) {
-        if (dt1->hour != dt2->hour) return dt1->hour > dt2->hour ? 1 : -1;
+        if (dt1->hour != dt2->hour) { return dt1->hour > dt2->hour ? 1 : -1; }
     }
     if (flag & DT_WC_MIN) {
-        if (dt1->minute != dt2->minute)
+        if (dt1->minute != dt2->minute) {
             return dt1->minute > dt2->minute ? 1 : -1;
+        }
     }
     if (flag & DT_WC_SEC) {
-        if (dt1->second != dt2->second)
+        if (dt1->second != dt2->second) {
             return dt1->second > dt2->second ? 1 : -1;
+        }
     }
     return 0;
 }
 
 int strwrap(char* buffer, size_t buffer_s, int width, char** array, int array_s)
 {
-    if (width <= 0 || array_s <= 0 || buffer == NULL || array == NULL)
+    if (width <= 0 || array_s <= 0 || buffer == NULL || array == NULL) {
         return -1;
+    }
 
     array[0] = buffer;
     char* last_space = buffer;
@@ -122,7 +128,7 @@ int strwrap(char* buffer, size_t buffer_s, int width, char** array, int array_s)
 
         if (current_idx > array_s) {
             if (buffer_s > (uint64_t)(last_space - buffer + 4)) {
-                if (*(last_space - 1) != '.') last_space[0] = '.';
+                if (*(last_space - 1) != '.') { last_space[0] = '.'; }
                 last_space[1] = '.';
                 last_space[2] = '.';
                 last_space[3] = '\0';
@@ -142,7 +148,7 @@ int __strdump(int code, const char* fmt, ...)
     vsnprintf(str, 40, fmt, args);
 
     int str_s = strnlen(str, 40);
-    if (str_s > 40) str[39] = '\n';
+    if (str_s > 40) { str[39] = '\n'; }
     if (str_s + log_idx > LOG_BUFFER_S) {
         memmove(LOG_BUFFER, LOG_BUFFER + str_s, LOG_BUFFER_S - str_s);
         log_idx -= str_s;
@@ -178,18 +184,19 @@ bool str_to_date(const char buffer[15], DateTime* dt)
     dt->flag = _dt_wildcard(buffer);
 
     for (size_t i = 0; i < DT_STRLEN; i++) {
-        if (i < IDX_MONTH)
+        if (i < IDX_MONTH) {
             year[i - IDX_YEAR] = buffer[i];
-        else if (IDX_MONTH <= i && i < IDX_DAY)
+        } else if (IDX_MONTH <= i && i < IDX_DAY) {
             month[i - IDX_MONTH] = buffer[i];
-        else if (IDX_DAY <= i && i < IDX_HOUR)
+        } else if (IDX_DAY <= i && i < IDX_HOUR) {
             day[i - IDX_DAY] = buffer[i];
-        else if (IDX_HOUR <= i && i < IDX_MIN)
+        } else if (IDX_HOUR <= i && i < IDX_MIN) {
             hour[i - IDX_HOUR] = buffer[i];
-        else if (IDX_MIN <= i && i < IDX_SEC)
+        } else if (IDX_MIN <= i && i < IDX_SEC) {
             min[i - IDX_MIN] = buffer[i];
-        else if (IDX_SEC <= i)
+        } else if (IDX_SEC <= i) {
             sec[i - IDX_SEC] = buffer[i];
+        }
     }
     return _dt_map(dt, (char*[]){year, month, day, hour, min, sec});
 }
@@ -198,24 +205,24 @@ bool date_to_str(const DateTime* dt, char buffer[15])
 {
     snprintf(buffer, 14, "%04d%02d%02d%02d%02d%02d", dt->year, dt->month,
              dt->day, dt->hour, dt->minute, dt->second);
-    if (dt->flag & DT_WC_YEAR) memset(buffer, 4, '?');
-    if (dt->flag & DT_WC_MONTH) memset(buffer + IDX_MONTH, '?', 2);
-    if (dt->flag & DT_WC_DAY) memset(buffer + IDX_DAY, '?', 2);
-    if (dt->flag & DT_WC_HOUR) memset(buffer + IDX_HOUR, '?', 2);
-    if (dt->flag & DT_WC_MIN) memset(buffer + IDX_MIN, '?', 2);
-    if (dt->flag & DT_WC_SEC) memset(buffer + IDX_SEC, '?', 2);
+    if (dt->flag & DT_WC_YEAR) { memset(buffer, 4, '?'); }
+    if (dt->flag & DT_WC_MONTH) { memset(buffer + IDX_MONTH, '?', 2); }
+    if (dt->flag & DT_WC_DAY) { memset(buffer + IDX_DAY, '?', 2); }
+    if (dt->flag & DT_WC_HOUR) { memset(buffer + IDX_HOUR, '?', 2); }
+    if (dt->flag & DT_WC_MIN) { memset(buffer + IDX_MIN, '?', 2); }
+    if (dt->flag & DT_WC_SEC) { memset(buffer + IDX_SEC, '?', 2); }
     return true;
 }
 
 static int16_t _dt_wildcard(const char* b)
 {
     int16_t wc = 0;
-    if (b[IDX_YEAR] == '?') wc |= DT_WC_YEAR;
-    if (b[IDX_MONTH] == '?') wc |= DT_WC_MONTH;
-    if (b[IDX_DAY] == '?') wc |= DT_WC_DAY;
-    if (b[IDX_HOUR] == '?') wc |= DT_WC_HOUR;
-    if (b[IDX_MIN] == '?') wc |= DT_WC_MIN;
-    if (b[IDX_SEC] == '?') wc |= DT_WC_SEC;
+    if (b[IDX_YEAR] == '?') { wc |= DT_WC_YEAR; }
+    if (b[IDX_MONTH] == '?') { wc |= DT_WC_MONTH; }
+    if (b[IDX_DAY] == '?') { wc |= DT_WC_DAY; }
+    if (b[IDX_HOUR] == '?') { wc |= DT_WC_HOUR; }
+    if (b[IDX_MIN] == '?') { wc |= DT_WC_MIN; }
+    if (b[IDX_SEC] == '?') { wc |= DT_WC_SEC; }
     return wc;
 }
 
@@ -224,30 +231,31 @@ static bool _dt_map(DateTime* dt, char** str_p)
     char* endptr = NULL;
     if (!(DT_WC_YEAR & dt->flag)) {
         dt->year = strtoul(str_p[0], &endptr, 10);
-        if (*endptr != '\0' || dt->year == 0 || dt->year > 9999) return false;
+        if (*endptr != '\0' || dt->year == 0 || dt->year > 9999) {
+            return false;
+        }
     }
     if (!(DT_WC_MONTH & dt->flag)) {
         dt->month = strtoul(str_p[1], &endptr, 10);
-        if (*endptr != '\0' || dt->month == 0 || dt->month > 12) return false;
+        if (*endptr != '\0' || dt->month == 0 || dt->month > 12) {
+            return false;
+        }
     }
     if (!(DT_WC_DAY & dt->flag)) {
         dt->day = strtoul(str_p[2], &endptr, 10);
-        if (*endptr != '\0' || dt->day == 0 || dt->day > 30) return false;
+        if (*endptr != '\0' || dt->day == 0 || dt->day > 30) { return false; }
     }
     if (!(DT_WC_HOUR & dt->flag)) {
         dt->hour = strtoul(str_p[3], &endptr, 10);
-        if (*endptr != '\0' || dt->hour > 24)// danger
-            return false;
+        if (*endptr != '\0' || dt->hour > 24) { return false; }
     }
     if (!(DT_WC_MIN & dt->flag)) {
         dt->minute = strtoul(str_p[4], &endptr, 10);
-        if (*endptr != '\0' || dt->minute > 60)// danger
-            return false;
+        if (*endptr != '\0' || dt->minute > 60) { return false; }
     }
     if (!(DT_WC_SEC & dt->flag)) {
         dt->second = strtoul(str_p[5], &endptr, 10);
-        if (*endptr != '\0' || dt->second > 60)// danger
-            return false;
+        if (*endptr != '\0' || dt->second > 60) { return false; }
     }
     return true;
 }

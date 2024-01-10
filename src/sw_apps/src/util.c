@@ -19,10 +19,11 @@ void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)
     int y = base_y;
     for (int i = 0; i < datestr_s - 1; i++) {
         const unsigned char* img_ptr = NULL;
-        if (datestr[i] >= '0' && datestr[i] <= '9')
+        if (datestr[i] >= '0' && datestr[i] <= '9') {
             img_ptr = font + 2 * (datestr[i] - '0') * x_size * y_size;
-        else if (datestr[i] == ':')
+        } else if (datestr[i] == ':') {
             img_ptr = font + 2 * 10 * x_size * y_size;
+        }
 
         Paint_DrawImage(img_ptr, x, y, x_size, y_size);
         x += show_sec ? 30 : 40;
@@ -45,30 +46,32 @@ bool apps_is_clicked(int x_start, int y_start, int width, int height)
 
 void apps_post_process(bool is_cb)
 {
-    if (screen.sstate == SCREEN_LOCK) return;
+    if (screen.sstate == SCREEN_LOCK) { return; }
     char str[10];
     if (screen.sstate != SCREEN_CLOCK || state.popup.type != POPUP_NONE) {
         snprintf(str, 10, "%02d:%02d", state.dt.hour, state.dt.minute);
         Paint_DrawString_EN(100, 12, str, &Font12, COLOR_BG, COLOR_FG);
     }
     Resource tray;
-    if (state.bat.on_charge)
+    if (state.bat.on_charge) {
         tray = res_get_tray(TRAY_BAT_CHARGE);
-    else if (state.bat.pct > 80)
+    } else if (state.bat.pct > 80) {
         tray = res_get_tray(TRAY_BAT_HIGH);
-    else if (state.bat.pct > 50)
+    } else if (state.bat.pct > 50) {
         tray = res_get_tray(TRAY_BAT_MID);
-    else if (state.bat.pct > 15)
+    } else if (state.bat.pct > 15) {
         tray = res_get_tray(TRAY_BAT_LOW);
-    else
+    } else {
         tray = res_get_tray(TRAY_BAT_CRIT);
+    }
     apps_draw(tray, 66, 214);
     apps_draw(res_get_tray(state.is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 45,
               200);
 
-    if (screen.sstate != SCREEN_CHRONO || state.popup.type != POPUP_NONE)
+    if (screen.sstate != SCREEN_CHRONO || state.popup.type != POPUP_NONE) {
         apps_draw(res_get_tray(state.chrono.enabled ? TRAY_CHRONO : TRAY_NONE),
                   175, 200);
+    }
     if ((screen.sstate != SCREEN_ALARM || state.popup.type != POPUP_NONE)
         && state.alarms.len > 0) {
         bool alarm_status = false;
@@ -78,10 +81,11 @@ void apps_post_process(bool is_cb)
                 break;
             }
         }
-        if (alarm_status)
+        if (alarm_status) {
             apps_draw(res_get_tray(TRAY_ALARM), 152, 214);
-        else
+        } else {
             apps_draw(res_get_tray(TRAY_NONE), 152, 214);
+        }
     }
     screen.post_time = 60;
     if (is_cb) {
@@ -92,8 +96,9 @@ void apps_post_process(bool is_cb)
 
 void apps_draw(Resource res, int start_x, int start_y)
 {
-    if (res.img != NULL)
+    if (res.img != NULL) {
         Paint_DrawImage(res.img, start_x, start_y, res.width, res.height);
+    }
 }
 
 bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title)
@@ -106,15 +111,12 @@ bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title)
             apps_draw(res_get_titlebar(s_title, POPUP_NONE), 40, 30);
             return true;
         }
-    } else {
-
-        if (state.popup.type != p_title || screen.redraw == DISP_REDRAW) {
-            screen.redraw = DISP_REDRAW;
-            state.popup.type = p_title;
-            apps_reset();
-            apps_draw(res_get_titlebar(0, p_title), 40, 30);
-            return true;
-        }
+    } else if (state.popup.type != p_title || screen.redraw == DISP_REDRAW) {
+        screen.redraw = DISP_REDRAW;
+        state.popup.type = p_title;
+        apps_reset();
+        apps_draw(res_get_titlebar(0, p_title), 40, 30);
+        return true;
     }
     return false;
 }
@@ -125,13 +127,14 @@ void apps_reset()
                         DRAW_FILL_FULL);
 }
 
-enum app_status_t apps_set_module(enum screen_t screen_type, enum popup_t popup_type,
-                             int touch_type)
+enum app_status_t apps_set_module(enum screen_t screen_type,
+                                  enum popup_t popup_type, int touch_type)
 {
-    if (popup_type != POPUP_NONE)
+    if (popup_type == POPUP_NONE) {
         PRINT("SET_MODULE_%s", , screen_to_str(screen_type));
-    else
+    } else {
         PRINT("SET_MODULE_%s", , popup_to_str(popup_type));
+    }
     XY.mode = touch_type;
     if (Touch_1IN28_init(XY.mode) != 1) { return ERROR(APP_WARN_TOUCH_FAILED); }
     screen.redraw = DISP_REDRAW;
@@ -140,4 +143,3 @@ enum app_status_t apps_set_module(enum screen_t screen_type, enum popup_t popup_
     XY.Gesture = None;
     return APP_OK;
 }
-

@@ -53,10 +53,11 @@ enum app_status_t apps_init(void)
 static bool _post_process_cb(repeating_timer_t* r)
 {
     UNUSED(void*, r);
-    if (screen.post_time > 0)
+    if (screen.post_time > 0) {
         screen.post_time--;
-    else
+    } else {
         apps_post_process(true);
+    }
 }
 
 void _apps_touch_cb(uint gpio, uint32_t events)

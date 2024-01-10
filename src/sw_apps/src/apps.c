@@ -55,8 +55,8 @@ enum app_status_t apps_load_media()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
-        if (apps_is_exited()) return APP_OK;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
         if (clicked) {
             if (apps_is_clicked(BTN_PLAY_PAUSE)) {
                 state.media.is_playing = !state.media.is_playing;
@@ -109,21 +109,21 @@ enum app_status_t apps_load_calendar()
             x = XY.x_point;
             y = XY.y_point;
         }
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
-        if (apps_is_exited()) return APP_OK;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
         if (apps_set_titlebar(SCREEN_CALENDAR, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
             DateTime now = state.dt;
             int number_of_days = dt_number_of_days(&now);
             int dow = dt_get_day_int(&now);
-            if (dow == 0) dow = 7;
+            if (dow == 0) { dow = 7; }
 
             DateTime beginning = {.day = 1,
                                   .month = now.month,
                                   .year = now.year};
             int dow_begin = dt_get_day_int(&beginning);
-            if (dow == 0) dow = 7;
+            if (dow == 0) { dow = 7; }
             char title[12];
             snprintf(title, 12, "%3s %4d", DATETIME_MONTH(now.month), now.year);
             strcenter(title, strnlen(title, 12), 12);
@@ -141,17 +141,18 @@ enum app_status_t apps_load_calendar()
                 int fg_color = COLOR_FG;
                 int bg_color = COLOR_BG;
                 if (((i - 1) % 7) > 4) {
-                    if ((i - dow == now.day))
+                    if ((i - dow == now.day)) {
                         bg_color = YELLOW;
-                    else
+                    } else {
                         bg_color = GBLUE;
+                    }
                     fg_color = BLACK;
                 } else if (i - dow == now.day) {
                     fg_color = YELLOW;
                 }
                 Paint_DrawString_EN(25 + (i - 1) % 7 * 28, j, str, &Font12,
                                     bg_color, fg_color);
-                if (i % 7 == 0) j += 14;
+                if (i % 7 == 0) { j += 14; }
             }
             if (screen.redraw) {
                 apps_post_process(false);

@@ -32,7 +32,7 @@ Resource res_get_tray(enum tray_t tray)
 {
     const int w = 20;
     const int h = 13;
-    if (tray < 0 && tray >= TRAY_T_SIZE) return (Resource){NULL, 0, 0};
+    if (tray < 0 && tray >= TRAY_T_SIZE) { return (Resource){NULL, 0, 0}; }
 
     return (Resource){_res_tray + 2 * (tray)*w * h, w, h};
 }
@@ -45,11 +45,12 @@ Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title)
     const int w = 160;
     const int h = 30;
     const unsigned char* img;
-    if (p_title == POPUP_NONE)
+    if (p_title == POPUP_NONE) {
         img = _res_titlebar + 2 * (s_title - 3) * w * h;
-    else
+    } else {
         img = _res_titlebar + 2 * (SCREEN_T_SIZE - 3) * w * h
               + 2 * (p_title - 1) * w * h;
+    }
     return (Resource){img, w, h};
 }
 
@@ -57,7 +58,9 @@ Resource res_get_menu_screen(enum menu_t selected)
 {
     const int w = 160;
     const int h = 160;
-    if (selected < 0 && selected >= MENU_T_SIZE) return (Resource){NULL, 0, 0};
+    if (selected < 0 && selected >= MENU_T_SIZE) {
+        return (Resource){NULL, 0, 0};
+    }
     return _get_sprite(selected, _res_menu, w, h);
 }
 
@@ -65,8 +68,9 @@ Resource res_get_direction(enum gest_dir_t direction)
 {
     const int w = 48;
     const int h = 48;
-    if (direction < 0 && direction >= GEST_DIR_T_SIZE)
+    if (direction < 0 && direction >= GEST_DIR_T_SIZE) {
         return (Resource){NULL, 0, 0};
+    }
     return _get_sprite(direction, _res_gest, w, h);
 }
 

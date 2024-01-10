@@ -9,7 +9,7 @@ enum app_status_t apps_load_clock()
     int sec = 0;
     bool old_show_sec = false;
     while (true) {
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         switch (XY.Gesture) {
         case Down: apps_load(SCREEN_MENU); break;
         case CLICK:
@@ -24,8 +24,9 @@ enum app_status_t apps_load_clock()
             screen.sstate = SCREEN_CLOCK;
             screen.redraw = DISP_REDRAW;
         } else if (state.show_sec) {
-            if (sec != state.dt.second && screen.redraw == DISP_SYNC)
+            if (sec != state.dt.second && screen.redraw == DISP_SYNC) {
                 screen.redraw = DISP_PARTIAL;
+            }
             sec = state.dt.second;
         } else if (min != state.dt.minute && screen.redraw == DISP_SYNC) {
             screen.redraw = DISP_PARTIAL;

@@ -23,10 +23,11 @@ void os_dev_init(void)
 
 void os_dev_set(enum dev_t dev, bool value)
 {
-    if (value)
+    if (value) {
         state.dev.stack[dev]++;
-    else
+    } else {
         state.dev.stack[dev]--;
+    }
     if (state.dev.stack[dev] > 0) {
         gpio_put(dev, 1);
     } else {
@@ -36,8 +37,8 @@ void os_dev_set(enum dev_t dev, bool value)
 
 static void _notify_iter(int32_t flag, int in)
 {
-    if (flag & DEV_VIB) gpio_put(pins[DEV_VIB], true);
-    if (flag & DEV_LED) gpio_put(pins[DEV_LED], true);
+    if (flag & DEV_VIB) { gpio_put(pins[DEV_VIB], true); }
+    if (flag & DEV_LED) { gpio_put(pins[DEV_LED], true); }
     bool value = true;
     if (flag & DEV_BUZZER) {
         for (int i = 0; i < in; i++) {
@@ -45,11 +46,12 @@ static void _notify_iter(int32_t flag, int in)
             value = !value;
             sleep_ms(1);
         }
-    } else
+    } else {
         sleep_ms(in);
+    }
 
-    if (flag & DEV_LED) gpio_put(pins[DEV_LED], false);
-    if (flag & DEV_VIB) gpio_put(pins[DEV_VIB], false);
+    if (flag & DEV_LED) { gpio_put(pins[DEV_LED], false); }
+    if (flag & DEV_VIB) { gpio_put(pins[DEV_VIB], false); }
 }
 
 void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)

@@ -32,15 +32,15 @@ enum app_status_t apps_load_chrono()
             y = XY.y_point;
             clicked = true;
         }
-        if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
-        if (apps_is_exited()) return APP_OK;
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
 
         // Start/Stop Button
         if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
             WARN(BTN_STOPWATCH);
             screen.redraw = DISP_REDRAW;
             enum app_status_t status = _apps_chrono_toggle();
-            if (!status) return status;
+            if (!status) { return status; }
         }
         if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {
             XY.x_point = 0;
@@ -74,8 +74,9 @@ static bool _scr_chrono_cb(repeating_timer_t* r)
             }
         }
     }
-    if (screen.sstate == SCREEN_CHRONO && state.popup.type == POPUP_NONE)
+    if (screen.sstate == SCREEN_CHRONO && state.popup.type == POPUP_NONE) {
         screen.redraw = DISP_PARTIAL;
+    }
 }
 
 static enum app_status_t _apps_chrono_toggle()
@@ -88,8 +89,9 @@ static enum app_status_t _apps_chrono_toggle()
         state.chrono.dt.second = 0;
         memset(&state.chrono.timer, 0, sizeof(repeating_timer_t));
         if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _scr_chrono_cb,
-                                    NULL, &state.chrono.timer))
+                                    NULL, &state.chrono.timer)) {
             return ERROR(APP_ERROR_TIMER_CREATE);
+        }
         WARN(REGISTER_EVENT scr_chrono_cb);
     } else {
         WARN(CANCEL_EVENT scr_chrono_cb);

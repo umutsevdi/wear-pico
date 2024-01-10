@@ -21,7 +21,7 @@ BtFd bt = {0};
 
 static bool is_str_complete()
 {
-    if (bt.cursor < 4) return false;
+    if (bt.cursor < 4) { return false; }
     return bt.packet[bt.cursor] == '\0' && bt.packet[bt.cursor - 1] == '\n'
            && bt.packet[bt.cursor - 2] == '\r'
            && bt.packet[bt.cursor - 3] == '|';
@@ -30,8 +30,9 @@ static bool is_str_complete()
 void on_uart_rx()
 {
     size_t bytes_left = uart_is_readable(bt.id);
-    if (bytes_left > 0 && bt.cursor < 240)
+    if (bytes_left > 0 && bt.cursor < 240) {
         bt.packet[bt.cursor++] = uart_getc(bt.id);
+    }
     if (is_str_complete()) {
         PRINT("handle str: [%s]%u", , bt.packet, bt.cursor);
         bt_handle_req(bt.packet, bt.cursor - 2);
@@ -64,16 +65,17 @@ void bt_init(void)
 bool bt_send_resp(enum bt_resp_t response)
 {
     char err_str[10];
-    if (response != BT_RESP_STEP)
+    if (response != BT_RESP_STEP) {
         snprintf(err_str, 9, "%d|", response);
-    else
+    } else {
         snprintf(err_str, 9, "%d|%d|", response, state.step);
+    }
     return bt_write(err_str, 10) > 0;
 }
 
 size_t bt_write(char* str, size_t str_s)
 {
-    if (!bt_is_writable()) return 0;
+    if (!bt_is_writable()) { return 0; }
     size_t bytes = strnlen(str, str_s);
     uart_write_blocking(bt.id, (uint8_t*)str, bytes);
     PRINT("sent [%s]", , str);

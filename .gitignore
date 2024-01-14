@@ -55,3 +55,8 @@ build/
 cmake-build-debug/
 src/.inc/
 src/waveshare
+
+docs/img/app/
+docs/img/hardware/
+docs/img/software/
+docs/market-analysis.png

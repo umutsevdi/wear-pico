@@ -87,9 +87,9 @@ void apps_post_process(bool is_cb)
             apps_draw(res_get_tray(TRAY_NONE), 152, 214);
         }
     }
-    screen.post_time = 60;
+    screen.post_time = 30;
     if (is_cb) {
-        WARN(POST_PROCESS_BY_CB);
+        //        WARN(POST_PROCESS_BY_CB);
         LCD_1IN28_Display(screen.buffer);
     }
 }

@@ -26,7 +26,7 @@ enum app_status_t apps_lock_screen()
     while (true) {
         if (state.popup.type != POPUP_NONE
             || state.__popup_req.type != POPUP_NONE) {
-            DEV_SET_PWM(100);
+            DEV_SET_PWM(80);
             if (!apps_poll_popup()) return APP_OK;
         }
         if (XY.Gesture == DOUBLE_CLICK) {

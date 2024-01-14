@@ -20,15 +20,13 @@ absolute_time_t then = {0};
 static void _process_alarms()
 {
     for (short i = 0; i < state.alarms.len; i++) {
-        if (state.alarms.list[i].is_active) {
-            if (!dt_cmp(&state.dt, &state.alarms.list[i].at,
-                        DT_WC_HOUR | DT_WC_MIN)) {
-                os_request_popup((Popup){
-                    .type = POPUP_ALARM,
-                    .value =
-                        (union PopupValue){.alarm = state.alarms.list[i].at}});
-                break;
-            }
+        if (state.alarms.list[i].is_active
+            && !dt_cmp(&state.dt, &state.alarms.list[i].at,
+                       DT_WC_HOUR | DT_WC_MIN)) {
+            os_request_popup((Popup){
+                .type = POPUP_ALARM,
+                .value = (union PopupValue){.alarm = state.alarms.list[i].at}});
+            break;
         }
     }
 }
@@ -40,7 +38,7 @@ static bool _os_timer_cb(repeating_timer_t* r)
         then = now;
         state.dt.second++;
         state.is_connected =
-            absolute_time_diff_us(state.__last_connected, now) / 1000000 < 5;
+            absolute_time_diff_us(state.__last_connected, now) / 1000000 < 30;
     }
     if (state.dt.second > 59) {
         state.dt.second = 0;
@@ -56,14 +54,6 @@ static bool _os_timer_cb(repeating_timer_t* r)
         /* Call every minute  */
         _process_alarms();
     }
-    return true;
-}
-
-static bool _step_count_cb(repeating_timer_t* r)
-{
-    static int16_t old = 0;
-    GyroData d = os_gyro_fetch();
-    int16_t peak = state.dev.dist_acc;
     return true;
 }
 
@@ -88,7 +78,6 @@ void os_init()
     os_dev_init();
     os_gyro_init();
     add_repeating_timer_ms(1000, _os_timer_cb, NULL, &state.__dt_timer);
-    add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
     PRINT(OS_INIT);
 }
 

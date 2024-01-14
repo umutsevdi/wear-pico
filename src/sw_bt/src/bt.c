@@ -14,7 +14,6 @@ typedef struct __BT_FD {
     bool is_enabled;
     char packet[240];// max size of a Bluetooth payload
     uint cursor;
-    bool packet_lock;
 } BtFd;
 
 BtFd bt = {0};
@@ -38,6 +37,7 @@ void on_uart_rx()
         bt_handle_req(bt.packet, bt.cursor - 2);
         memset(bt.packet, '\0', 240);
         bt.cursor = 0;
+        state.__last_connected = get_absolute_time();
     }
 }
 
@@ -51,7 +51,6 @@ void bt_init(void)
          * data-sheet for information on which other pins can be used. */
         .rx_pin = 1,
         .is_enabled = true,
-        .packet_lock = false,
     };
     uart_init(bt.id, bt.baud_rate);
     gpio_set_function(bt.tx_pin, GPIO_FUNC_UART);

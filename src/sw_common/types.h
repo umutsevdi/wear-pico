@@ -46,9 +46,9 @@ typedef struct {
     uint8_t second;
 } DateTime;
 
-bool str_to_date(const char buffer[15], DateTime* dt);
+bool date_decode(const char buffer[15], DateTime* dt);
 
-bool date_to_str(const DateTime* dt, char buffer[15]);
+bool date_encode(const DateTime* dt, char buffer[15]);
 
 #define DATETIME_MONTH(m)                                                      \
     m == 1    ? "Jan"                                                          \
@@ -64,6 +64,8 @@ bool date_to_str(const DateTime* dt, char buffer[15]);
     : m == 11 ? "Nov"                                                          \
     : m == 12 ? "Dec"                                                          \
               : "Null"
+
+const char* date_to_str(DateTime* dt);
 
 enum screen_t {
     SCREEN_CLOCK,

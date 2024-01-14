@@ -84,7 +84,7 @@ enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req)
 static enum bt_fmt_t _handle_fetch_date(char** str, int str_s)
 {
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
-    bool result = str_to_date(str[1], &state.dt);
+    bool result = date_decode(str[1], &state.dt);
     state.is_connected = true;
     PRINT("fetch_date(%s) = %s", , str[1], result ? "true" : "false");
     return result ? BT_FMT_OK : ERROR(BT_FMT_ERROR_DATE_PARSE);
@@ -94,7 +94,7 @@ static enum bt_fmt_t _handle_call_begin(char** str, int str_s)
 {
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     Popup p = (Popup){.type = POPUP_CALL, .value.caller.is_over = false};
-    strncpy(p.value.caller.name, str[1], strnlen(str[1], 25));
+    strncpy(p.value.caller.name, str[1], strnlen(str[1], 24));
     os_request_popup(p);
     PRINT("received_call(%s)", , str[1]);
     return BT_FMT_OK;
@@ -113,8 +113,8 @@ static enum bt_fmt_t _handle_notify(char** str, int str_s)
 {
     if (str_s < 3) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     Popup p = (Popup){.type = POPUP_NOTIFY};
-    strncpy(p.value.notify.title, str[1], strnlen(str[1], 15));
-    strncpy(p.value.notify.text, str[2], strnlen(str[2], 128));
+    strncpy(p.value.notify.title, str[1], strnlen(str[1], 12));
+    strncpy(p.value.notify.text, str[2], strnlen(str[2], 127));
     os_request_popup(p);
     PRINT("notify(%s, %s)", , p.value.notify.title, p.value.notify.text);
     return BT_FMT_OK;
@@ -125,7 +125,7 @@ static enum bt_fmt_t _handle_reminder(char** str, int str_s)
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     Popup p = (Popup){.type = POPUP_NOTIFY};
     strncpy(p.value.notify.title, "Reminder", strlen("Reminder"));
-    strncpy(p.value.notify.text, str[1], strnlen(str[1], 128));
+    strncpy(p.value.notify.text, str[1], strnlen(str[1], 127));
     os_request_popup(p);
     PRINT("reminder(%s)", , p.value.notify.text);
     return BT_FMT_OK;

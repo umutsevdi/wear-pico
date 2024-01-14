@@ -18,7 +18,13 @@ int log_idx = 0;
 
 const char* _file_fmt(const char* str)
 {
-    return (strnlen(str, 9) > 8) ? (char*)str + 8 : str;
+    int len = strlen(str);
+    if (len <= 8) {
+        return str;
+    } else if (len > 30) {
+        return str + 8 + len - 30;
+    }
+    return (char*)str + 8;
 }
 
 const char* strcenter(char* str, size_t str_s, size_t str_cap)
@@ -172,7 +178,7 @@ static int16_t _dt_wildcard(const char* b);
  */
 static bool _dt_map(DateTime* dt, char** str_p);
 
-bool str_to_date(const char buffer[15], DateTime* dt)
+bool date_decode(const char buffer[15], DateTime* dt)
 {
     if (buffer[DT_STRLEN] != '\0') return false;
     char year[5] = {0};
@@ -201,7 +207,7 @@ bool str_to_date(const char buffer[15], DateTime* dt)
     return _dt_map(dt, (char*[]){year, month, day, hour, min, sec});
 }
 
-bool date_to_str(const DateTime* dt, char buffer[15])
+bool date_encode(const DateTime* dt, char buffer[15])
 {
     snprintf(buffer, 14, "%04d%02d%02d%02d%02d%02d", dt->year, dt->month,
              dt->day, dt->hour, dt->minute, dt->second);
@@ -258,4 +264,12 @@ static bool _dt_map(DateTime* dt, char** str_p)
         if (*endptr != '\0' || dt->second > 60) { return false; }
     }
     return true;
+}
+
+const char* date_to_str(DateTime* dt)
+{
+    static char string[20];
+    snprintf(string, 20, "%02d/%02d/%02d %02d:%02d:%02d", dt->day, dt->month,
+             dt->year % 100, dt->hour, dt->minute, dt->second);
+    return string;
 }

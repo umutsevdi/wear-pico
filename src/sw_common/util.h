@@ -25,17 +25,17 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 
 #if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
-    printf("%s#%s():%-4d  " #FMT "\r\n", _file_fmt(__FILE__), __func__,        \
+    printf("%17s %s#%s():-%4d - " #FMT "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__), __func__,        \
            __LINE__ ARGS),                                                     \
         __strdump(0, "INF:" #FMT "\n" ARGS)
 
 #define WARN(CODE)                                                             \
-    printf("%s#%s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__), __func__,       \
+    printf("%17s %s#%s():%-4d - " #CODE "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__), __func__,       \
            __LINE__),                                                          \
         __strdump(0, "WRN:" #CODE "\n")
 
 #define ERROR(CODE)                                                            \
-    (fprintf(stderr, "%s#%s():%-4d  " #CODE "\r\n", _file_fmt(__FILE__),       \
+    (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__),       \
              __func__, __LINE__),                                              \
      __strdump(CODE, "ERR:" #CODE "\n"))
 #else
@@ -45,11 +45,7 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 #endif
 
 #ifndef UNUSED
-#define UNUSED(TYPE, ARGS...)                                                  \
-    do {                                                                       \
-        TYPE __args[] = {ARGS};                                                \
-        __args[0] = __args[0];                                                 \
-    } while (0);
+#define UNUSED(ARG) __attribute__ ((unused))ARG
 #endif
 
 /**

@@ -39,13 +39,12 @@ typedef struct {
     Popup popup;
     Popup __popup_req;
     struct {
-        /* GPIO pin stack to prevent early cancels
-         * Each set/reset is added to the stack */
-        int stack[20];
-        int16_t temp;
-        int16_t dist_acc;
-        int16_t dist_gyro;
+        int16_t buffer[100];
+        int16_t cursor;
         repeating_timer_t __step_timer;
+        int16_t temp;
+        double dist_acc;
+        double dist_gyro;
     } dev;
     struct {
         bool on_charge;

@@ -19,7 +19,6 @@ include_directories(waveshare/lib/Config)
 include_directories(waveshare/lib/Fonts)
 include_directories(waveshare/lib/GUI)
 include_directories(waveshare/lib/LCD)
-# include_directories(bluetooth-stdio)
 include_directories(./)
 
 # pull in common dependencies

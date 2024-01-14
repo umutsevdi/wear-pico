@@ -16,6 +16,8 @@
 static void mpu6050_reset();
 static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp);
 
+static void _step_count_analyze();
+
 void os_gyro_init()
 {
 #if !defined(i2c_default) || !defined(PICO_DEFAULT_I2C_SDA_PIN)                \
@@ -37,6 +39,8 @@ void os_gyro_init()
                                PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
     mpu6050_reset();
     os_gyro_fetch();
+
+//    add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
 #endif
 }
 
@@ -50,6 +54,13 @@ GyroData os_gyro_fetch()
         sqrt(pow(data.acc[0], 2) + pow(data.acc[1], 2) + pow(data.acc[2], 2));
     state.dev.dist_gyro = sqrt(pow(data.gyro[0], 2) + pow(data.gyro[1], 2)
                                + pow(data.gyro[2], 2));
+
+    state.dev.buffer[state.dev.cursor++] = state.dev.dist_acc;
+    if (state.dev.cursor >= 100) {
+        _step_count_analyze();
+        state.dev.cursor = 0;
+    }
+
     return data;
 }
 
@@ -130,5 +141,12 @@ static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
                       false);// False - finished with bus
 
     *temp = buffer[0] << 8 | buffer[1];
+}
+
+static void _step_count_analyze()
+{
+    for (int i = 0; i < 100; i++) {
+//        PRINT("%d", , state.dev.buffer[i]);
+    }
 }
 #endif

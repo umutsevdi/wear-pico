@@ -21,20 +21,6 @@ void os_dev_init(void)
     gpio_set_dir(pins[DEV_VIB], true);
 }
 
-void os_dev_set(enum dev_t dev, bool value)
-{
-    if (value) {
-        state.dev.stack[dev]++;
-    } else {
-        state.dev.stack[dev]--;
-    }
-    if (state.dev.stack[dev] > 0) {
-        gpio_put(dev, 1);
-    } else {
-        gpio_put(dev, 0);
-    }
-}
-
 static void _notify_iter(int32_t flag, int in)
 {
     if (flag & DEV_VIB) { gpio_put(pins[DEV_VIB], true); }
@@ -60,7 +46,7 @@ void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)
         _notify_iter(flag, in_ms);
         sleep_ms(out_ms);
     }
-    os_dev_set(pins[DEV_BUZZER], false);
+    gpio_put(pins[DEV_BUZZER], false);
 }
 
 void os_dev_notify(int count, int32_t flag)

@@ -26,7 +26,7 @@ enum app_status_t apps_init(void)
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);
     //backlight settings
-    DEV_SET_PWM(100);
+    DEV_SET_PWM(80);
     //open interrupt
     DEV_IRQ_SET(DEV_I2C_INT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true,
                 &_apps_touch_cb);
@@ -50,9 +50,8 @@ enum app_status_t apps_init(void)
     PRINT(APPS_INIT);
     return APP_OK;
 }
-static bool _post_process_cb(repeating_timer_t* r)
+static bool _post_process_cb(UNUSED(repeating_timer_t* r))
 {
-    UNUSED(void*, r);
     if (screen.post_time > 0) {
         screen.post_time--;
     } else {
@@ -60,9 +59,8 @@ static bool _post_process_cb(repeating_timer_t* r)
     }
 }
 
-void _apps_touch_cb(uint gpio, uint32_t events)
+void _apps_touch_cb(UNUSED(uint gpio), UNUSED(uint32_t events))
 {
-    UNUSED(int, gpio, events);
     if (XY.mode == 0) {
         XY.Gesture = DEV_I2C_Read_Byte(address, 0x01);
         flag = TOUCH_IRQ;
@@ -72,7 +70,7 @@ void _apps_touch_cb(uint gpio, uint32_t events)
     }
 }
 
-bool _apps_refresh_cb(struct repeating_timer* t)
+bool _apps_refresh_cb(UNUSED(struct repeating_timer* t))
 {
     l++;//Determine continuous or single point
     if (l == 253) { l = 252; }

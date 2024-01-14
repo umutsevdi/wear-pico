@@ -24,12 +24,11 @@ typedef struct {
     int16_t temp;
 } GyroData;
 
-#define DEV_S(dev)                                                             \
+#define dev_to_str(dev)                                                        \
     dev == DEV_BUZZER ? "DEV_BUZZER"                                           \
     : dev == DEV_LED  ? "DEV_LED"                                              \
-                      : "DEV_UNDEFINED"
-
-void os_dev_set(enum dev_t dev, bool value);
+    : dev == DEV_VIB  ? "DEV_VIB"                                              \
+                      : "NONE"
 
 /**
  * Create a notification effect with desired
@@ -59,7 +58,7 @@ void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms);
  */
 GyroData os_gyro_fetch();
 
-#define GYRO_S(G)                                                              \
+#define gyro_to_str(G)                                                              \
     "Acc{%d,%d,%d}, Gyro{%d,%d,%d}, Temp %d*C\n", G.acc[0], G.acc[1],          \
         G.acc[2], G.gyro[0], G.gyro[1], G.gyro[2], G.temp
 #endif// !SW_PERIPHERALS

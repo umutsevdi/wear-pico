@@ -11,6 +11,7 @@ void _core1_cb() { apps_load(SCREEN_CLOCK); }
 int main(int argc, char* argv[])
 {
     stdio_init_all();
+    sleep_ms(1000);
     os_init();
     apps_init();
     multicore_launch_core1(_core1_cb);
@@ -18,16 +19,9 @@ int main(int argc, char* argv[])
     WARN(BT_INIT);
     bt_init();
 
-    int i = 0;
     while (1) {
-        os_gyro_fetch();
-        i++;
-        if (i % 10 == 0) {
-            int demo_amount = (state.dev.dist_acc / 10000 - 1);
-            state.step += demo_amount > 0 ? demo_amount : 0;
-        }
-        sleep_ms(125);
+        GyroData data = os_gyro_fetch();
+        sleep_ms(50);
     }
-
     return 0;
 }

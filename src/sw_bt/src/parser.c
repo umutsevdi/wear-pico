@@ -144,7 +144,7 @@ static enum bt_fmt_t _handle_osc(char** str, int str_s)
     strncpy(state.media.artist, str[3], len_artist);
     if (len_artist < 30) { state.media.artist[len_artist] = '\0'; }
 
-    state.media.is_fetched = true;
+    state.media.is_fetched = false;
     PRINT("media(%s by %s)", , state.media.song, state.media.artist);
     return BT_FMT_OK;
 }

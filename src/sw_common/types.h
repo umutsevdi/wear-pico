@@ -65,8 +65,6 @@ bool date_encode(const DateTime* dt, char buffer[15]);
     : m == 12 ? "Dec"                                                          \
               : "Null"
 
-const char* date_to_str(DateTime* dt);
-
 enum screen_t {
     SCREEN_CLOCK,
     SCREEN_LOCK,

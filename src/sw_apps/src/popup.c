@@ -1,6 +1,8 @@
 #include "sw_apps/apps.h"
 #include "sw_bt/bt.h"
 #include "sw_os/dev.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
 
 static const int POPUP_CALL_ITER = 3;
 static const int POPUP_ALARM_ITER = 2;
@@ -162,14 +164,12 @@ static enum app_status_t _load_alarm()
 
 static enum app_status_t _load_notification()
 {
-    bool clicked;
     int x = 0, y = 0;
     os_dev_notify(POPUP_ALARM_ITER, POPUP_NOTIFY_FLAG);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
             y = XY.y_point;
-            clicked = true;
         }
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
@@ -200,6 +200,5 @@ static enum app_status_t _load_notification()
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }
-        clicked = false;
     }
 }

@@ -12,7 +12,6 @@
 #define SW_BT
 
 #include "sw_common/util.h"
-#include "sw_os/state.h"
 
 /* Status codes related to protocol */
 enum bt_fmt_t {

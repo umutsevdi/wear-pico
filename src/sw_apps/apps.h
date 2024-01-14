@@ -11,7 +11,6 @@
 #define SW_APPS
 
 #include "sw_common/util.h"
-#include "sw_os/state.h"
 #include "sw_res/resources.h"
 #include <DEV_Config.h>
 #include <LCD_1in28.h>

@@ -25,18 +25,18 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 
 #if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
-    printf("%17s %s#%s():-%4d - " #FMT "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__), __func__,        \
-           __LINE__ ARGS),                                                     \
+    printf("%17s %s#%s():-%4d - " #FMT "\r\n", __now(), _file_fmt(__FILE__),   \
+           __func__, __LINE__ ARGS),                                           \
         __strdump(0, "INF:" #FMT "\n" ARGS)
 
 #define WARN(CODE)                                                             \
-    printf("%17s %s#%s():%-4d - " #CODE "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__), __func__,       \
-           __LINE__),                                                          \
+    printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__),  \
+           __func__, __LINE__),                                                \
         __strdump(0, "WRN:" #CODE "\n")
 
 #define ERROR(CODE)                                                            \
-    (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", date_to_str(&state.dt), _file_fmt(__FILE__),       \
-             __func__, __LINE__),                                              \
+    (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
+             _file_fmt(__FILE__), __func__, __LINE__),                         \
      __strdump(CODE, "ERR:" #CODE "\n"))
 #else
 #define PRINT(FMT, ARGS...) __strdump(0, "INF:" #FMT "\n" ARGS)
@@ -45,7 +45,7 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 #endif
 
 #ifndef UNUSED
-#define UNUSED(ARG) __attribute__ ((unused))ARG
+#define UNUSED(ARG) __attribute__((unused)) ARG
 #endif
 
 /**
@@ -102,5 +102,7 @@ int strwrap(char* buffer, size_t buffer_s, int width, char** array,
 
 /* Dumps given text to the log buffer */
 int __strdump(int code, const char* fmt, ...);
+
+const char* __now();
 
 #endif

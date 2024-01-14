@@ -11,7 +11,6 @@ void _core1_cb() { apps_load(SCREEN_CLOCK); }
 int main(int argc, char* argv[])
 {
     stdio_init_all();
-    sleep_ms(1000);
     os_init();
     apps_init();
     multicore_launch_core1(_core1_cb);
@@ -20,7 +19,7 @@ int main(int argc, char* argv[])
     bt_init();
 
     while (1) {
-        GyroData data = os_gyro_fetch();
+        os_gyro_fetch();
         sleep_ms(50);
     }
     return 0;

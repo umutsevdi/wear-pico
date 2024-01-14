@@ -1,4 +1,5 @@
 #include "sw_common/util.h"
+#include "sw_os/state.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -29,9 +30,14 @@ const char* _file_fmt(const char* str)
 
 const char* strcenter(char* str, size_t str_s, size_t str_cap)
 {
-    size_t lpad = (str_cap - str_s) / 2;
-    memmove(str + lpad, str, str_s);
-    memset(str, ' ', lpad);
+    PRINT("STRING: %s, LEN: %zu CAP: %zu", , str, str_s, str_cap);
+    if (str_s < str_cap) {
+        size_t lpad = (str_cap - str_s) / 2;
+        memmove(str + lpad, str, str_s);
+        memset(str, ' ', lpad);
+        str[str_s + lpad] = '\0';
+    }
+    PRINT("STRCENTER->%s", , str);
     return str;
 }
 
@@ -266,10 +272,11 @@ static bool _dt_map(DateTime* dt, char** str_p)
     return true;
 }
 
-const char* date_to_str(DateTime* dt)
+const char* __now()
 {
     static char string[20];
-    snprintf(string, 20, "%02d/%02d/%02d %02d:%02d:%02d", dt->day, dt->month,
-             dt->year % 100, dt->hour, dt->minute, dt->second);
+    snprintf(string, 20, "%02d/%02d/%02d %02d:%02d:%02d", state.dt.day,
+             state.dt.month, state.dt.year % 100, state.dt.hour,
+             state.dt.minute, state.dt.second);
     return string;
 }

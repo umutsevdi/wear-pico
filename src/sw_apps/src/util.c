@@ -1,5 +1,6 @@
-#include "GUI_Paint.h"
 #include "sw_apps/apps.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
 
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)
 {

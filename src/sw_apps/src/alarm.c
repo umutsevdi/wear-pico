@@ -1,5 +1,6 @@
 #include "sw_apps/apps.h"
 #include "sw_bt/bt.h"
+#include "sw_os/state.h"
 #include "sw_res/resources.h"
 #define ALARM_X 40
 #define ALARM_Y 66

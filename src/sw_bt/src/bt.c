@@ -1,6 +1,7 @@
 #include "sw_bt/bt.h"
-#include "hardware/regs/intctrl.h"
+#include "sw_os/state.h"
 #include <hardware/irq.h>
+#include <hardware/regs/intctrl.h>
 #include <hardware/uart.h>
 #include <pico/stdlib.h>
 #define POLLING_ON 0

@@ -1,4 +1,6 @@
 #include "sw_apps/apps.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
 
 /* Updates the values on the SCREEN_CLOCK */
 static void _clock_partial();

@@ -1,5 +1,7 @@
 #include "sw_apps/apps.h"
 #include "sw_os/dev.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
 
 #define CHRONO_CB_FREQUENCY 13
 

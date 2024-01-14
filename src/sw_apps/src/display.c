@@ -1,4 +1,6 @@
 #include "sw_apps/apps.h"
+#include "sw_res/resources.h"
+
 #define CANVAS_WIDTH 176
 #define CANVAS_HEIGHT 110
 

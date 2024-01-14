@@ -1,6 +1,7 @@
 #include "sw_apps/apps.h"
-#include "GUI_Paint.h"
 #include "sw_bt/bt.h"
+#include "sw_os/state.h"
+#include "sw_res/resources.h"
 
 enum notepad_color_t {
     NOTEPAD_COLOR_NONE = COLOR_BG,
@@ -63,16 +64,16 @@ enum app_status_t apps_load_media()
                 screen.redraw = DISP_REDRAW;
                 bt_send_resp(BT_RESP_OSC_PLAY_PAUSE);
             } else if (apps_is_clicked(BTN_NEXT)) {
-                screen.redraw = DISP_PARTIAL;
+                screen.redraw = DISP_REDRAW;
                 bt_send_resp(BT_RESP_OSC_NEXT);
             } else if (apps_is_clicked(BTN_PREV)) {
-                screen.redraw = DISP_PARTIAL;
+                screen.redraw = DISP_REDRAW;
                 bt_send_resp(BT_RESP_OSC_PREV);
             }
         }
-        if (state.media.is_fetched) {
+        if (!state.media.is_fetched) {
             PRINT(BT_OSC_FETCH);
-            state.media.is_fetched = false;
+            state.media.is_fetched = true;
             screen.redraw = DISP_REDRAW;
         }
         if (apps_set_titlebar(SCREEN_MEDIA, POPUP_NONE)) {
@@ -85,7 +86,7 @@ enum app_status_t apps_load_media()
             char center[30] = {0};
             int len = strnlen(state.media.song, 30);
             strncpy(center, state.media.song, len);
-            Paint_DrawString_EN(5, 84, strcenter(center, len, 20), &Font20,
+            Paint_DrawString_EN(5, 80, strcenter(center, len, 16), &Font20,
                                 COLOR_BG, COLOR_FG);
             len = strnlen(state.media.artist, 30);
             memset(center, 0, 30);
@@ -97,6 +98,7 @@ enum app_status_t apps_load_media()
             screen.redraw = DISP_SYNC;
         }
         clicked = false;
+        sleep_ms(50);
     }
 }
 

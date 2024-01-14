@@ -24,7 +24,7 @@ include_directories(./)
 # pull in common dependencies
 target_link_libraries(smartwatch
     sw_res
-    sw_common
+    sw_utils
     sw_os
     sw_apps
     sw_bt

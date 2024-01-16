@@ -118,14 +118,10 @@ enum app_status_t apps_load_calendar()
             XY.y_point = 0;
             DateTime now = state.dt;
             int number_of_days = dt_number_of_days(&now);
-            int dow = dt_get_day_int(&now);
-            if (dow == 0) { dow = 7; }
-
             DateTime beginning = {.day = 1,
                                   .month = now.month,
                                   .year = now.year};
             int dow_begin = dt_get_day_int(&beginning);
-            if (dow == 0) { dow = 7; }
             char title[12];
             snprintf(title, 12, "%3s %4d", DATETIME_MONTH(now.month), now.year);
             strcenter(title, strnlen(title, 12), 12);
@@ -142,14 +138,14 @@ enum app_status_t apps_load_calendar()
                 snprintf(str, 4, " %02d", i - dow_begin + 1);
                 int fg_color = COLOR_FG;
                 int bg_color = COLOR_BG;
-                if (((i - 1) % 7) > 4) {
-                    if ((i - dow == now.day)) {
+                if (i % 7 == 6 || i % 7 == 0) {
+                    if (i - dow_begin + 1 == now.day) {
                         bg_color = YELLOW;
                     } else {
                         bg_color = GBLUE;
                     }
                     fg_color = BLACK;
-                } else if (i - dow == now.day) {
+                } else if (i - dow_begin + 1 == now.day) {
                     fg_color = YELLOW;
                 }
                 Paint_DrawString_EN(25 + (i - 1) % 7 * 28, j, str, &Font12,

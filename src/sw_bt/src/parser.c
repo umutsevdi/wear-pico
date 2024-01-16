@@ -178,6 +178,7 @@ static enum bt_fmt_t _handle_fetch_alarm(char** str, int str_s)
         PRINT("alarm_%d(%d:%d)", , i, state.alarms.list[i].at.hour,
               state.alarms.list[i].at.minute);
     }
+    state.alarms.is_fetched = false;
     return BT_FMT_OK;
 }
 

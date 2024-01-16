@@ -60,20 +60,9 @@ static bool _os_timer_cb(repeating_timer_t* r)
 void os_init()
 {
     then = get_absolute_time();
-    state.show_sec = false;
-    state.is_connected = false;
-    state.bat.on_charge = true;
-    state.dt = (DateTime){0, 2024, 1, 7, 00, 00, 00};
-    state.alarms.len = 3;
-    for (int i = 0; i < state.alarms.len; i++) {
-        state.alarms.list[i].is_active = i % 2;
-        state.alarms.list[i].at = (DateTime){
-            .flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_DAY | DT_WC_SEC,
-            .hour = 9,
-            .minute = 1 + i * 10 - (i << 2),
-
-        };
-    }
+    state.bat.pct = 100;
+    state.dt = (DateTime){0, 2024, 01, 01, 00, 00, 00};
+    state.alarms.len = 0;
     state.chrono.dt.flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_YEAR | DT_WC_DAY;
     os_dev_init();
     os_gyro_init();

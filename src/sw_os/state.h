@@ -53,6 +53,7 @@ typedef struct {
     struct {
         Alarm list[4];
         short len;
+        bool is_fetched;
     } alarms;
     struct {
         DateTime dt;

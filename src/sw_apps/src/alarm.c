@@ -37,7 +37,11 @@ enum app_status_t apps_load_alarm(void)
                 }
             }
         }
-
+        if (!state.alarms.is_fetched) {
+            PRINT(BT_FETCH_ALARMS);
+            state.alarms.is_fetched = true;
+            screen.redraw = DISP_REDRAW;
+        }
         if (apps_set_titlebar(SCREEN_ALARM, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;

@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
     bt_init();
 
     while (1) {
-        os_gyro_fetch();
+        GyroData data = os_gyro_fetch();
+//        printf(gyro_to_str(data));
         sleep_ms(50);
     }
     return 0;

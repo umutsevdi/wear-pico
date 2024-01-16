@@ -145,12 +145,11 @@ static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
 
 static void _step_count_analyze()
 {
-    /*
-    for (int i = 0; i < 100; i += 5) {
+
+/*    for (int i = 0; i < 100; i += 5) {
         PRINT("[%d %d %d %d %d]", , state.dev.buffer[i],
               state.dev.buffer[i + 1], state.dev.buffer[i + 2],
               state.dev.buffer[i + 3], state.dev.buffer[i + 4]);
-    }
-    */
+    }*/
 }
 #endif

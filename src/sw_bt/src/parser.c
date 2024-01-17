@@ -35,9 +35,9 @@ static enum bt_fmt_t _req_route(char** arr, int arr_s,
 
 enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
 {
-    char* str_arr[5] = {0};
+    char* str_arr[10] = {0};
     enum bt_fmt_t err;
-    int size = 5;
+    int size = 10;
     enum bt_req_t request_t;
 
     err = _req_decode(str, str_s, str_arr, &size);
@@ -72,7 +72,6 @@ static enum bt_fmt_t _req_decode(char* str, size_t str_s, char** arr,
 
 enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req)
 {
-    if (arr_s > 5) { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     char* endptr;
     long request_type = strtol(arr[0], &endptr, 10);
     if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_REQ_TYPE); }
@@ -145,7 +144,7 @@ static enum bt_fmt_t _handle_osc(char** str, int str_s)
     if (len_artist < 30) { state.media.artist[len_artist] = '\0'; }
 
     state.media.is_fetched = false;
-    PRINT("media(%s by %s)", , state.media.song, state.media.artist);
+    PRINT("media(%s, %s)", , state.media.song, state.media.artist);
     return BT_FMT_OK;
 }
 
@@ -170,15 +169,18 @@ static enum bt_fmt_t _handle_fetch_alarm(char** str, int str_s)
         return ERROR(BT_FMT_ERROR_ALARM_PARSE);
     }
     int alarm_count = str[1][0] - '0';
-
-    state.alarms.len = alarm_count;
+    if (alarm_count + 2 > str_s) { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     for (int i = 0; i < alarm_count; i++) {
-        /* is_active value is set by the watch */
         str_to_alarm(str[i + 2], &state.alarms.list[i].at);
         PRINT("alarm_%d(%d:%d)", , i, state.alarms.list[i].at.hour,
               state.alarms.list[i].at.minute);
     }
+    for (int i = alarm_count; i < 4; i++) {
+        state.alarms.list[i].is_active = true;
+    }
+    state.alarms.len = alarm_count;
     state.alarms.is_fetched = false;
+    PRINT(FETCH_ALARM_BT);
     return BT_FMT_OK;
 }
 

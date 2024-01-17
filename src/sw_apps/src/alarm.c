@@ -11,8 +11,6 @@ void _alarm_draw(int idx, Alarm* alarm);
 
 enum app_status_t apps_load_alarm(void)
 {
-    bt_send_resp(BT_RESP_FETCH_ALARM);
-
     bool clicked;
     int x = 0, y = 0;
     while (true) {
@@ -51,6 +49,7 @@ enum app_status_t apps_load_alarm(void)
         }
 
         if (screen.redraw) {
+            PRINT(REDRAW);
             LCD_1IN28_Display(screen.buffer);
             screen.redraw = DISP_SYNC;
         }

@@ -38,7 +38,7 @@ target_link_libraries(smartwatch
     hardware_adc
     hardware_exception
     # waveshare_begin
-    LCD GUI Fonts Config pico_stdlib hardware_spi hardware_i2c
+    LCD GUI Fonts Config hardware_spi hardware_i2c
     # waveshare_ends
 )
 

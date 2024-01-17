@@ -60,7 +60,6 @@ enum bt_resp_t {
     BT_RESP_OSC_PREV,
     BT_RESP_OSC_PLAY_PAUSE,
     BT_RESP_OSC_NEXT,
-    BT_RESP_FETCH_ALARM,
     BT_RESP_STEP,
     BT_RESP_SIZE
 };

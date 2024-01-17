@@ -19,7 +19,7 @@ typedef struct __BT_FD {
 
 BtFd bt = {0};
 
-static bool is_str_complete()
+static inline bool is_str_complete()
 {
     if (bt.cursor < 4) { return false; }
     return bt.packet[bt.cursor] == '\0' && bt.packet[bt.cursor - 1] == '\n'
@@ -29,8 +29,7 @@ static bool is_str_complete()
 
 void on_uart_rx()
 {
-    size_t bytes_left = uart_is_readable(bt.id);
-    if (bytes_left > 0 && bt.cursor < 240) {
+    if (uart_is_readable(bt.id) > 0 && bt.cursor < 240) {
         bt.packet[bt.cursor++] = uart_getc(bt.id);
     }
     if (is_str_complete()) {
@@ -77,6 +76,7 @@ size_t bt_write(char* str, size_t str_s)
 {
     if (!bt_is_writable()) { return 0; }
     size_t bytes = strnlen(str, str_s);
+    PRINT(Start sending);
     uart_write_blocking(bt.id, (uint8_t*)str, bytes);
     PRINT("sent [%s]", , str);
     return bytes;

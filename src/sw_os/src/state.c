@@ -19,6 +19,7 @@ absolute_time_t then = {0};
  * trigger */
 static void _process_alarms()
 {
+    if (!state.alarms.is_fetched) { return; }
     for (short i = 0; i < state.alarms.len; i++) {
         if (state.alarms.list[i].is_active
             && !dt_cmp(&state.dt, &state.alarms.list[i].at,

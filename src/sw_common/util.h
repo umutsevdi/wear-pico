@@ -18,31 +18,28 @@
 #include <string.h>
 #include <unistd.h>
 
-#define LOG_BUFFER_S 400
+#define LOG_BUFFER_S 250
 extern char LOG_BUFFER[LOG_BUFFER_S];
 
-#define __SW_DEBUG_USB__ 1
-
-#if __SW_DEBUG_USB__
 #define PRINT(FMT, ARGS...)                                                    \
     printf("%17s %s#%s():-%4d - " #FMT "\r\n", __now(), _file_fmt(__FILE__),   \
            __func__, __LINE__ ARGS),                                           \
-        __strdump(0, "INF:" #FMT "\n" ARGS)
+        __strdump(0, #FMT "\n" ARGS)
 
 #define WARN(CODE)                                                             \
     printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__),  \
            __func__, __LINE__),                                                \
         __strdump(0, "WRN:" #CODE "\n")
 
+#define INFO(CODE)                                                             \
+    (fprintf(stdout, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
+             _file_fmt(__FILE__), __func__, __LINE__),                         \
+     __strdump(0, "INF:" #CODE "\n"))
+
 #define ERROR(CODE)                                                            \
     (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
              _file_fmt(__FILE__), __func__, __LINE__),                         \
      __strdump(CODE, "ERR:" #CODE "\n"))
-#else
-#define PRINT(FMT, ARGS...) __strdump(0, "INF:" #FMT "\n" ARGS)
-#define WARN(CODE) __strdump(0, "WRN:" #CODE "\n")
-#define ERROR(CODE) __strdump(CODE, "ERR:" #CODE "\n")
-#endif
 
 #ifndef UNUSED
 #define UNUSED(ARG) __attribute__((unused)) ARG

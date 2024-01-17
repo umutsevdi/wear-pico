@@ -137,7 +137,7 @@ enum app_status_t apps_set_module(enum screen_t screen_type,
         PRINT("SET_MODULE_%s", , popup_to_str(popup_type));
     }
     XY.mode = touch_type;
-    if (Touch_1IN28_init(XY.mode) != 1) { return ERROR(APP_WARN_TOUCH_FAILED); }
+    if (Touch_1IN28_init(XY.mode) != 1) { return INFO(APP_WARN_TOUCH_FAILED); }
     screen.redraw = DISP_REDRAW;
     XY.x_point = 0;
     XY.y_point = 0;

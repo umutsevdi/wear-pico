@@ -136,13 +136,6 @@ static void _step_count_analyze()
     bool peaked = false;
     int number_of_steps = 0;
     for (int i = 0; i < SAMPLE_SIZE; i++) {
-        if (buffer[i] > threshold) {
-
-            printf("[%5d] ", buffer[i]);
-        } else {
-
-            printf(" %5d  ", buffer[i]);
-        }
         if (buffer[i] > threshold && !peaked) {
             peaked = true;
             number_of_steps++;
@@ -150,7 +143,6 @@ static void _step_count_analyze()
         } else if (buffer[i] < threshold && peaked) {
             peaked = false;
         }
-        if (i % 5 == 0) { printf("\n"); }
     }
     if (number_of_steps)
         state.dev.step += number_of_steps / 2;

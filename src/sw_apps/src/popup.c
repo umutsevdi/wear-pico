@@ -27,7 +27,7 @@ static enum app_status_t _load_call();
 /* Load function for the alarm pop-up module */
 static enum app_status_t _load_alarm();
 /* Load function for the notify pop-up module */
-static enum app_status_t _load_notification();
+static enum app_status_t _load_notify();
 
 enum app_status_t apps_poll_popup()
 {
@@ -76,7 +76,7 @@ static enum app_status_t _popup_load(enum popup_t popup)
     switch (popup) {
     case POPUP_CALL: r = _load_call(); break;
     case POPUP_ALARM: r = _load_alarm(); break;
-    case POPUP_NOTIFY: r = _load_notification(); break;
+    case POPUP_NOTIFY: r = _load_notify(); break;
     default: break;
     }
     return r;
@@ -99,9 +99,10 @@ static enum app_status_t _load_call()
 
         if (clicked) {
             if (apps_is_clicked(BTN_ACCEPT)) {
-                if (bt_send_resp(BT_RESP_CALL_OK)) return APP_OK;
+                if (bt_send_resp(BT_RESP_CALL_OK)) return INFO(BT_RESP_CALL_OK);
             } else if (apps_is_clicked(BTN_DISMISS)) {
-                if (bt_send_resp(BT_RESP_CALL_CANCEL)) return APP_OK;
+                if (bt_send_resp(BT_RESP_CALL_CANCEL))
+                    return INFO(BT_RESP_CALL_CANCEL);
             }
         }
 
@@ -111,7 +112,7 @@ static enum app_status_t _load_call()
             apps_draw(res_get_popup_call(), 52, 140);
             PRINT("%s", , state.popup.value.caller.name);
             Paint_DrawString_EN(
-                5, 90,
+                0, 90,
                 strcenter(state.popup.value.caller.name,
                           strnlen(state.popup.value.caller.name, 25), 16),
                 &Font24, COLOR_BG, COLOR_FG);
@@ -143,7 +144,6 @@ static enum app_status_t _load_alarm()
 
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
-
         if (clicked && apps_is_clicked(BTN_ALARM_DISMISS)) { return APP_OK; }
         if (apps_set_titlebar(0, POPUP_ALARM)) {
             XY.x_point = 0;
@@ -162,10 +162,11 @@ static enum app_status_t _load_alarm()
     }
 }
 
-static enum app_status_t _load_notification()
+static enum app_status_t _load_notify()
 {
     int x = 0, y = 0;
     os_dev_notify(POPUP_ALARM_ITER, POPUP_NOTIFY_FLAG);
+    absolute_time_t then = get_absolute_time();
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -173,6 +174,9 @@ static enum app_status_t _load_notification()
         }
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
+        if ((absolute_time_diff_us(get_absolute_time(), then) / 10000000)) {
+            return INFO(APP_TIMEOUT_NOTIFY);
+        }
 
         if (apps_set_titlebar(0, POPUP_NOTIFY)) {
             XY.x_point = 0;

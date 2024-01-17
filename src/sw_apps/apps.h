@@ -28,6 +28,7 @@ enum app_status_t {
     APP_OK,
     APP_WARN_TOUCH_FAILED,
     APP_NO_POPUP,
+    APP_TIMEOUT_NOTIFY,
     APP_ERROR_ALLOC,
     APP_ERROR_TIMER_CREATE,
     APP_ERROR_INVALID_POPUP,
@@ -145,6 +146,6 @@ bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title);
  * @return - APP_OK if configuration is successful, APP_WARN_TOUCH_FAILED on
  * failure
  */
-enum app_status_t apps_set_module(enum screen_t screen_type, enum popup_t popup_type,
-                             int touch_type);
+enum app_status_t apps_set_module(enum screen_t screen_type,
+                                  enum popup_t popup_type, int touch_type);
 #endif

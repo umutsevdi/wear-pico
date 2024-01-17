@@ -2,6 +2,7 @@
 #include "sw_bt/bt.h"
 #include "sw_os/state.h"
 #include "sw_res/resources.h"
+#include <string.h>
 
 enum notepad_color_t {
     NOTEPAD_COLOR_NONE = COLOR_BG,
@@ -256,6 +257,7 @@ enum app_status_t apps_load_log(void)
 {
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
+    static char __log_copy[LOG_BUFFER_S] = {0};
     int sec = 0;
     while (true) {
         if (!apps_poll_popup()) screen.redraw = DISP_REDRAW;
@@ -273,7 +275,8 @@ enum app_status_t apps_load_log(void)
 
         if (screen.redraw) {
             char* array[15] = {0};
-            int array_s = strwrap(LOG_BUFFER, strnlen(LOG_BUFFER, LOG_BUFFER_S),
+            memcpy(__log_copy, LOG_BUFFER, LOG_BUFFER_S);
+            int array_s = strwrap(__log_copy, strnlen(__log_copy, LOG_BUFFER_S),
                                   40, array, 14);
             if (array_s != -1) {
                 for (int i = 0; i < array_s; i++)

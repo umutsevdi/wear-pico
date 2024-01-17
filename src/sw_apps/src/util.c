@@ -2,6 +2,31 @@
 #include "sw_os/state.h"
 #include "sw_res/resources.h"
 
+enum app_status_t apps_lock_screen()
+{
+    screen.sstate = SCREEN_LOCK;
+    Paint_Clear(BLACK);
+    DEV_SET_PWM(0);
+    LCD_1IN28_Display(screen.buffer);
+    XY.Gesture = None;
+    while (true) {
+        if (state.popup.type != POPUP_NONE
+            || state.__popup_req.type != POPUP_NONE) {
+            DEV_SET_PWM(80);
+            if (!apps_poll_popup()) return APP_OK;
+        }
+        if (XY.Gesture == DOUBLE_CLICK) {
+            /* Returns with up gesture to trigger down
+             * on menu and return to clock screen safely
+             */
+            XY.Gesture = UP;
+            DEV_SET_PWM(100);
+            return APP_OK;
+        }
+        sleep_ms(200);
+    }
+}
+
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec)
 {
     const int x_size = 40;

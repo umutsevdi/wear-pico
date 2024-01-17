@@ -1,4 +1,5 @@
 #include "sw_apps/apps.h"
+#include "sw_bt/bt.h"
 #include "sw_os/state.h"
 
 enum app_status_t apps_load_log(void)

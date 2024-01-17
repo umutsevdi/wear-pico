@@ -111,9 +111,9 @@ static enum app_status_t _load_call()
             apps_draw(res_get_popup_call(), 52, 140);
             PRINT("%s", , state.popup.value.caller.name);
             Paint_DrawString_EN(
-                0, 90,
+                5, 90,
                 strcenter(state.popup.value.caller.name,
-                          strnlen(state.popup.value.caller.name, 25), 25),
+                          strnlen(state.popup.value.caller.name, 25), 16),
                 &Font24, COLOR_BG, COLOR_FG);
             apps_post_process(false);
         }

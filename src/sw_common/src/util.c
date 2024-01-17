@@ -30,14 +30,12 @@ const char* _file_fmt(const char* str)
 
 const char* strcenter(char* str, size_t str_s, size_t str_cap)
 {
-    PRINT("STRING: %s, LEN: %zu CAP: %zu", , str, str_s, str_cap);
     if (str_s < str_cap) {
         size_t lpad = (str_cap - str_s) / 2;
         memmove(str + lpad, str, str_s);
         memset(str, ' ', lpad);
         str[str_s + lpad] = '\0';
     }
-    PRINT("STRCENTER->%s", , str);
     return str;
 }
 

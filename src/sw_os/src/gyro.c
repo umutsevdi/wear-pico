@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+#include "pico/time.h"
 #include "sw_os/dev.h"
 #include "sw_os/state.h"
 
@@ -10,12 +11,16 @@
 #include <math.h>
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
-static void mpu6050_reset();
-static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp);
+#define SAMPLE_SIZE 30
+uint16_t buffer[SAMPLE_SIZE];
+int16_t cursor;
+repeating_timer_t step_timer;
 
+static void _mpu6050_reset();
+static void _mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp);
+
+static bool _step_count_cb(repeating_timer_t* r);
 static void _step_count_analyze();
 
 void os_gyro_init()
@@ -37,32 +42,14 @@ void os_gyro_init()
     // Make the I2C pins available to picotool
     bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
                                PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
-    mpu6050_reset();
-    os_gyro_fetch();
-
-//    add_repeating_timer_ms(500, _step_count_cb, NULL, &state.dev.__step_timer);
+    _mpu6050_reset();
+    add_repeating_timer_ms(80, _step_count_cb, NULL, &step_timer);
 #endif
 }
 
-GyroData os_gyro_fetch()
-{
-    GyroData data;
-    mpu6050_read_raw(data.acc, data.gyro, &data.temp);
-    data.temp = (data.temp / 340.0) + 36.53;
-    state.dev.temp = data.temp;
-    state.dev.dist_acc =
-        sqrt(pow(data.acc[0], 2) + pow(data.acc[1], 2) + pow(data.acc[2], 2));
-    state.dev.dist_gyro = sqrt(pow(data.gyro[0], 2) + pow(data.gyro[1], 2)
-                               + pow(data.gyro[2], 2));
-
-    state.dev.buffer[state.dev.cursor++] = state.dev.dist_acc;
-    if (state.dev.cursor >= 100) {
-        _step_count_analyze();
-        state.dev.cursor = 0;
-    }
-
-    return data;
-}
+/**
+ * Taken from https://github.com/raspberrypi/pico-examples/blob/master/i2c/mpu6050_i2c/mpu6050_i2c.c
+ */
 
 /* Example code to talk to a MPU6050 MEMS accelerometer and gyroscope
 
@@ -88,7 +75,7 @@ GyroData os_gyro_fetch()
 static int addr = 0x68;
 
 #ifdef i2c_default
-static void mpu6050_reset()
+static void _mpu6050_reset()
 {
     // Two byte reset. First byte register, second byte data
     // There are a load more options to set up the device in different ways that could be added here
@@ -103,7 +90,7 @@ static void mpu6050_reset()
     sleep_ms(200); /* Give the device time to get out of the reset */
 }
 
-static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
+static void _mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
 {
     // For this particular device, we send the device the register we want to read
     // first, then subsequently read from the device. The register is auto incrementing
@@ -145,11 +132,42 @@ static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
 
 static void _step_count_analyze()
 {
+    const uint16_t threshold = 26000;
+    bool peaked = false;
+    int number_of_steps = 0;
+    for (int i = 0; i < SAMPLE_SIZE; i++) {
+        if (buffer[i] > threshold) {
 
-/*    for (int i = 0; i < 100; i += 5) {
-        PRINT("[%d %d %d %d %d]", , state.dev.buffer[i],
-              state.dev.buffer[i + 1], state.dev.buffer[i + 2],
-              state.dev.buffer[i + 3], state.dev.buffer[i + 4]);
-    }*/
+            printf("[%5d] ", buffer[i]);
+        } else {
+
+            printf(" %5d  ", buffer[i]);
+        }
+        if (buffer[i] > threshold && !peaked) {
+            peaked = true;
+            number_of_steps++;
+            PRINT(STEP);
+        } else if (buffer[i] < threshold && peaked) {
+            peaked = false;
+        }
+        if (i % 5 == 0) { printf("\n"); }
+    }
+    if (number_of_steps)
+        state.dev.step += number_of_steps / 2;
+    else
+        state.dev.step += number_of_steps;
+}
+
+static bool _step_count_cb(repeating_timer_t* r)
+{
+    struct GyroData* data = &state.dev;
+    _mpu6050_read_raw(data->acc, data->gyro, &data->temp);
+    data->temp = (data->temp / 340.0) + 36.53;
+    buffer[cursor++] = sqrt(pow(data->acc[0], 2) + pow(data->acc[1], 2)
+                            + pow(data->acc[2], 2));
+    if (cursor >= SAMPLE_SIZE) {
+        _step_count_analyze();
+        cursor = 0;
+    }
 }
 #endif

@@ -18,12 +18,6 @@ enum dev_t {
     DEV_VIB = 4,
 };
 
-typedef struct {
-    int16_t acc[3];
-    int16_t gyro[3];
-    int16_t temp;
-} GyroData;
-
 #define dev_to_str(dev)                                                        \
     dev == DEV_BUZZER ? "DEV_BUZZER"                                           \
     : dev == DEV_LED  ? "DEV_LED"                                              \
@@ -48,15 +42,6 @@ void os_dev_notify(int count, int32_t flag);
  *
  */
 void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms);
-
-/**
- * Fetches and returns the current values
- * from the Gyroscope.
- * Sets state.dev.dis_acc and state.dev.dis_acc
- * to the square root of the X Y Z vectors.
- * @return GyroData
- */
-GyroData os_gyro_fetch();
 
 #define gyro_to_str(G)                                                              \
     "Acc{%d,%d,%d}, Gyro{%d,%d,%d}, Temp %d*C\n", G.acc[0], G.acc[1],          \

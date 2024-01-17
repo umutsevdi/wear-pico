@@ -326,7 +326,7 @@ static void _step_display()
     char numstr[6] = {0};
     const int x_size = 40;
     const int y_size = 40;
-    snprintf(numstr, 6, "%d", state.step);
+    snprintf(numstr, 6, "%d", state.dev.step);
     strcenter(numstr, strnlen(numstr, 6), 6);
     int x = base_x;
     int y = base_y;

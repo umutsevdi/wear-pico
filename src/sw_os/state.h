@@ -30,6 +30,36 @@ typedef struct {
     union PopupValue value;
 } Popup;
 
+struct GyroData {
+    int16_t acc[3];
+    int16_t gyro[3];
+    int16_t temp;
+    int32_t step;
+};
+struct Battery {
+    bool on_charge;
+    int pct;
+};
+
+struct AlarmList {
+    Alarm list[4];
+    short len;
+    bool is_fetched;
+};
+
+struct Chrono {
+    DateTime dt;
+    bool enabled;
+    repeating_timer_t timer;
+};
+
+struct Media {
+    bool is_playing;
+    char song[30];
+    char artist[30];
+    bool is_fetched;
+};
+
 typedef struct {
     DateTime dt;
     repeating_timer_t __dt_timer;
@@ -38,35 +68,11 @@ typedef struct {
     absolute_time_t __last_connected;
     Popup popup;
     Popup __popup_req;
-    struct {
-        int16_t buffer[100];
-        int16_t cursor;
-        repeating_timer_t __step_timer;
-        int16_t temp;
-        double dist_acc;
-        double dist_gyro;
-    } dev;
-    struct {
-        bool on_charge;
-        int pct;
-    } bat;
-    struct {
-        Alarm list[4];
-        short len;
-        bool is_fetched;
-    } alarms;
-    struct {
-        DateTime dt;
-        bool enabled;
-        repeating_timer_t timer;
-    } chrono;
-    struct {
-        bool is_playing;
-        char song[30];
-        char artist[30];
-        bool is_fetched;
-    } media;
-    int32_t step;
+    struct GyroData dev;
+    struct Battery bat;
+    struct AlarmList alarms;
+    struct Chrono chrono;
+    struct Media media;
 } SwState;
 
 extern SwState state;

@@ -67,7 +67,7 @@ bool bt_send_resp(enum bt_resp_t response)
     if (response != BT_RESP_STEP) {
         snprintf(err_str, 9, "%d|", response);
     } else {
-        snprintf(err_str, 9, "%d|%d|", response, state.step);
+        snprintf(err_str, 9, "%d|%d|", response, state.dev.step);
     }
     return bt_write(err_str, 10) > 0;
 }

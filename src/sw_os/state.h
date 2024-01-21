@@ -22,7 +22,8 @@ union PopupValue {
         char title[13];
         char text[128];
     } notify;
-    DateTime alarm;
+    char* event;
+    Alarm* alarm;
 };
 
 typedef struct {
@@ -30,55 +31,68 @@ typedef struct {
     union PopupValue value;
 } Popup;
 
-struct GyroData {
+typedef struct {
+    int alarm;
+    int call;
+    int notify;
+    int reminder;
+    int brightness;
+} ConfigData;
+
+typedef struct {
     int16_t acc[3];
     int16_t gyro[3];
     int16_t temp;
     int32_t step;
-};
-struct Battery {
+} GyroData;
+
+typedef struct {
     bool on_charge;
     int pct;
-};
+} BatteryData;
 
-struct AlarmList {
+typedef struct {
     Alarm list[4];
     short len;
     bool is_fetched;
-};
+} AlarmList;
 
-struct Chrono {
+typedef struct {
+    Event list[3];
+    short len;
+    bool is_fetched;
+} EventList;
+
+typedef struct {
     DateTime dt;
     bool enabled;
-    repeating_timer_t timer;
-};
+} ChronoData;
 
-struct Media {
+typedef struct {
     bool is_playing;
     char song[30];
     char artist[30];
     bool is_fetched;
-};
+} MediaData;
 
 typedef struct {
+    ConfigData config;
     DateTime dt;
-    repeating_timer_t __dt_timer;
     bool show_sec;
     bool is_connected;
     absolute_time_t __last_connected;
     Popup popup;
     Popup __popup_req;
-    struct GyroData dev;
-    struct Battery bat;
-    struct AlarmList alarms;
-    struct Chrono chrono;
-    struct Media media;
-} SwState;
+    GyroData dev;
+    BatteryData bat;
+    AlarmList alarms;
+    EventList events;
+    ChronoData chrono;
+    MediaData media;
+} GlobalState;
 
-extern SwState state;
+extern GlobalState state;
 
-DateTime os_get_time();
 void os_init();
-
 void os_request_popup(Popup p);
 #endif

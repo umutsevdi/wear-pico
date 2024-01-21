@@ -12,7 +12,7 @@ enum app_status_t apps_lock_screen()
     while (true) {
         if (state.popup.type != POPUP_NONE
             || state.__popup_req.type != POPUP_NONE) {
-            DEV_SET_PWM(80);
+            DEV_SET_PWM(state.config.brightness);
             if (!apps_poll_popup()) return APP_OK;
         }
         if (XY.Gesture == DOUBLE_CLICK) {
@@ -20,7 +20,7 @@ enum app_status_t apps_lock_screen()
              * on menu and return to clock screen safely
              */
             XY.Gesture = UP;
-            DEV_SET_PWM(100);
+            DEV_SET_PWM(state.config.brightness);
             return APP_OK;
         }
         sleep_ms(200);

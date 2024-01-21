@@ -24,8 +24,8 @@ enum bt_fmt_t {
     BT_FMT_ERROR_DATE_PARSE,
     BT_FMT_ERROR_REQ_TYPE,
     BT_FMT_ERROR_EVENT_PARSE,
+    BT_FMT_ERROR_EVENT_LIST_PARSE,
     BT_FMT_ERROR_NOTIFY_PARSE,
-    BT_FMT_ERROR_EVENTLST_PARSE,
     BT_FMT_ERROR_BAT_PARSE,
     BT_FMT_ERROR_OSC_PARSE,
 };
@@ -47,7 +47,8 @@ enum bt_req_t {
     BT_REQ_FETCH_DATE, /* Update request. Payload: "{DateTime}" */
     BT_REQ_FETCH_ALARM,
     BT_REQ_STEP,
-    BT_REQ_HB, /* Heartbeat request to show Pico connection is alive */
+    BT_REQ_HB,     /* Heartbeat request to show Pico connection is alive */
+    BT_REQ_CONFIG, /* Receives the configuration data*/
 
     BT_REQ_SIZE
 };

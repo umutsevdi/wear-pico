@@ -3,15 +3,14 @@
 #include "pico/time.h"
 #include "sw_bt/bt.h"
 #include "sw_common/types.h"
+#include "sw_common/util.h"
 #include "sw_os/dev.h"
 
-SwState state;
-
-DateTime os_get_time() { return state.dt; }
+GlobalState state;
+repeating_timer_t clock_timer;
 
 extern void os_gyro_init(void);
 extern void os_dev_init(void);
-extern void os_request_popup(Popup p);
 
 absolute_time_t then = {0};
 
@@ -19,14 +18,42 @@ absolute_time_t then = {0};
  * trigger */
 static void _process_alarms()
 {
-    if (!state.alarms.is_fetched) { return; }
-    for (short i = 0; i < state.alarms.len; i++) {
-        if (state.alarms.list[i].is_active
-            && !dt_cmp(&state.dt, &state.alarms.list[i].at,
+    AlarmList* alarms = &state.alarms;
+    for (int i = 0; i < (alarms->len); i++) {
+        if (alarms->list[i].is_active
+            && !dt_cmp(&state.dt, &alarms->list[i].at,
                        DT_WC_HOUR | DT_WC_MIN)) {
             os_request_popup((Popup){
                 .type = POPUP_ALARM,
-                .value = (union PopupValue){.alarm = state.alarms.list[i].at}});
+                .value = (union PopupValue){.alarm = &alarms->list[i]},
+            });
+            break;
+        }
+    }
+}
+
+/* Iterate over active events, process the first event that is about to
+ * trigger */
+static void _process_events()
+{
+    WARN(START PROCESSING EVENTS);
+    EventList* events = &state.events;
+    for (int i = 0; i < (events->len); i++) {
+        PRINT("event_%d %d/%d/%d %d:%d", , i, events->list[i].at.year,
+              events->list[i].at.month, events->list[i].at.day,
+              events->list[i].at.hour, events->list[i].at.minute);
+        PRINT("date  %d/%d/%d %d:%d", , state.dt.year, state.dt.month,
+              state.dt.day, state.dt.hour, state.dt.minute);
+        PRINT("result: %d", ,
+              dt_cmp(&state.dt, &events->list[i].at,
+                     DT_WC_MONTH | DT_WC_DAY | DT_WC_HOUR | DT_WC_MIN));
+        if (!dt_cmp(&state.dt, &events->list[i].at,
+                    DT_WC_MONTH | DT_WC_DAY | DT_WC_HOUR | DT_WC_MIN)) {
+            PRINT(EVENT);
+            os_request_popup((Popup){
+                .type = POPUP_REMINDER,
+                .value = (union PopupValue){.event = events->list[i].title},
+            });
             break;
         }
     }
@@ -41,20 +68,24 @@ static bool _os_timer_cb(repeating_timer_t* r)
         state.is_connected =
             absolute_time_diff_us(state.__last_connected, now) / 1000000 < 30;
     }
-    if (state.dt.second > 59) {
-        state.dt.second = 0;
-        state.dt.minute++;
-        if (state.dt.minute > 59) {
-            state.dt.minute = 0;
-            state.dt.hour++;
-            if (state.dt.hour > 23) {
-                state.dt.hour = 0;
-                state.dt.day++;
-            }
-        }
-        /* Call every minute  */
-        _process_alarms();
-    }
+    if (state.dt.second < 60) { return true; }
+    state.dt.second = 0;
+    state.dt.minute++;
+    /* Call every minute  */
+    _process_alarms();
+    _process_events();
+    if (state.dt.minute < 60) { return true; }
+    state.dt.minute = 0;
+    state.dt.hour++;
+    if (state.dt.hour < 24) { return true; }
+    state.dt.hour = 0;
+    state.dt.day++;
+    if (state.dt.day < dt_number_of_days(&state.dt)) { return true; };
+    state.dt.day = 1;
+    state.dt.month++;
+    if (state.dt.month < 12) { return true; }
+    state.dt.month = 1;
+    state.dt.year++;
     return true;
 }
 
@@ -67,7 +98,13 @@ void os_init()
     state.chrono.dt.flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_YEAR | DT_WC_DAY;
     os_dev_init();
     os_gyro_init();
-    add_repeating_timer_ms(1000, _os_timer_cb, NULL, &state.__dt_timer);
+    add_repeating_timer_ms(1000, _os_timer_cb, NULL, &clock_timer);
+
+    state.config.call = DEV_BUZZER | DEV_LED | DEV_VIB;
+    state.config.notify = DEV_BUZZER | DEV_VIB;
+    state.config.reminder = DEV_BUZZER | DEV_VIB;
+    state.config.alarm = DEV_BUZZER | DEV_LED;
+
     PRINT(OS_INIT);
 }
 

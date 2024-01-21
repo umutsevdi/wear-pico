@@ -11,17 +11,16 @@
  * @array_s - size of the array
  * @returns - error code
  */
-static enum bt_fmt_t _req_decode(char* str, size_t str_s, char** arr,
+static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
                                  int* arr_s);
 
 /**
  * Parses and validates the incoming request. Sets the request type,
  * @arr - array of tokens
- * @array_s - size of the array
  * @req - request to set
  * @returns - error code
  */
-enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req);
+static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req);
 
 /**
  * Executes the function corresponding to the request type
@@ -30,12 +29,12 @@ enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req);
  * @req - request type to select
  * @returns - error code
  */
-static enum bt_fmt_t _req_route(char** arr, int arr_s,
+static enum bt_fmt_t _req_route(String* arr, int arr_s,
                                 enum bt_req_t request_type);
 
 enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
 {
-    char* str_arr[10] = {0};
+    String str_arr[10] = {0};
     enum bt_fmt_t err;
     int size = 10;
     enum bt_req_t request_t;
@@ -43,13 +42,13 @@ enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
     err = _req_decode(str, str_s, str_arr, &size);
     if (err) { return err; }
 
-    err = _req_parse(str_arr, size, &request_t);
+    err = _req_parse(str_arr, &request_t);
     if (err) { return err; }
 
     return _req_route(str_arr, size, request_t);
 }
 
-static enum bt_fmt_t _req_decode(char* str, size_t str_s, char** arr,
+static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
                                  int* arr_s)
 {
     int str_arr_i = 0;
@@ -59,43 +58,49 @@ static enum bt_fmt_t _req_decode(char* str, size_t str_s, char** arr,
     while (i < len && str_arr_i < *arr_s) {
         if (str[i] == '|') {
             str[i] = '\0';
-            arr[str_arr_i] = old_str;
+            arr[str_arr_i].bytes = old_str;
+            arr[str_arr_i].len = str + i - old_str;
             old_str = &str[i + 1];
             str_arr_i++;
         }
         i++;
     }
+    if (i < str_s) { str[i] = '\0'; }
     if (str_arr_i == 0) { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     *arr_s = str_arr_i;
+    for (int j = 0; j < *arr_s; j++) {
+        printf("%u %s\n", arr[j].len, arr[j].bytes);
+    }
+
     return BT_FMT_OK;
 }
 
-enum bt_fmt_t _req_parse(char** arr, int arr_s, enum bt_req_t* req)
+static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req)
 {
     char* endptr;
-    long request_type = strtol(arr[0], &endptr, 10);
+    long request_type = strtol(arr[0].bytes, &endptr, 10);
     if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_REQ_TYPE); }
 
     *req = request_type;
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _handle_fetch_date(char** str, int str_s)
+static enum bt_fmt_t _handle_fetch_date(String* str, int str_s)
 {
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
-    bool result = date_decode(str[1], &state.dt);
+    bool result = dt_decode(str[1].bytes, &state.dt);
     state.is_connected = true;
-    PRINT("fetch_date(%s) = %s", , str[1], result ? "true" : "false");
+    PRINT("fetch_date(%s) = %s", , str[1].bytes, result ? "true" : "false");
     return result ? BT_FMT_OK : ERROR(BT_FMT_ERROR_DATE_PARSE);
 }
 
-static enum bt_fmt_t _handle_call_begin(char** str, int str_s)
+static enum bt_fmt_t _handle_call_begin(String* str, int str_s)
 {
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     Popup p = (Popup){.type = POPUP_CALL, .value.caller.is_over = false};
-    strncpy(p.value.caller.name, str[1], strnlen(str[1], 24));
+    strncpy(p.value.caller.name, str[1].bytes, MIN(str[1].len, 24));
     os_request_popup(p);
-    PRINT("received_call(%s)", , str[1]);
+    PRINT("received_call(%s)", , str[1].bytes);
     return BT_FMT_OK;
 }
 
@@ -108,47 +113,30 @@ static enum bt_fmt_t _handle_call_end()
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _handle_notify(char** str, int str_s)
+static enum bt_fmt_t _handle_notify(String* str, int str_s)
 {
     if (str_s < 3) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     Popup p = (Popup){.type = POPUP_NOTIFY};
-    strncpy(p.value.notify.title, str[1], strnlen(str[1], 12));
-    strncpy(p.value.notify.text, str[2], strnlen(str[2], 127));
+    strncpy(p.value.notify.title, str[1].bytes, MIN(str[1].len, 12));
+    strncpy(p.value.notify.text, str[2].bytes, MIN(str[2].len, 127));
     os_request_popup(p);
     PRINT("notify(%s, %s)", , p.value.notify.title, p.value.notify.text);
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _handle_reminder(char** str, int str_s)
-{
-    if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
-    Popup p = (Popup){.type = POPUP_NOTIFY};
-    strncpy(p.value.notify.title, "Reminder", strlen("Reminder"));
-    strncpy(p.value.notify.text, str[1], strnlen(str[1], 127));
-    os_request_popup(p);
-    PRINT("reminder(%s)", , p.value.notify.text);
-    return BT_FMT_OK;
-}
-
-static enum bt_fmt_t _handle_osc(char** str, int str_s)
+static enum bt_fmt_t _handle_osc(String* str, int str_s)
 {
     if (str_s < 4) return ERROR(BT_FMT_ERROR_PAYLOAD);
-    state.media.is_playing =
-        str[1][0] == 't' || str[1][0] == 'T' || str[1][0] == '1';
+    state.media.is_playing = str[1].bytes[0] == 't';
 
-    int len_song = strnlen(str[2], 30);
-    strncpy(state.media.song, str[2], len_song);
-    if (len_song < 30) { state.media.song[len_song] = '\0'; }
-    int len_artist = strnlen(str[3], 30);
-    strncpy(state.media.artist, str[3], len_artist);
-    if (len_artist < 30) { state.media.artist[len_artist] = '\0'; }
-
+    strncpy(state.media.song, str[2].bytes, MIN(str[2].len, 30));
+    strncpy(state.media.artist, str[3].bytes, MIN(str[3].len, 30));
     state.media.is_fetched = false;
     PRINT("media(%s, %s)", , state.media.song, state.media.artist);
     return BT_FMT_OK;
 }
 
-void str_to_alarm(const char* str, DateTime* dt)
+static void _str_to_alarm(const char* str, DateTime* dt)
 {
     int digits[5];
     for (int i = 0; i < 4; i++) {
@@ -162,29 +150,73 @@ void str_to_alarm(const char* str, DateTime* dt)
     dt->minute = min;
 }
 
-static enum bt_fmt_t _handle_fetch_alarm(char** str, int str_s)
+static enum bt_fmt_t _handle_fetch_alarm(String* str, int str_s)
 {
+    AlarmList* alarms = &state.alarms;
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
-    if (str[1][0] < '0' || str[1][0] > '4') {
+    int alarm_count = str[1].bytes[0] - '0';
+    if (alarm_count < 0 || alarm_count > 4) {
         return ERROR(BT_FMT_ERROR_ALARM_PARSE);
+    } else if (alarm_count + 2 > str_s) {
+        return ERROR(BT_FMT_ERROR_INVALID_INPUT);
     }
-    int alarm_count = str[1][0] - '0';
-    if (alarm_count + 2 > str_s) { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     for (int i = 0; i < alarm_count; i++) {
-        str_to_alarm(str[i + 2], &state.alarms.list[i].at);
-        PRINT("alarm_%d(%d:%d)", , i, state.alarms.list[i].at.hour,
-              state.alarms.list[i].at.minute);
+        _str_to_alarm(str[i + 2].bytes, &alarms->list[i].at);
+        PRINT("alarm_%d(%d:%d)", , i, alarms->list[i].at.hour,
+              alarms->list[i].at.minute);
     }
     for (int i = alarm_count; i < 4; i++) {
-        state.alarms.list[i].is_active = true;
+        alarms->list[i].is_active = true;
     }
-    state.alarms.len = alarm_count;
-    state.alarms.is_fetched = false;
+    alarms->len = alarm_count;
+    alarms->is_fetched = false;
     PRINT(FETCH_ALARM_BT);
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _handle_step(char** str, int str_s)
+static enum bt_fmt_t _handle_reminder(String* str, int str_s)
+{
+    EventList* events = &state.events;
+    if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
+    int event_count = str[1].bytes[0] - '0';
+    if (event_count < 0 || event_count > 3) {
+        return ERROR(BT_FMT_ERROR_EVENT_LIST_PARSE);
+    } else if (event_count * 2 + 2 > str_s) {
+        return ERROR(BT_FMT_ERROR_INVALID_INPUT);
+    }
+
+    for (int i = 0; i < event_count; i++) {
+        printf("%d - %s\n", i, str[i + 2].bytes);
+    }
+    for (int i = 0; i < event_count; i++) {
+        printf("%d - %s\n", i, str[i + 3].bytes);
+    }
+
+    for (int i = 0; i < event_count; i++) {
+        strncpy(events->list[i].title, str[i + 2].bytes,
+                MIN(str[i + 2].len, 30));
+        PRINT("event_%d(title:%s, %s(%u))", , i, events->list[i].title,
+              str[i + 3].bytes, MIN(str[i + 3].len, 30));
+        if (!dt_decode(str[i + 3].bytes, &events->list[i].at)) {
+            events->len = i;
+            return ERROR(BT_FMT_ERROR_EVENT_PARSE);
+        }
+    }
+    events->len = event_count;
+    events->is_fetched = false;
+
+    PRINT("EVENTS ARE %d", , events->len);
+    for (int i = 0; i < (events->len); i++) {
+        PRINT("event_%d %d/%d/%d %d:%d", , i, events->list[i].at.year,
+              events->list[i].at.month, events->list[i].at.day,
+              events->list[i].at.hour, events->list[i].at.minute);
+    }
+
+    PRINT(FETCH_REMINDER_BT);
+    return BT_FMT_OK;
+}
+
+static enum bt_fmt_t _handle_step(int str_s)
 {
     if (str_s < 1) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     bt_send_resp(BT_RESP_STEP);
@@ -192,15 +224,33 @@ static enum bt_fmt_t _handle_step(char** str, int str_s)
     return BT_FMT_OK;
 }
 
-static enum bt_fmt_t _handle_hb(char** str, int str_s)
+static enum bt_fmt_t _handle_hb(int str_s)
 {
     if (str_s < 1) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     bt_send_resp(BT_RESP_OK);
     PRINT("heartbeat()");
     return BT_FMT_OK;
 }
+extern void DEV_SET_PWM(uint8_t);
+static enum bt_fmt_t _handle_config(String* str, int str_s)
+{
+    if (str_s < 6) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
+    char* endptr;
+    state.config.brightness = strtol(str[1].bytes, &endptr, 10);
+    if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
+    state.config.alarm = strtol(str[2].bytes, &endptr, 10);
+    if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
+    state.config.call = strtol(str[3].bytes, &endptr, 10);
+    if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
+    state.config.notify = strtol(str[4].bytes, &endptr, 10);
+    if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
+    state.config.reminder = strtol(str[5].bytes, &endptr, 10);
+    if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
+    DEV_SET_PWM(state.config.brightness);
+    return BT_FMT_OK;
+}
 
-static enum bt_fmt_t _req_route(char** arr, int arr_s,
+static enum bt_fmt_t _req_route(String* arr, int arr_s,
                                 enum bt_req_t request_type)
 {
     switch (request_type) {
@@ -211,8 +261,9 @@ static enum bt_fmt_t _req_route(char** arr, int arr_s,
     case BT_REQ_OSC: return _handle_osc(arr, arr_s);
     case BT_REQ_FETCH_DATE: return _handle_fetch_date(arr, arr_s);
     case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(arr, arr_s);
-    case BT_REQ_STEP: return _handle_step(arr, arr_s);
-    case BT_REQ_HB: return _handle_hb(arr, arr_s);
+    case BT_REQ_STEP: return _handle_step(arr_s);
+    case BT_REQ_HB: return _handle_hb(arr_s);
+    case BT_REQ_CONFIG: return _handle_config(arr, arr_s);
     default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
     }
 }

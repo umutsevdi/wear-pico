@@ -1,3 +1,4 @@
+#include "GUI_Paint.h"
 #include "sw_apps/apps.h"
 #include "sw_bt/bt.h"
 #include "sw_os/dev.h"
@@ -6,9 +7,6 @@
 
 static const int POPUP_CALL_ITER = 3;
 static const int POPUP_ALARM_ITER = 2;
-static const int POPUP_CALL_FLAG = DEV_BUZZER | DEV_LED | DEV_VIB;
-static const int POPUP_NOTIFY_FLAG = DEV_BUZZER | DEV_VIB;
-static const int POPUP_ALARM_FLAG = DEV_BUZZER | DEV_LED;
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
 
@@ -21,12 +19,9 @@ static int _popup_cmp(enum popup_t p1, enum popup_t p2);
 
 /* Loads the given pop-up */
 static enum app_status_t _popup_load(enum popup_t popup);
-
-/* Load function for the call pop-up module */
 static enum app_status_t _load_call();
-/* Load function for the alarm pop-up module */
 static enum app_status_t _load_alarm();
-/* Load function for the notify pop-up module */
+static enum app_status_t _load_reminder();
 static enum app_status_t _load_notify();
 
 enum app_status_t apps_poll_popup()
@@ -55,8 +50,9 @@ static int _popup_value(enum popup_t p)
 {
     switch (p) {
     case POPUP_NOTIFY: return 1;
-    case POPUP_ALARM: return 2;
-    case POPUP_CALL: return 3;
+    case POPUP_REMINDER: return 2;
+    case POPUP_ALARM: return 3;
+    case POPUP_CALL: return 4;
     default: return 0;
     }
 }
@@ -76,6 +72,7 @@ static enum app_status_t _popup_load(enum popup_t popup)
     switch (popup) {
     case POPUP_CALL: r = _load_call(); break;
     case POPUP_ALARM: r = _load_alarm(); break;
+    case POPUP_REMINDER: r = _load_reminder(); break;
     case POPUP_NOTIFY: r = _load_notify(); break;
     default: break;
     }
@@ -124,8 +121,7 @@ static enum app_status_t _load_call()
             screen.redraw = DISP_SYNC;
         }
         clicked = false;
-        os_dev_notify_d(POPUP_CALL_ITER, DEV_BUZZER | DEV_LED | DEV_VIB, 250,
-                        60);
+        os_dev_notify_d(POPUP_CALL_ITER, state.config.call, 250, 60);
         sleep_ms(125);
     }
 }
@@ -149,7 +145,7 @@ static enum app_status_t _load_alarm()
             XY.x_point = 0;
             XY.y_point = 0;
             apps_draw(res_get_popup_alarm(), 40, 156);
-            apps_paint_time(&state.popup.value.alarm, 20, 70, false);
+            apps_paint_time(&state.popup.value.alarm->at, 20, 70, false);
             apps_post_process(false);
         }
         if (screen.redraw) {
@@ -157,7 +153,43 @@ static enum app_status_t _load_alarm()
             screen.redraw = DISP_SYNC;
         }
         clicked = false;
-        os_dev_notify(POPUP_ALARM_ITER, POPUP_ALARM_FLAG);
+        os_dev_notify(POPUP_ALARM_ITER, state.config.alarm);
+        sleep_ms(125);
+    }
+}
+
+static enum app_status_t _load_reminder()
+{
+    bool clicked;
+    int x = 0, y = 0;
+    char reminder_title[31] = {0};
+    while (true) {
+        if (x != XY.x_point || y != XY.y_point) {
+            x = XY.x_point;
+            y = XY.y_point;
+            clicked = true;
+        }
+
+        if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
+        if (apps_is_exited()) { return APP_OK; }
+        if (clicked && apps_is_clicked(BTN_ALARM_DISMISS)) { return APP_OK; }
+        if (apps_set_titlebar(0, POPUP_REMINDER)) {
+            XY.x_point = 0;
+            XY.y_point = 0;
+            apps_draw(res_get_popup_alarm(), 40, 156);
+            strncpy(reminder_title, state.popup.value.event, 31);
+            Paint_DrawString_EN(
+                20, 70,
+                strcenter(reminder_title, strnlen(reminder_title, 30), 30),
+                &Font24, COLOR_BG, COLOR_FG);
+            apps_post_process(false);
+        }
+        if (screen.redraw) {
+            LCD_1IN28_Display(screen.buffer);
+            screen.redraw = DISP_SYNC;
+        }
+        clicked = false;
+        os_dev_notify(POPUP_ALARM_ITER, state.config.reminder);
         sleep_ms(125);
     }
 }
@@ -165,7 +197,7 @@ static enum app_status_t _load_alarm()
 static enum app_status_t _load_notify()
 {
     int x = 0, y = 0;
-    os_dev_notify(POPUP_ALARM_ITER, POPUP_NOTIFY_FLAG);
+    os_dev_notify(POPUP_ALARM_ITER, state.config.notify);
     absolute_time_t then = get_absolute_time();
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {

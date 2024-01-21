@@ -21,6 +21,13 @@
 #define LOG_BUFFER_S 250
 extern char LOG_BUFFER[LOG_BUFFER_S];
 
+#ifndef MIN
+#define MIN(A, B) (A) < (B) ? (A) : (B)
+#endif
+#ifndef MAX
+#define MAX(A, B) (A) > (B) ? (A) : (B)
+#endif
+
 #define PRINT(FMT, ARGS...)                                                    \
     printf("%17s %s#%s():-%4d - " #FMT "\r\n", __now(), _file_fmt(__FILE__),   \
            __func__, __LINE__ ARGS),                                           \
@@ -32,13 +39,13 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
         __strdump(0, "WRN:" #CODE "\n")
 
 #define INFO(CODE)                                                             \
-    (fprintf(stdout, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
-             _file_fmt(__FILE__), __func__, __LINE__),                         \
+    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__), \
+            __func__, __LINE__),                                               \
      __strdump(0, "INF:" #CODE "\n"))
 
 #define ERROR(CODE)                                                            \
-    (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
-             _file_fmt(__FILE__), __func__, __LINE__),                         \
+    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__), \
+            __func__, __LINE__),                                               \
      __strdump(CODE, "ERR:" #CODE "\n"))
 
 #ifndef UNUSED
@@ -52,26 +59,6 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
  * @str_cap - max length of the buffer
  */
 const char* strcenter(char* str, size_t str_s, size_t str_cap);
-
-/* Returns how many days in given month/year combination */
-int dt_number_of_days(DateTime* dt);
-/* Returns the day of the week based on given day/month/year. */
-int dt_get_day_int(DateTime* dt);
-/* Returns the string representation of the day of the week based on given day/month/year. */
-const char* dt_get_day(DateTime* dt);
-
-/**
- * Compares given dates based on given flag
- * Example:
- * - date_cmp(dt1, dt2, DT_WC_YEAR | DT_WC_MONTH); -> Compare YEAR and MONTH
- * - date_cmp(dt1, dt2, ~dt1->flag);               -> Compare valid dt1 fields
- * - date_cmp(dt1, dt2, ~(dt2->flag | dt1->flag)); -> Compare common fields
- * @returns
- * *  1 if dt1 is after dt2
- * *  0 if dt1 and dt2 are equal
- * * -1 if dt1 is before dt2
- */
-int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag);
 /**
  * Trims the first 9 characters of a file URI
  * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c

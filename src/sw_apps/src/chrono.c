@@ -4,6 +4,7 @@
 #include "sw_res/resources.h"
 
 #define CHRONO_CB_FREQUENCY 13
+repeating_timer_t chrono_timer;
 
 /**
  * Starts/cancels a Stopwatch _scr_chrono_cb event which periodically
@@ -89,14 +90,14 @@ static enum app_status_t _apps_chrono_toggle()
         state.chrono.dt.hour = 0;
         state.chrono.dt.minute = 0;
         state.chrono.dt.second = 0;
-        memset(&state.chrono.timer, 0, sizeof(repeating_timer_t));
+        memset(&chrono_timer, 0, sizeof(repeating_timer_t));
         if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _scr_chrono_cb,
-                                    NULL, &state.chrono.timer)) {
+                                    NULL, &chrono_timer)) {
             return ERROR(APP_ERROR_TIMER_CREATE);
         }
         WARN(REGISTER_EVENT scr_chrono_cb);
     } else {
         WARN(CANCEL_EVENT scr_chrono_cb);
-        cancel_repeating_timer(&state.chrono.timer);
+        cancel_repeating_timer(&chrono_timer);
     }
 }

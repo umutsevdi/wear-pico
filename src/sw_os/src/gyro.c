@@ -12,10 +12,13 @@
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
 
-#define SAMPLE_SIZE 30
+#define STEP_THRESHOLD 26000
+#define SAMPLE_SIZE 20
+
+/* Buffer that stores step samples*/
 uint16_t buffer[SAMPLE_SIZE];
 int16_t cursor;
-repeating_timer_t step_timer;
+repeating_timer_t gyro_timer;
 
 static void _mpu6050_reset();
 static void _mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp);
@@ -43,7 +46,7 @@ void os_gyro_init()
     bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN,
                                PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
     _mpu6050_reset();
-    add_repeating_timer_ms(80, _step_count_cb, NULL, &step_timer);
+    add_repeating_timer_ms(50, _step_count_cb, NULL, &gyro_timer);
 #endif
 }
 
@@ -132,34 +135,36 @@ static void _mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t* temp)
 
 static void _step_count_analyze()
 {
-    const uint16_t threshold = 26000;
     bool peaked = false;
-    int number_of_steps = 0;
+    int peak_count = 0;
     for (int i = 0; i < SAMPLE_SIZE; i++) {
-        if (buffer[i] > threshold && !peaked) {
+        if (buffer[i] > STEP_THRESHOLD && !peaked) {
             peaked = true;
-            number_of_steps++;
-            PRINT(STEP);
-        } else if (buffer[i] < threshold && peaked) {
+            peak_count++;
+            //            PRINT(STEP);
+        } else if (buffer[i] < STEP_THRESHOLD && peaked) {
             peaked = false;
         }
     }
-    if (number_of_steps)
-        state.dev.step += number_of_steps / 2;
-    else
-        state.dev.step += number_of_steps;
+    if (peak_count / 2 > 0) {
+        peak_count /= 2;
+    } else {
+        state.dev.step += peak_count;
+    }
 }
 
-static bool _step_count_cb(repeating_timer_t* r)
+static bool _step_count_cb(UNUSED(repeating_timer_t* r))
 {
-    struct GyroData* data = &state.dev;
+    GyroData* data = &state.dev;
     _mpu6050_read_raw(data->acc, data->gyro, &data->temp);
     data->temp = (data->temp / 340.0) + 36.53;
     buffer[cursor++] = sqrt(pow(data->acc[0], 2) + pow(data->acc[1], 2)
                             + pow(data->acc[2], 2));
+
     if (cursor >= SAMPLE_SIZE) {
         _step_count_analyze();
         cursor = 0;
     }
+    return true;
 }
 #endif

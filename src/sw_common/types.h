@@ -12,6 +12,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef struct {
+    char* bytes;
+    uint32_t len;
+} String;
+
 typedef enum {
     DT_WC_YEAR = 0b000001,
     DT_WC_MONTH = 0b000010,
@@ -46,9 +51,29 @@ typedef struct {
     uint8_t second;
 } DateTime;
 
-bool date_decode(const char buffer[15], DateTime* dt);
+bool dt_decode(const char buffer[15], DateTime* dt);
 
-bool date_encode(const DateTime* dt, char buffer[15]);
+bool dt_encode(const DateTime* dt, char buffer[15]);
+
+/* Returns how many days in given month/year combination */
+int dt_number_of_days(DateTime* dt);
+/* Returns the day of the week based on given day/month/year. */
+int dt_get_day_int(DateTime* dt);
+/* Returns the string representation of the day of the week based on given day/month/year. */
+const char* dt_get_day(DateTime* dt);
+
+/**
+ * Compares given dates based on given flag
+ * Example:
+ * - date_cmp(dt1, dt2, DT_WC_YEAR | DT_WC_MONTH); -> Compare YEAR and MONTH
+ * - date_cmp(dt1, dt2, ~dt1->flag);               -> Compare valid dt1 fields
+ * - date_cmp(dt1, dt2, ~(dt2->flag | dt1->flag)); -> Compare common fields
+ * @returns
+ * *  1 if dt1 is after dt2
+ * *  0 if dt1 and dt2 are equal
+ * * -1 if dt1 is before dt2
+ */
+int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag);
 
 #define DATETIME_MONTH(m)                                                      \
     m == 1    ? "Jan"                                                          \
@@ -116,24 +141,31 @@ enum menu_t {
 
 /* Whether a pop-up is enabled or not and its type */
 enum popup_t {
-    POPUP_NONE,   /* No Pop-Up is available */
-    POPUP_ALARM,  /* Alarm UI */
-    POPUP_CALL,   /* Incoming call UI */
-    POPUP_NOTIFY, /* Notification UI */
+    POPUP_NONE,     /* No Pop-Up is available */
+    POPUP_ALARM,    /* Alarm UI */
+    POPUP_CALL,     /* Incoming call UI */
+    POPUP_NOTIFY,   /* Notification UI */
+    POPUP_REMINDER, /* Reminder UI */
 
     POPUP_T_SIZE
 };
 
 #define popup_to_str(popup)                                                    \
-    popup == POPUP_NONE     ? "POPUP_NONE"                                     \
-    : popup == POPUP_ALARM  ? "POPUP_ALARM"                                    \
-    : popup == POPUP_CALL   ? "POPUP_CALL"                                     \
-    : popup == POPUP_NOTIFY ? "POPUP_NOTIFY"                                   \
-                            : "POPUP_NONE"
+    popup == POPUP_NONE       ? "POPUP_NONE"                                   \
+    : popup == POPUP_ALARM    ? "POPUP_ALARM"                                  \
+    : popup == POPUP_CALL     ? "POPUP_CALL"                                   \
+    : popup == POPUP_REMINDER ? "POPUP_REMINDER"                               \
+    : popup == POPUP_NOTIFY   ? "POPUP_NOTIFY"                                 \
+                              : "POPUP_NONE"
 
 typedef struct {
     bool is_active;
     DateTime at;
 } Alarm;
+
+typedef struct {
+    DateTime at;
+    char title[31];
+} Event;
 
 #endif

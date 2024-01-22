@@ -85,6 +85,7 @@ static enum app_status_t _load_call()
 #define BTN_DISMISS 140, 140, 48, 48
     bool clicked;
     int x = 0, y = 0;
+    PRINT("_load_call %s", , state.popup.value.caller.name);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -107,7 +108,6 @@ static enum app_status_t _load_call()
             XY.x_point = 0;
             XY.y_point = 0;
             apps_draw(res_get_popup_call(), 52, 140);
-            PRINT("%s", , state.popup.value.caller.name);
             Paint_DrawString_EN(
                 0, 90,
                 strcenter(state.popup.value.caller.name,
@@ -131,6 +131,8 @@ static enum app_status_t _load_alarm()
 #define BTN_ALARM_DISMISS 40, 156, 160, 35
     bool clicked;
     int x = 0, y = 0;
+    PRINT("_load_alarm %02d:%02d", , state.popup.value.alarm->at.hour,
+          state.popup.value.alarm->at.minute);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -163,6 +165,7 @@ static enum app_status_t _load_reminder()
     bool clicked;
     int x = 0, y = 0;
     char reminder_title[31] = {0};
+    PRINT("_load_reminder %s ", , state.popup.value.event);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -179,8 +182,8 @@ static enum app_status_t _load_reminder()
             apps_draw(res_get_popup_alarm(), 40, 156);
             strncpy(reminder_title, state.popup.value.event, 31);
             Paint_DrawString_EN(
-                20, 70,
-                strcenter(reminder_title, strnlen(reminder_title, 30), 30),
+                0, 90,
+                strcenter(reminder_title, strnlen(reminder_title, 30), 16),
                 &Font24, COLOR_BG, COLOR_FG);
             apps_post_process(false);
         }
@@ -199,6 +202,8 @@ static enum app_status_t _load_notify()
     int x = 0, y = 0;
     os_dev_notify(POPUP_ALARM_ITER, state.config.notify);
     absolute_time_t then = get_absolute_time();
+    PRINT("_load_notify %s, %s", , state.popup.value.notify.title,
+          state.popup.value.notify.text);
     while (true) {
         if (x != XY.x_point || y != XY.y_point) {
             x = XY.x_point;
@@ -206,7 +211,7 @@ static enum app_status_t _load_notify()
         }
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
-        if ((absolute_time_diff_us(get_absolute_time(), then) / 10000000)) {
+        if ((absolute_time_diff_us(get_absolute_time(), then) / 12000000)) {
             return INFO(APP_TIMEOUT_NOTIFY);
         }
 

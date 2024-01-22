@@ -68,10 +68,6 @@ static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
     if (i < str_s) { str[i] = '\0'; }
     if (str_arr_i == 0) { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     *arr_s = str_arr_i;
-    for (int j = 0; j < *arr_s; j++) {
-        printf("%u %s\n", arr[j].len, arr[j].bytes);
-    }
-
     return BT_FMT_OK;
 }
 
@@ -88,10 +84,11 @@ static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req)
 static enum bt_fmt_t _handle_fetch_date(String* str, int str_s)
 {
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
-    bool result = dt_decode(str[1].bytes, &state.dt);
-    state.is_connected = true;
-    PRINT("fetch_date(%s) = %s", , str[1].bytes, result ? "true" : "false");
-    return result ? BT_FMT_OK : ERROR(BT_FMT_ERROR_DATE_PARSE);
+    if (!dt_decode(str[1].bytes, &state.dt)) {
+        PRINT("fetch_date(%s)", , str[1].bytes);
+        return BT_FMT_OK;
+    }
+    return ERROR(BT_FMT_ERROR_DATE_PARSE);
 }
 
 static enum bt_fmt_t _handle_call_begin(String* str, int str_s)
@@ -176,42 +173,31 @@ static enum bt_fmt_t _handle_fetch_alarm(String* str, int str_s)
 
 static enum bt_fmt_t _handle_reminder(String* str, int str_s)
 {
+
     EventList* events = &state.events;
     if (str_s < 2) { return ERROR(BT_FMT_ERROR_PAYLOAD); }
     int event_count = str[1].bytes[0] - '0';
-    if (event_count < 0 || event_count > 3) {
+    if (event_count < 0 || event_count > 4) {
         return ERROR(BT_FMT_ERROR_EVENT_LIST_PARSE);
     } else if (event_count * 2 + 2 > str_s) {
         return ERROR(BT_FMT_ERROR_INVALID_INPUT);
     }
 
-    for (int i = 0; i < event_count; i++) {
-        printf("%d - %s\n", i, str[i + 2].bytes);
-    }
-    for (int i = 0; i < event_count; i++) {
-        printf("%d - %s\n", i, str[i + 3].bytes);
-    }
-
-    for (int i = 0; i < event_count; i++) {
-        strncpy(events->list[i].title, str[i + 2].bytes,
-                MIN(str[i + 2].len, 30));
-        PRINT("event_%d(title:%s, %s(%u))", , i, events->list[i].title,
-              str[i + 3].bytes, MIN(str[i + 3].len, 30));
-        if (!dt_decode(str[i + 3].bytes, &events->list[i].at)) {
-            events->len = i;
-            return ERROR(BT_FMT_ERROR_EVENT_PARSE);
+    int event_idx = 0;
+    for (int i = 2; i < str_s; i++) {
+        if (i % 2 == 0) {
+            strncpy(events->list[event_idx].title, str[i].bytes,
+                    MIN(str[i].len + 1, 30));
+        } else {
+            if (!dt_decode(str[i].bytes, &events->list[event_idx].at)) {
+                events->len = event_idx;
+                return ERROR(BT_FMT_ERROR_EVENT_PARSE);
+            }
+            event_idx++;
         }
     }
     events->len = event_count;
     events->is_fetched = false;
-
-    PRINT("EVENTS ARE %d", , events->len);
-    for (int i = 0; i < (events->len); i++) {
-        PRINT("event_%d %d/%d/%d %d:%d", , i, events->list[i].at.year,
-              events->list[i].at.month, events->list[i].at.day,
-              events->list[i].at.hour, events->list[i].at.minute);
-    }
-
     PRINT(FETCH_REMINDER_BT);
     return BT_FMT_OK;
 }

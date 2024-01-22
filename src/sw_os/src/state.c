@@ -36,37 +36,27 @@ static void _process_alarms()
  * trigger */
 static void _process_events()
 {
-    WARN(START PROCESSING EVENTS);
     EventList* events = &state.events;
-    for (int i = 0; i < (events->len); i++) {
-        PRINT("event_%d %d/%d/%d %d:%d", , i, events->list[i].at.year,
-              events->list[i].at.month, events->list[i].at.day,
-              events->list[i].at.hour, events->list[i].at.minute);
-        PRINT("date  %d/%d/%d %d:%d", , state.dt.year, state.dt.month,
-              state.dt.day, state.dt.hour, state.dt.minute);
-        PRINT("result: %d", ,
-              dt_cmp(&state.dt, &events->list[i].at,
-                     DT_WC_MONTH | DT_WC_DAY | DT_WC_HOUR | DT_WC_MIN));
+    for (int i = (events->len) - 1; i >= 0; i--) {
         if (!dt_cmp(&state.dt, &events->list[i].at,
-                    DT_WC_MONTH | DT_WC_DAY | DT_WC_HOUR | DT_WC_MIN)) {
-            PRINT(EVENT);
+                    DT_WC_YEAR | DT_WC_MONTH | DT_WC_DAY | DT_WC_HOUR
+                        | DT_WC_MIN)) {
             os_request_popup((Popup){
                 .type = POPUP_REMINDER,
                 .value = (union PopupValue){.event = events->list[i].title},
             });
+            events->len = i;
             break;
         }
     }
 }
 
-static bool _os_timer_cb(repeating_timer_t* r)
+static bool _os_timer_cb(UNUSED(repeating_timer_t* r))
 {
     absolute_time_t now = get_absolute_time();
     if ((absolute_time_diff_us(now, then) / 1000000)) {
         then = now;
         state.dt.second++;
-        state.is_connected =
-            absolute_time_diff_us(state.__last_connected, now) / 1000000 < 30;
     }
     if (state.dt.second < 60) { return true; }
     state.dt.second = 0;

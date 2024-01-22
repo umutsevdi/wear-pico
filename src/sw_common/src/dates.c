@@ -55,29 +55,23 @@ const char* dt_get_day(DateTime* dt)
 
 int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag)
 {
-    if (flag & DT_WC_YEAR) {
-        if (dt1->year != dt2->year) { return dt1->year > dt2->year ? 1 : -1; }
+    if (flag & DT_WC_YEAR && dt1->year != dt2->year) {
+        return dt1->year > dt2->year ? 1 : -1;
     }
-    if (flag & DT_WC_MONTH) {
-        if (dt1->month != dt2->month) {
-            return dt1->month > dt2->month ? 1 : -1;
-        }
+    if (flag & DT_WC_MONTH && dt1->month != dt2->month) {
+        return dt1->month > dt2->month ? 1 : -1;
     }
-    if (flag & DT_WC_DAY) {
-        if (dt1->day != dt2->day) { return dt1->day > dt2->day ? 1 : -1; }
+    if (flag & DT_WC_DAY && dt1->day != dt2->day) {
+        return dt1->day > dt2->day ? 1 : -1;
     }
-    if (flag & DT_WC_HOUR) {
-        if (dt1->hour != dt2->hour) { return dt1->hour > dt2->hour ? 1 : -1; }
+    if (flag & DT_WC_HOUR && dt1->hour != dt2->hour) {
+        return dt1->hour > dt2->hour ? 1 : -1;
     }
-    if (flag & DT_WC_MIN) {
-        if (dt1->minute != dt2->minute) {
-            return dt1->minute > dt2->minute ? 1 : -1;
-        }
+    if (flag & DT_WC_MIN && dt1->minute != dt2->minute) {
+        return dt1->minute > dt2->minute ? 1 : -1;
     }
-    if (flag & DT_WC_SEC) {
-        if (dt1->second != dt2->second) {
-            return dt1->second > dt2->second ? 1 : -1;
-        }
+    if (flag & DT_WC_SEC && dt1->second != dt2->second) {
+        return dt1->second > dt2->second ? 1 : -1;
     }
     return 0;
 }
@@ -110,7 +104,6 @@ bool dt_encode(const DateTime* dt, char buffer[15])
 
 bool dt_decode(const char buffer[15], DateTime* dt)
 {
-    PRINT("dt_decode [%s]", , buffer);
     if (buffer[DT_STRLEN] != '\0') {
         WARN(STRNLEN);
         return false;
@@ -138,7 +131,6 @@ bool dt_decode(const char buffer[15], DateTime* dt)
             sec[i - IDX_SEC] = buffer[i];
         }
     }
-    WARN(DT_MAP);
     return _dt_map(dt, (char*[]){year, month, day, hour, min, sec});
 }
 
@@ -199,6 +191,5 @@ static bool _dt_map(DateTime* dt, char** str_p)
             return false;
         }
     }
-    WARN(OK);
     return true;
 }

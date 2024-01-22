@@ -33,7 +33,7 @@ void on_uart_rx()
         bt.packet[bt.cursor++] = uart_getc(bt.id);
     }
     if (is_str_complete()) {
-        PRINT("handle str: [%s]%u", , bt.packet, bt.cursor);
+        PRINT("RECEIVED [%s]%u", , bt.packet, bt.cursor);
         bt_handle_req(bt.packet, bt.cursor - 2);
         memset(bt.packet, '\0', 240);
         bt.cursor = 0;

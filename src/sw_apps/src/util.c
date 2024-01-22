@@ -91,8 +91,11 @@ void apps_post_process(bool is_cb)
         tray = res_get_tray(TRAY_BAT_CRIT);
     }
     apps_draw(tray, 66, 214);
-    apps_draw(res_get_tray(state.is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 45,
-              200);
+    bool is_connected =
+        absolute_time_diff_us(state.__last_connected, get_absolute_time())
+            / 1000000
+        < 21;
+    apps_draw(res_get_tray(is_connected ? TRAY_BT_ON : TRAY_BT_OFF), 45, 200);
 
     if (screen.sstate != SCREEN_CHRONO || state.popup.type != POPUP_NONE) {
         apps_draw(res_get_tray(state.chrono.enabled ? TRAY_CHRONO : TRAY_NONE),
@@ -115,7 +118,7 @@ void apps_post_process(bool is_cb)
     }
     screen.post_time = 30;
     if (is_cb) {
-        //        WARN(POST_PROCESS_BY_CB);
+        WARN(POST_PROCESS_BY_CB);
         LCD_1IN28_Display(screen.buffer);
     }
 }

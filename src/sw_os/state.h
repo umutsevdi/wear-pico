@@ -58,7 +58,7 @@ typedef struct {
 } AlarmList;
 
 typedef struct {
-    Event list[3];
+    Event list[4];
     short len;
     bool is_fetched;
 } EventList;
@@ -79,7 +79,6 @@ typedef struct {
     ConfigData config;
     DateTime dt;
     bool show_sec;
-    bool is_connected;
     absolute_time_t __last_connected;
     Popup popup;
     Popup __popup_req;

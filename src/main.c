@@ -1,10 +1,10 @@
 #include <pico/multicore.h>
 #include <pico/stdlib.h>
 
-#include "sw_apps/apps.h"
-#include "sw_bt/bt.h"
-#include "sw_os/dev.h"
-#include "sw_os/state.h"
+#include "wp_apps/apps.h"
+#include "wp_bt/bt.h"
+#include "wp_dev/dev.h"
+#include "wp_dev/state.h"
 
 void _core1_cb() { apps_load(SCREEN_CLOCK); }
 

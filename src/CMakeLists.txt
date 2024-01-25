@@ -1,5 +1,5 @@
 file(GLOB SOURCES *.c)
-add_executable(smartwatch ${SOURCES})
+add_executable(wear-pico ${SOURCES})
 
 # Waveshare dependencies
 #添加编译子目录
@@ -8,11 +8,11 @@ add_subdirectory(waveshare/lib/LCD)
 add_subdirectory(waveshare/lib/Fonts)
 add_subdirectory(waveshare/lib/GUI)
 # add_subdirectory(bluetooth-stdio)
-add_subdirectory(sw_res/)
-add_subdirectory(sw_common/)
-add_subdirectory(sw_os/)
-add_subdirectory(sw_apps/)
-add_subdirectory(sw_bt/)
+add_subdirectory(wp_res/)
+add_subdirectory(wp_common/)
+add_subdirectory(wp_dev/)
+add_subdirectory(wp_apps/)
+add_subdirectory(wp_bt/)
 
 #添加头文件目录
 include_directories(waveshare/lib/Config)
@@ -22,12 +22,12 @@ include_directories(waveshare/lib/LCD)
 include_directories(./)
 
 # pull in common dependencies
-target_link_libraries(smartwatch
-    sw_res
-    sw_utils
-    sw_os
-    sw_apps
-    sw_bt
+target_link_libraries(wear-pico
+    wp_res
+    wp_utils
+    wp_dev
+    wp_apps
+    wp_bt
 
     # bluetooth_stdio
 
@@ -43,10 +43,10 @@ target_link_libraries(smartwatch
 )
 
 # enable usb output, disable uart output
-pico_enable_stdio_usb(smartwatch 1)
-pico_enable_stdio_uart(smartwatch 0)
+pico_enable_stdio_usb(wear-pico 1)
+pico_enable_stdio_uart(wear-pico 0)
 
-# pico_btstack_make_gatt_header(smartwatch PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sw.gatt")
+# pico_btstack_make_gatt_header(wear-pico PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sw.gatt")
 # create map/bin/hex/uf2 file etc.
-pico_add_extra_outputs(smartwatch)
+pico_add_extra_outputs(wear-pico)
 

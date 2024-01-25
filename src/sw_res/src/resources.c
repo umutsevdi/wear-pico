@@ -36,6 +36,7 @@ Resource res_get_tray(enum tray_t tray)
 
     return (Resource){_res_tray + 2 * (tray)*w * h, w, h};
 }
+
 Resource res_get_titlebar(enum screen_t s_title, enum popup_t p_title)
 {
     if ((p_title < 0 && p_title >= POPUP_T_SIZE)
@@ -80,14 +81,17 @@ Resource res_get_app_alarm_button(bool is_paused)
 {
     return _get_sprite(is_paused, _res_alarm_button, 164, 36);
 }
+
 Resource res_get_app_chrono_button(bool is_paused)
 {
     return _get_sprite(is_paused, _res_stopwatch, 160, 40);
 }
+
 Resource res_get_app_media_button(bool is_paused)
 {
     return _get_sprite(is_paused, _res_media, 160, 60);
 }
+
 Resource res_get_app_step() { return (Resource){_res_step, 160, 51}; }
 
 Resource res_get_popup_alarm() { return (Resource){_res_alarm_popup, 160, 35}; }

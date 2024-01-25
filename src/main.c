@@ -14,10 +14,7 @@ int main(int argc, char* argv[])
     os_init();
     apps_init();
     multicore_launch_core1(_core1_cb);
-
-    WARN(BT_INIT);
     bt_init();
-
     while (true)
         ;
     return 0;

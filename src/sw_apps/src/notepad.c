@@ -1,5 +1,13 @@
 #include "sw_apps/apps.h"
 
+#define PAINT_AREA 42, 79, 156, 95
+#define BTN_WHITE 66, 204, 15, 15
+#define BTN_RED 92, 204, 15, 15
+#define BTN_BLUE 119, 204, 15, 15
+#define BTN_GREEN 148, 204, 15, 15
+#define BTN_ERASER 0, 112, 32, 32
+#define BTN_CLEAR 208, 112, 32, 32
+
 enum notepad_color_t {
     NOTEPAD_COLOR_NONE = COLOR_BG,
     NOTEPAD_COLOR_WHITE = WHITE,
@@ -9,11 +17,52 @@ enum notepad_color_t {
 };
 
 /* Assigns the currently selected color. Returns false if no color is selected */
-static bool _notepad_get_color(enum notepad_color_t* color);
+static bool _notepad_get_color(enum notepad_color_t* color)
+{
+    if (apps_is_clicked(BTN_ERASER)) {
+        WARN(BTN_ERASER);
+        *color = NOTEPAD_COLOR_NONE;
+    } else if (apps_is_clicked(BTN_CLEAR)) {
+        WARN(BTN_CLEAR);
+        Paint_DrawRectangle(32, 69, 208, 179, NOTEPAD_COLOR_NONE, DOT_PIXEL_2X2,
+                            DRAW_FILL_FULL);
+    } else if (apps_is_clicked(BTN_WHITE)) {
+        WARN(BTN_WHITE);
+        *color = NOTEPAD_COLOR_WHITE;
+    } else if (apps_is_clicked(BTN_RED)) {
+        WARN(BTN_RED);
+        *color = NOTEPAD_COLOR_RED;
+    } else if (apps_is_clicked(BTN_BLUE)) {
+        WARN(BTN_BLUE);
+        *color = NOTEPAD_COLOR_BLUE;
+    } else if (apps_is_clicked(BTN_GREEN)) {
+        WARN(BTN_GREEN);
+        *color = NOTEPAD_COLOR_GREEN;
+    } else
+        return false;
+    return true;
+}
+
+static enum notepad_color_t _handle_click(int* x, int* y, int* old_x,
+                                          int* old_y)
+{
+    enum notepad_color_t color;
+    bool is_selected = _notepad_get_color(&color);
+    if (!is_selected && apps_is_clicked(PAINT_AREA)) {
+        DOT_PIXEL px_size =
+            color == NOTEPAD_COLOR_NONE ? DOT_PIXEL_4X4 : DOT_PIXEL_2X2;
+        if (apps_is_clicked_d(*old_x, *old_y, PAINT_AREA))
+            Paint_DrawLine(*old_x, *old_y, *x, *y, color, px_size,
+                           LINE_STYLE_SOLID);
+        else
+            Paint_DrawPoint(*x, *y, color, px_size, DOT_FILL_AROUND);
+    }
+    screen.redraw = DISP_PARTIAL;
+    return color;
+}
 
 enum app_status_t apps_load_notepad()
 {
-#define PAINT_AREA 42, 79, 156, 95
     enum notepad_color_t color = NOTEPAD_COLOR_WHITE;
     bool clicked = false;
     int x = 0, y = 0;
@@ -44,19 +93,7 @@ enum app_status_t apps_load_notepad()
             screen.is_saved = true;
             return APP_OK;
         }
-        if (clicked) {
-            bool is_selected = _notepad_get_color(&color);
-            if (!is_selected && apps_is_clicked(PAINT_AREA)) {
-                DOT_PIXEL px_size =
-                    color == NOTEPAD_COLOR_NONE ? DOT_PIXEL_4X4 : DOT_PIXEL_2X2;
-                if (apps_is_clicked_d(old_x, old_y, PAINT_AREA))
-                    Paint_DrawLine(old_x, old_y, x, y, color, px_size,
-                                   LINE_STYLE_SOLID);
-                else
-                    Paint_DrawPoint(x, y, color, px_size, DOT_FILL_AROUND);
-            }
-            screen.redraw = DISP_PARTIAL;
-        }
+        if (clicked) { color = _handle_click(&x, &y, &old_x, &old_y); }
 
         if (apps_set_titlebar(SCREEN_NOTE, POPUP_NONE)) {
             XY.x_point = 0;
@@ -75,36 +112,4 @@ enum app_status_t apps_load_notepad()
         }
         clicked = false;
     }
-}
-
-static bool _notepad_get_color(enum notepad_color_t* color)
-{
-#define BTN_WHITE 66, 204, 15, 15
-#define BTN_RED 92, 204, 15, 15
-#define BTN_BLUE 119, 204, 15, 15
-#define BTN_GREEN 148, 204, 15, 15
-#define BTN_ERASER 0, 112, 32, 32
-#define BTN_CLEAR 208, 112, 32, 32
-    if (apps_is_clicked(BTN_ERASER)) {
-        WARN(BTN_ERASER);
-        *color = NOTEPAD_COLOR_NONE;
-    } else if (apps_is_clicked(BTN_CLEAR)) {
-        WARN(BTN_CLEAR);
-        Paint_DrawRectangle(32, 69, 208, 179, NOTEPAD_COLOR_NONE, DOT_PIXEL_2X2,
-                            DRAW_FILL_FULL);
-    } else if (apps_is_clicked(BTN_WHITE)) {
-        WARN(BTN_WHITE);
-        *color = NOTEPAD_COLOR_WHITE;
-    } else if (apps_is_clicked(BTN_RED)) {
-        WARN(BTN_RED);
-        *color = NOTEPAD_COLOR_RED;
-    } else if (apps_is_clicked(BTN_BLUE)) {
-        WARN(BTN_BLUE);
-        *color = NOTEPAD_COLOR_BLUE;
-    } else if (apps_is_clicked(BTN_GREEN)) {
-        WARN(BTN_GREEN);
-        *color = NOTEPAD_COLOR_GREEN;
-    } else
-        return false;
-    return true;
 }

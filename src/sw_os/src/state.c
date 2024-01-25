@@ -86,6 +86,7 @@ void os_init()
     state.dt = (DateTime){0, 2024, 01, 01, 00, 00, 00};
     state.alarms.len = 0;
     state.chrono.dt.flag = DT_WC_YEAR | DT_WC_MONTH | DT_WC_YEAR | DT_WC_DAY;
+    state.config.brightness = 100;
     os_dev_init();
     os_gyro_init();
     add_repeating_timer_ms(1000, _os_timer_cb, NULL, &clock_timer);

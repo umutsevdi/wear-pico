@@ -1,23 +1,44 @@
 #include "sw_apps/apps.h"
+#include "sw_os/state.h"
 #include "sw_res/resources.h"
-
-#define CANVAS_WIDTH 176
-#define CANVAS_HEIGHT 110
 
 Display screen = {0};
 Touch_1IN28_XY XY;
 
-/* A callback function that triggers post process automatically every 30
- * seconds if it hasn't been triggered for that amount of time */
-static bool _post_process_cb(repeating_timer_t* r);
-/* Touchscreen reload timer */
-static void _apps_touch_cb(uint gpio, uint32_t events);
-/* Screen refresh timer */
-static bool _apps_refresh_cb(struct repeating_timer* t);
-
 UBYTE flag = 0, flgh = 0, l;
 UWORD x, y;
 struct repeating_timer timer_capture_t;
+
+/* A callback function that triggers post process automatically every 30
+ * seconds if it hasn't been triggered for that amount of time */
+static bool _post_process_cb(UNUSED(repeating_timer_t* r))
+{
+    if (screen.post_time > 0) {
+        screen.post_time--;
+    } else {
+        apps_post_process(true);
+    }
+}
+
+/* Touchscreen reload timer */
+void _touch_cb(UNUSED(uint gpio), UNUSED(uint32_t events))
+{
+    if (XY.mode == 0) {
+        XY.Gesture = DEV_I2C_Read_Byte(address, 0x01);
+        flag = TOUCH_IRQ;
+    } else {
+        flag = TOUCH_IRQ;
+        XY = Touch_1IN28_Get_Point();
+    }
+}
+
+/* Screen refresh timer */
+bool _refresh_timer_cb(UNUSED(struct repeating_timer* t))
+{
+    l++;//Determine continuous or single point
+    if (l == 253) { l = 252; }
+    return true;
+}
 
 enum app_status_t apps_init(void)
 {
@@ -28,10 +49,11 @@ enum app_status_t apps_init(void)
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);
     //backlight settings
-    DEV_SET_PWM(80);
+    if (!state.config.brightness) { return ERROR(APP_ERROR_OS_UNINITIALIZED); }
+    DEV_SET_PWM(state.config.brightness);
     //open interrupt
     DEV_IRQ_SET(DEV_I2C_INT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true,
-                &_apps_touch_cb);
+                &_touch_cb);
 
     if ((screen.buffer = (UWORD*)malloc(screen.buffer_s)) == NULL) {
         return ERROR(APP_ERROR_ALLOC);
@@ -48,33 +70,6 @@ enum app_status_t apps_init(void)
     LCD_1IN28_Display(screen.buffer);
 
     add_repeating_timer_ms(1000, _post_process_cb, NULL, &screen.__post_timer);
-    add_repeating_timer_us(1000, _apps_refresh_cb, NULL, &timer_capture_t);
-    PRINT(APPS_INIT);
-    return APP_OK;
-}
-static bool _post_process_cb(UNUSED(repeating_timer_t* r))
-{
-    if (screen.post_time > 0) {
-        screen.post_time--;
-    } else {
-        apps_post_process(true);
-    }
-}
-
-void _apps_touch_cb(UNUSED(uint gpio), UNUSED(uint32_t events))
-{
-    if (XY.mode == 0) {
-        XY.Gesture = DEV_I2C_Read_Byte(address, 0x01);
-        flag = TOUCH_IRQ;
-    } else {
-        flag = TOUCH_IRQ;
-        XY = Touch_1IN28_Get_Point();
-    }
-}
-
-bool _apps_refresh_cb(UNUSED(struct repeating_timer* t))
-{
-    l++;//Determine continuous or single point
-    if (l == 253) { l = 252; }
-    return true;
+    add_repeating_timer_us(1000, _refresh_timer_cb, NULL, &timer_capture_t);
+    return INFO(APP_OK);
 }

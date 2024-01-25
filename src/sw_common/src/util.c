@@ -5,17 +5,6 @@
 char LOG_BUFFER[LOG_BUFFER_S] = {0};
 int log_idx = 0;
 
-const char* _file_fmt(const char* str)
-{
-    int len = strlen(str);
-    if (len <= 8) {
-        return str;
-    } else if (len > 30) {
-        return str + 8 + len - 30;
-    }
-    return (char*)str + 8;
-}
-
 const char* strcenter(char* str, size_t str_s, size_t str_cap)
 {
     if (str_s < str_cap) {
@@ -66,6 +55,17 @@ int strwrap(char* buffer, size_t buffer_s, int width, char** array, int array_s)
     }
 
     return current_idx;
+}
+
+const char* __file_fmt(const char* str)
+{
+    int len = strlen(str);
+    if (len <= 8) {
+        return str;
+    } else if (len > 30) {
+        return str + 8 + len - 30;
+    }
+    return (char*)str + 8;
 }
 
 int __strdump(int code, const char* fmt, ...)

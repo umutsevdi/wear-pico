@@ -5,24 +5,57 @@
 #include "sw_os/state.h"
 #include "sw_res/resources.h"
 
-static const int POPUP_CALL_ITER = 3;
-static const int POPUP_ALARM_ITER = 2;
 #define NOTIFY_COLOR 0x9ce5
 #define NOTIFY_TEXT_COLOR 0x8c7
 
-/** Returns the priority of the pop-up type as an integer:
- * - CALL > ALARM > NOTIFY */
-static int _popup_value(enum popup_t p);
+#define CALL_BTN_ACCEPT 52, 140, 48, 48
+#define CALL_BTN_DISMISS 140, 140, 48, 48
+#define ALARM_BTN_DISMISS 40, 156, 160, 35
 
-/* Compares two pop-up types based on their @_popup_value */
-static int _popup_cmp(enum popup_t p1, enum popup_t p2);
+static const int POPUP_CALL_ITER = 3;
+static const int POPUP_ALARM_ITER = 2;
 
-/* Loads the given pop-up */
-static enum app_status_t _popup_load(enum popup_t popup);
 static enum app_status_t _load_call();
 static enum app_status_t _load_alarm();
 static enum app_status_t _load_reminder();
 static enum app_status_t _load_notify();
+
+/** Returns the priority of the pop-up type as an integer:
+ * - CALL > ALARM > NOTIFY */
+static int _popup_value(enum popup_t p)
+{
+    switch (p) {
+    case POPUP_NOTIFY: return 1;
+    case POPUP_REMINDER: return 2;
+    case POPUP_ALARM: return 3;
+    case POPUP_CALL: return 4;
+    default: return 0;
+    }
+}
+
+/* Compares two pop-up types based on their @_popup_value */
+static int _popup_cmp(enum popup_t p1, enum popup_t p2)
+{
+    if (p1 == p2) { return 0; }
+    return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
+}
+
+/* Loads the given pop-up */
+static enum app_status_t _popup_load(enum popup_t popup)
+{
+    enum app_status_t r;
+
+    if (!_popup_value(popup)) { return ERROR(APP_ERROR_INVALID_POPUP); }
+    apps_set_module(SCREEN_T_SIZE, popup, TOUCH_POINT);
+    switch (popup) {
+    case POPUP_CALL: r = _load_call(); break;
+    case POPUP_ALARM: r = _load_alarm(); break;
+    case POPUP_REMINDER: r = _load_reminder(); break;
+    case POPUP_NOTIFY: r = _load_notify(); break;
+    default: break;
+    }
+    return r;
+}
 
 enum app_status_t apps_poll_popup()
 {
@@ -46,43 +79,8 @@ enum app_status_t apps_poll_popup()
     return r;
 }
 
-static int _popup_value(enum popup_t p)
-{
-    switch (p) {
-    case POPUP_NOTIFY: return 1;
-    case POPUP_REMINDER: return 2;
-    case POPUP_ALARM: return 3;
-    case POPUP_CALL: return 4;
-    default: return 0;
-    }
-}
-
-static int _popup_cmp(enum popup_t p1, enum popup_t p2)
-{
-    if (p1 == p2) { return 0; }
-    return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
-}
-
-static enum app_status_t _popup_load(enum popup_t popup)
-{
-    enum app_status_t r;
-
-    if (!_popup_value(popup)) { return ERROR(APP_ERROR_INVALID_POPUP); }
-    apps_set_module(SCREEN_T_SIZE, popup, TOUCH_POINT);
-    switch (popup) {
-    case POPUP_CALL: r = _load_call(); break;
-    case POPUP_ALARM: r = _load_alarm(); break;
-    case POPUP_REMINDER: r = _load_reminder(); break;
-    case POPUP_NOTIFY: r = _load_notify(); break;
-    default: break;
-    }
-    return r;
-}
-
 static enum app_status_t _load_call()
 {
-#define BTN_ACCEPT 52, 140, 48, 48
-#define BTN_DISMISS 140, 140, 48, 48
     bool clicked;
     int x = 0, y = 0;
     PRINT("_load_call %s", , state.popup.value.caller.name);
@@ -96,9 +94,9 @@ static enum app_status_t _load_call()
         if (apps_is_exited()) { return APP_OK; }
 
         if (clicked) {
-            if (apps_is_clicked(BTN_ACCEPT)) {
+            if (apps_is_clicked(CALL_BTN_ACCEPT)) {
                 if (bt_send_resp(BT_RESP_CALL_OK)) return INFO(BT_RESP_CALL_OK);
-            } else if (apps_is_clicked(BTN_DISMISS)) {
+            } else if (apps_is_clicked(CALL_BTN_DISMISS)) {
                 if (bt_send_resp(BT_RESP_CALL_CANCEL))
                     return INFO(BT_RESP_CALL_CANCEL);
             }
@@ -128,7 +126,6 @@ static enum app_status_t _load_call()
 
 static enum app_status_t _load_alarm()
 {
-#define BTN_ALARM_DISMISS 40, 156, 160, 35
     bool clicked;
     int x = 0, y = 0;
     PRINT("_load_alarm %02d:%02d", , state.popup.value.alarm->at.hour,
@@ -142,7 +139,7 @@ static enum app_status_t _load_alarm()
 
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
-        if (clicked && apps_is_clicked(BTN_ALARM_DISMISS)) { return APP_OK; }
+        if (clicked && apps_is_clicked(ALARM_BTN_DISMISS)) { return APP_OK; }
         if (apps_set_titlebar(0, POPUP_ALARM)) {
             XY.x_point = 0;
             XY.y_point = 0;
@@ -175,7 +172,7 @@ static enum app_status_t _load_reminder()
 
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
-        if (clicked && apps_is_clicked(BTN_ALARM_DISMISS)) { return APP_OK; }
+        if (clicked && apps_is_clicked(ALARM_BTN_DISMISS)) { return APP_OK; }
         if (apps_set_titlebar(0, POPUP_REMINDER)) {
             XY.x_point = 0;
             XY.y_point = 0;

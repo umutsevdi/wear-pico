@@ -23,7 +23,17 @@ extern enum app_status_t apps_load_step(void);
 extern enum app_status_t apps_load_log(void);
 
 /* Returns whether given screen requires TOUCH_GESTURE or TOUCH_POINT */
-static int _get_touch_type(enum screen_t s);
+static int _get_touch_type(enum screen_t s)
+{
+    static const int touch_types[SCREEN_T_SIZE] = {
+        [SCREEN_CLOCK] = TOUCH_GESTURE, [SCREEN_LOCK] = TOUCH_GESTURE,
+        [SCREEN_MENU] = TOUCH_GESTURE,  [SCREEN_ALARM] = TOUCH_POINT,
+        [SCREEN_CHRONO] = TOUCH_POINT,  [SCREEN_MEDIA] = TOUCH_POINT,
+        [SCREEN_STEP] = TOUCH_POINT,    [SCREEN_CALENDAR] = TOUCH_POINT,
+        [SCREEN_NOTE] = TOUCH_POINT,    [SCREEN_LOG] = TOUCH_POINT,
+    };
+    return touch_types[s];
+}
 
 enum app_status_t apps_load(enum screen_t s)
 {
@@ -97,16 +107,4 @@ enum app_status_t apps_load_menu()
         }
         if (screen.redraw) { _menu_display(current); }
     }
-}
-
-static int _get_touch_type(enum screen_t s)
-{
-    static const int touch_types[SCREEN_T_SIZE] = {
-        [SCREEN_CLOCK] = TOUCH_GESTURE, [SCREEN_LOCK] = TOUCH_GESTURE,
-        [SCREEN_MENU] = TOUCH_GESTURE,  [SCREEN_ALARM] = TOUCH_POINT,
-        [SCREEN_CHRONO] = TOUCH_POINT,  [SCREEN_MEDIA] = TOUCH_POINT,
-        [SCREEN_STEP] = TOUCH_POINT,    [SCREEN_CALENDAR] = TOUCH_POINT,
-        [SCREEN_NOTE] = TOUCH_POINT,    [SCREEN_LOG] = TOUCH_POINT,
-    };
-    return touch_types[s];
 }

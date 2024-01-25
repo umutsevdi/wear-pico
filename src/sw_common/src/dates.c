@@ -12,6 +12,19 @@ enum IDX {
     IDX_SEC = 12,
 };
 
+/* Parses the given buffer to generate the wildcard flag. Looks for '?' 
+ * characters. */
+static int16_t _dt_wildcard(const char* b);
+/**
+ * Maps the fields of given string array to the date time.
+ * @dt - to assign
+ * @date_s - a string array that contains each field of the struct in a
+ * different string.
+ * char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]}
+ * @return - whether mapping failed or not
+ */
+static bool _dt_map(DateTime* dt, char** str_p);
+
 int dt_number_of_days(DateTime* dt)
 {
     if (dt->month == 2) {
@@ -75,19 +88,6 @@ int dt_cmp(const DateTime* dt1, const DateTime* dt2, int16_t flag)
     }
     return 0;
 }
-
-/* Parses the given buffer to generate the wildcard flag. Looks for '?' 
- * characters. */
-static int16_t _dt_wildcard(const char* b);
-/**
- * Maps the fields of given string array to the date time.
- * @dt - to assign
- * @date_s - a string array that contains each field of the struct in a
- * different string.
- * char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]}
- * @return - whether mapping failed or not
- */
-static bool _dt_map(DateTime* dt, char** str_p);
 
 bool dt_encode(const DateTime* dt, char buffer[15])
 {

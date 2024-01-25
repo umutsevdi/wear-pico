@@ -12,43 +12,6 @@
  * @returns - error code
  */
 static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
-                                 int* arr_s);
-
-/**
- * Parses and validates the incoming request. Sets the request type,
- * @arr - array of tokens
- * @req - request to set
- * @returns - error code
- */
-static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req);
-
-/**
- * Executes the function corresponding to the request type
- * @arr - array of tokens
- * @arr_s - size of the array
- * @req - request type to select
- * @returns - error code
- */
-static enum bt_fmt_t _req_route(String* arr, int arr_s,
-                                enum bt_req_t request_type);
-
-enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
-{
-    String str_arr[10] = {0};
-    enum bt_fmt_t err;
-    int size = 10;
-    enum bt_req_t request_t;
-
-    err = _req_decode(str, str_s, str_arr, &size);
-    if (err) { return err; }
-
-    err = _req_parse(str_arr, &request_t);
-    if (err) { return err; }
-
-    return _req_route(str_arr, size, request_t);
-}
-
-static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
                                  int* arr_s)
 {
     int str_arr_i = 0;
@@ -71,6 +34,12 @@ static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
     return BT_FMT_OK;
 }
 
+/**
+ * Parses and validates the incoming request. Sets the request type,
+ * @arr - array of tokens
+ * @req - request to set
+ * @returns - error code
+ */
 static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req)
 {
     char* endptr;
@@ -79,6 +48,59 @@ static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req)
 
     *req = request_type;
     return BT_FMT_OK;
+}
+
+/* Routing functions */
+static enum bt_fmt_t _handle_fetch_date(String* str, int str_s);
+static enum bt_fmt_t _handle_call_begin(String* str, int str_s);
+static enum bt_fmt_t _handle_call_end();
+static enum bt_fmt_t _handle_notify(String* str, int str_s);
+static enum bt_fmt_t _handle_osc(String* str, int str_s);
+static enum bt_fmt_t _handle_fetch_alarm(String* str, int str_s);
+static enum bt_fmt_t _handle_reminder(String* str, int str_s);
+static enum bt_fmt_t _handle_step(int str_s);
+static enum bt_fmt_t _handle_hb(int str_s);
+static enum bt_fmt_t _handle_config(String* str, int str_s);
+
+/**
+ * Executes the function corresponding to the request type
+ * @arr - array of tokens
+ * @arr_s - size of the array
+ * @req - request type to select
+ * @returns - error code
+ */
+static enum bt_fmt_t _req_route(String* arr, int arr_s,
+                                enum bt_req_t request_type)
+{
+    switch (request_type) {
+    case BT_REQ_CALL_BEGIN: return _handle_call_begin(arr, arr_s);
+    case BT_REQ_CALL_END: return _handle_call_end();
+    case BT_REQ_NOTIFY: return _handle_notify(arr, arr_s);
+    case BT_REQ_REMINDER: return _handle_reminder(arr, arr_s);
+    case BT_REQ_OSC: return _handle_osc(arr, arr_s);
+    case BT_REQ_FETCH_DATE: return _handle_fetch_date(arr, arr_s);
+    case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(arr, arr_s);
+    case BT_REQ_STEP: return _handle_step(arr_s);
+    case BT_REQ_HB: return _handle_hb(arr_s);
+    case BT_REQ_CONFIG: return _handle_config(arr, arr_s);
+    default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
+    }
+}
+
+enum bt_fmt_t bt_handle_req(char* str, size_t str_s)
+{
+    String str_arr[10] = {0};
+    enum bt_fmt_t err;
+    int size = 10;
+    enum bt_req_t request_t;
+
+    err = _req_decode(str, str_s, str_arr, &size);
+    if (err) { return err; }
+
+    err = _req_parse(str_arr, &request_t);
+    if (err) { return err; }
+
+    return _req_route(str_arr, size, request_t);
 }
 
 static enum bt_fmt_t _handle_fetch_date(String* str, int str_s)
@@ -217,6 +239,7 @@ static enum bt_fmt_t _handle_hb(int str_s)
     PRINT("heartbeat()");
     return BT_FMT_OK;
 }
+
 extern void DEV_SET_PWM(uint8_t);
 static enum bt_fmt_t _handle_config(String* str, int str_s)
 {
@@ -234,22 +257,4 @@ static enum bt_fmt_t _handle_config(String* str, int str_s)
     if (*endptr != '\0') { return ERROR(BT_FMT_ERROR_INVALID_INPUT); }
     DEV_SET_PWM(state.config.brightness);
     return BT_FMT_OK;
-}
-
-static enum bt_fmt_t _req_route(String* arr, int arr_s,
-                                enum bt_req_t request_type)
-{
-    switch (request_type) {
-    case BT_REQ_CALL_BEGIN: return _handle_call_begin(arr, arr_s);
-    case BT_REQ_CALL_END: return _handle_call_end();
-    case BT_REQ_NOTIFY: return _handle_notify(arr, arr_s);
-    case BT_REQ_REMINDER: return _handle_reminder(arr, arr_s);
-    case BT_REQ_OSC: return _handle_osc(arr, arr_s);
-    case BT_REQ_FETCH_DATE: return _handle_fetch_date(arr, arr_s);
-    case BT_REQ_FETCH_ALARM: return _handle_fetch_alarm(arr, arr_s);
-    case BT_REQ_STEP: return _handle_step(arr_s);
-    case BT_REQ_HB: return _handle_hb(arr_s);
-    case BT_REQ_CONFIG: return _handle_config(arr, arr_s);
-    default: return ERROR(BT_FMT_ERROR_REQ_TYPE);
-    }
 }

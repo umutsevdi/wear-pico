@@ -29,23 +29,23 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 #endif
 
 #define PRINT(FMT, ARGS...)                                                    \
-    printf("%17s %s#%s():-%4d - " #FMT "\r\n", __now(), _file_fmt(__FILE__),   \
+    printf("%17s %s#%s():-%4d - " #FMT "\r\n", __now(), __file_fmt(__FILE__),  \
            __func__, __LINE__ ARGS),                                           \
         __strdump(0, #FMT "\n" ARGS)
 
 #define WARN(CODE)                                                             \
-    printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__),  \
+    printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), __file_fmt(__FILE__), \
            __func__, __LINE__),                                                \
         __strdump(0, "WRN:" #CODE "\n")
 
 #define INFO(CODE)                                                             \
-    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__), \
-            __func__, __LINE__),                                               \
+    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(),                      \
+            __file_fmt(__FILE__), __func__, __LINE__),                         \
      __strdump(0, "INF:" #CODE "\n"))
 
 #define ERROR(CODE)                                                            \
-    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), _file_fmt(__FILE__), \
-            __func__, __LINE__),                                               \
+    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(),                      \
+            __file_fmt(__FILE__), __func__, __LINE__),                         \
      __strdump(CODE, "ERR:" #CODE "\n"))
 
 #ifndef UNUSED
@@ -59,12 +59,6 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
  * @str_cap - max length of the buffer
  */
 const char* strcenter(char* str, size_t str_s, size_t str_cap);
-/**
- * Trims the first 9 characters of a file URI
- * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
- */
-const char* _file_fmt(const char* str);
-
 /**
  * Splits the input string into an array of substrings, considering both the
  * line width and '\n' character.
@@ -84,9 +78,16 @@ const char* _file_fmt(const char* str);
 int strwrap(char* buffer, size_t buffer_s, int width, char** array,
             int array_s);
 
-/* Dumps given text to the log buffer */
+/* Dumps given text to the log buffer for the debugger interface */
 int __strdump(int code, const char* fmt, ...);
 
+/* Current date time in string */
 const char* __now();
+
+/**
+ * Trims the first 9 characters of a file URI
+ * - /app/src/sw_apps/src/apps.c -> /sw_apps/src/apps.c
+ */
+const char* __file_fmt(const char* str);
 
 #endif

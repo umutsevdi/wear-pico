@@ -18,6 +18,9 @@
 
 #define TOUCH_GESTURE 0
 #define TOUCH_POINT 1
+#define CANVAS_WIDTH 176
+#define CANVAS_HEIGHT 110
+
 
 /******************************************************************************
                                 Modules
@@ -33,6 +36,7 @@ enum app_status_t {
     APP_ERROR_TIMER_CREATE,
     APP_ERROR_INVALID_POPUP,
     APP_ERROR_INVALID_APP,
+    APP_ERROR_OS_UNINITIALIZED,
 };
 
 /* Initializes the display */

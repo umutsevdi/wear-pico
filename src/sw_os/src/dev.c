@@ -11,16 +11,6 @@ const int pins[] = {
     [DEV_VIB] = 20,
 };
 
-void os_dev_init(void)
-{
-    gpio_init(pins[DEV_LED]);
-    gpio_set_dir(pins[DEV_LED], true);
-    gpio_init(pins[DEV_BUZZER]);
-    gpio_set_dir(pins[DEV_BUZZER], true);
-    gpio_init(pins[DEV_VIB]);
-    gpio_set_dir(pins[DEV_VIB], true);
-}
-
 static void _notify_iter(int32_t flag, int in)
 {
     if (flag & DEV_VIB) { gpio_put(pins[DEV_VIB], true); }
@@ -38,6 +28,16 @@ static void _notify_iter(int32_t flag, int in)
 
     if (flag & DEV_LED) { gpio_put(pins[DEV_LED], false); }
     if (flag & DEV_VIB) { gpio_put(pins[DEV_VIB], false); }
+}
+
+void os_dev_init(void)
+{
+    gpio_init(pins[DEV_LED]);
+    gpio_set_dir(pins[DEV_LED], true);
+    gpio_init(pins[DEV_BUZZER]);
+    gpio_set_dir(pins[DEV_BUZZER], true);
+    gpio_init(pins[DEV_VIB]);
+    gpio_set_dir(pins[DEV_VIB], true);
 }
 
 void os_dev_notify_d(int count, int32_t flag, int in_ms, int out_ms)

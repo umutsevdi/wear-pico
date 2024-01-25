@@ -33,7 +33,7 @@ alarms on the smartwatch and will manage background services such as notificatio
 calls, and media controls using Android services.
 
 ## Installation
-See [Installation](wiki/Installation)
+See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
 
 ## 5. License
 

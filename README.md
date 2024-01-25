@@ -1,5 +1,7 @@
 # smartwatch
-A smartwatch and it's Android application, built for RPi Pico microcontroller
+A smartwatch and it's Android application, built for Raspberry Pi Pico microcontroller.
+
+For the android application see [Smartwatch App](https://github.com/umutsevdi/smartwatch-app).
 
 ## Installation
 * Clone this repository

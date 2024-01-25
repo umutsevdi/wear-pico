@@ -76,7 +76,6 @@ size_t bt_write(char* str, size_t str_s)
 {
     if (!bt_is_writable()) { return 0; }
     size_t bytes = strnlen(str, str_s);
-    PRINT(Start sending);
     uart_write_blocking(bt.id, (uint8_t*)str, bytes);
     PRINT("sent [%s]", , str);
     return bytes;

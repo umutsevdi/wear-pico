@@ -21,6 +21,8 @@
 #define LOG_BUFFER_S 250
 extern char LOG_BUFFER[LOG_BUFFER_S];
 
+#define TO_US(s) ((s)*1000000)
+
 #ifndef MIN
 #define MIN(A, B) (A) < (B) ? (A) : (B)
 #endif
@@ -34,8 +36,8 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
         __strdump(0, #FMT "\n" ARGS)
 
 #define WARN(CODE)                                                             \
-    printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(), __file_fmt(__FILE__), \
-           __func__, __LINE__),                                                \
+    fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),              \
+            __file_fmt(__FILE__), __func__, __LINE__),                         \
         __strdump(0, "WRN:" #CODE "\n")
 
 #define INFO(CODE)                                                             \
@@ -44,8 +46,8 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
      __strdump(0, "INF:" #CODE "\n"))
 
 #define ERROR(CODE)                                                            \
-    (printf("%17s %s#%s():%-4d - " #CODE "\r\n", __now(),                      \
-            __file_fmt(__FILE__), __func__, __LINE__),                         \
+    (fprintf(stderr, "%17s %s#%s():%-4d - " #CODE "\r\n", __now(),             \
+             __file_fmt(__FILE__), __func__, __LINE__),                        \
      __strdump(CODE, "ERR:" #CODE "\n"))
 
 #ifndef UNUSED

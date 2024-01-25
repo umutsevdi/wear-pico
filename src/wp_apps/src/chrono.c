@@ -15,7 +15,7 @@ repeating_timer_t chrono_timer;
  * - second -> minute
  * - minute -> hour
  */
-static bool _scr_chrono_cb(repeating_timer_t* r)
+static bool _chrono_cb(repeating_timer_t* r)
 {
     state.chrono.dt.second += CHRONO_CB_FREQUENCY;
     if (state.chrono.dt.second > 99) {
@@ -26,7 +26,7 @@ static bool _scr_chrono_cb(repeating_timer_t* r)
                 state.chrono.dt.second = 0;
                 state.chrono.enabled = false;
                 cancel_repeating_timer(r);
-                WARN(END_EVENT_scr_chrono_cb);
+                INFO(END_EVENT_scr_chrono_cb);
                 screen.redraw = DISP_REDRAW;
             }
         }
@@ -41,7 +41,7 @@ static bool _scr_chrono_cb(repeating_timer_t* r)
  * updates the timer
  * @return - timer status
  */
-static enum app_status_t _apps_chrono_toggle()
+static enum app_status_t _chrono_toggle()
 {
     state.chrono.enabled = !state.chrono.enabled;
     os_dev_notify_d(1, DEV_BUZZER | DEV_LED, 150, 0);
@@ -50,13 +50,13 @@ static enum app_status_t _apps_chrono_toggle()
         state.chrono.dt.minute = 0;
         state.chrono.dt.second = 0;
         memset(&chrono_timer, 0, sizeof(repeating_timer_t));
-        if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _scr_chrono_cb,
-                                    NULL, &chrono_timer)) {
+        if (!add_repeating_timer_ms(CHRONO_CB_FREQUENCY * -10, _chrono_cb, NULL,
+                                    &chrono_timer)) {
             return ERROR(APP_ERROR_TIMER_CREATE);
         }
-        WARN(REGISTER_EVENT scr_chrono_cb);
+        INFO(REGISTER_EVENT scr_chrono_cb);
     } else {
-        WARN(CANCEL_EVENT scr_chrono_cb);
+        INFO(CANCEL_EVENT scr_chrono_cb);
         cancel_repeating_timer(&chrono_timer);
     }
 }
@@ -75,11 +75,10 @@ enum app_status_t apps_load_chrono()
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
 
-        // Start/Stop Button
         if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
             INFO(BTN_STOPWATCH);
             screen.redraw = DISP_REDRAW;
-            enum app_status_t status = _apps_chrono_toggle();
+            enum app_status_t status = _chrono_toggle();
             if (!status) { return status; }
         }
         if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {

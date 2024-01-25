@@ -20,23 +20,23 @@ enum notepad_color_t {
 static bool _notepad_get_color(enum notepad_color_t* color)
 {
     if (apps_is_clicked(BTN_ERASER)) {
-        WARN(BTN_ERASER);
+        INFO(BTN_ERASER);
         *color = NOTEPAD_COLOR_NONE;
     } else if (apps_is_clicked(BTN_CLEAR)) {
-        WARN(BTN_CLEAR);
+        INFO(BTN_CLEAR);
         Paint_DrawRectangle(32, 69, 208, 179, NOTEPAD_COLOR_NONE, DOT_PIXEL_2X2,
                             DRAW_FILL_FULL);
     } else if (apps_is_clicked(BTN_WHITE)) {
-        WARN(BTN_WHITE);
+        INFO(BTN_WHITE);
         *color = NOTEPAD_COLOR_WHITE;
     } else if (apps_is_clicked(BTN_RED)) {
-        WARN(BTN_RED);
+        INFO(BTN_RED);
         *color = NOTEPAD_COLOR_RED;
     } else if (apps_is_clicked(BTN_BLUE)) {
-        WARN(BTN_BLUE);
+        INFO(BTN_BLUE);
         *color = NOTEPAD_COLOR_BLUE;
     } else if (apps_is_clicked(BTN_GREEN)) {
-        WARN(BTN_GREEN);
+        INFO(BTN_GREEN);
         *color = NOTEPAD_COLOR_GREEN;
     } else
         return false;
@@ -96,10 +96,11 @@ enum app_status_t apps_load_notepad()
         if (apps_set_titlebar(SCREEN_NOTE, POPUP_NONE)) {
             XY.x_point = 0;
             XY.y_point = 0;
-            if (screen.is_saved)
+            if (screen.is_saved) {
                 memcpy(screen.buffer, screen.canvas_buffer, screen.buffer_s);
-            else
+            } else {
                 apps_draw(res_get_app_notepad(), 0, 64);
+            }
 
             apps_post_process(false);
         }

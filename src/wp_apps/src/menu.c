@@ -63,7 +63,7 @@ enum app_status_t apps_load(enum screen_t s)
 }
 
 /* Displays the current menu screen */
-static void _menu_display(enum menu_t current)
+static void _menu_draw_canvas(enum menu_t current)
 {
     if (screen.redraw == DISP_REDRAW) {
         apps_reset();
@@ -105,6 +105,6 @@ enum app_status_t apps_load_menu()
             screen.sstate = SCREEN_MENU;
             screen.redraw = DISP_REDRAW;
         }
-        if (screen.redraw) { _menu_display(current); }
+        if (screen.redraw) { _menu_draw_canvas(current); }
     }
 }

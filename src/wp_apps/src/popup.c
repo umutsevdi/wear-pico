@@ -22,7 +22,7 @@ static enum app_status_t _load_notify();
 
 /** Returns the priority of the pop-up type as an integer:
  * - CALL > ALARM > NOTIFY */
-static int _popup_value(enum popup_t p)
+static inline int _popup_value(enum popup_t p)
 {
     switch (p) {
     case POPUP_NOTIFY: return 1;
@@ -34,7 +34,7 @@ static int _popup_value(enum popup_t p)
 }
 
 /* Compares two pop-up types based on their @_popup_value */
-static int _popup_cmp(enum popup_t p1, enum popup_t p2)
+static inline int _popup_cmp(enum popup_t p1, enum popup_t p2)
 {
     if (p1 == p2) { return 0; }
     return _popup_value(p1) > _popup_value(p2) ? 1 : -1;
@@ -65,7 +65,7 @@ enum app_status_t apps_poll_popup()
         state.__popup_req.type = POPUP_NONE;
         return APP_NO_POPUP;
     }
-    WARN(LOADING_POPUP);
+    INFO(LOADING_POPUP);
     /* store the status to revert */
     int mode_old = XY.mode;
     Popup popup_old = state.popup;
@@ -94,34 +94,35 @@ static enum app_status_t _load_call()
         if (apps_is_exited()) { return APP_OK; }
 
         if (clicked) {
-            if (apps_is_clicked(CALL_BTN_ACCEPT)) {
-                if (bt_send_resp(BT_RESP_CALL_OK)) return INFO(BT_RESP_CALL_OK);
-            } else if (apps_is_clicked(CALL_BTN_DISMISS)) {
-                if (bt_send_resp(BT_RESP_CALL_CANCEL))
-                    return INFO(BT_RESP_CALL_CANCEL);
+            if (apps_is_clicked(CALL_BTN_ACCEPT)
+                && bt_send_resp(BT_RESP_CALL_OK)) {
+                return INFO(BT_RESP_CALL_OK);
+            } else if (apps_is_clicked(CALL_BTN_DISMISS)
+                       && bt_send_resp(BT_RESP_CALL_CANCEL)) {
+                return INFO(BT_RESP_CALL_CANCEL);
             }
         }
-
-        if (apps_set_titlebar(0, POPUP_CALL)) {
-            XY.x_point = 0;
-            XY.y_point = 0;
-            apps_draw(res_get_popup_call(), 52, 140);
-            Paint_DrawString_EN(
-                0, 90,
-                strcenter(state.popup.value.caller.name,
-                          strnlen(state.popup.value.caller.name, 25), 16),
-                &Font24, COLOR_BG, COLOR_FG);
-            apps_post_process(false);
-        }
-
-        if (screen.redraw) {
-            LCD_1IN28_Display(screen.buffer);
-            screen.redraw = DISP_SYNC;
-        }
-        clicked = false;
-        os_dev_notify_d(POPUP_CALL_ITER, state.config.call, 250, 60);
-        sleep_ms(125);
     }
+
+    if (apps_set_titlebar(0, POPUP_CALL)) {
+        XY.x_point = 0;
+        XY.y_point = 0;
+        apps_draw(res_get_popup_call(), 52, 140);
+        Paint_DrawString_EN(
+            0, 90,
+            strcenter(state.popup.value.caller.name,
+                      strnlen(state.popup.value.caller.name, 25), 16),
+            &Font24, COLOR_BG, COLOR_FG);
+        apps_post_process(false);
+    }
+
+    if (screen.redraw) {
+        LCD_1IN28_Display(screen.buffer);
+        screen.redraw = DISP_SYNC;
+    }
+    clicked = false;
+    os_dev_notify_d(POPUP_CALL_ITER, state.config.call, 250, 60);
+    sleep_ms(125);
 }
 
 static enum app_status_t _load_alarm()
@@ -194,6 +195,27 @@ static enum app_status_t _load_reminder()
     }
 }
 
+static void _draw_notification_text()
+{
+    apps_draw(res_get_popup_notify(), 40, 65);
+    Paint_DrawString_EN(76, 40,
+                        strcenter(state.popup.value.notify.title,
+                                  strnlen(state.popup.value.notify.title, 12),
+                                  12),
+                        &Font12, NOTIFY_COLOR, COLOR_FG);
+
+    char* array[8] = {0};
+    int array_s =
+        strwrap(state.popup.value.notify.text,
+                strnlen(state.popup.value.notify.text, 128), 17, array, 7);
+    if (array_s != -1) {
+        for (int i = 0; i < array_s; i++) {
+            Paint_DrawString_EN(50, 70 + 12 * i, array[i], &Font12,
+                                NOTIFY_TEXT_COLOR, COLOR_FG);
+        }
+    }
+}
+
 static enum app_status_t _load_notify()
 {
     int x = 0, y = 0;
@@ -208,30 +230,14 @@ static enum app_status_t _load_notify()
         }
         if (!apps_poll_popup()) { screen.redraw = DISP_REDRAW; }
         if (apps_is_exited()) { return APP_OK; }
-        if ((absolute_time_diff_us(get_absolute_time(), then) / 12000000)) {
+        if ((absolute_time_diff_us(get_absolute_time(), then) / TO_US(12))) {
             return INFO(APP_TIMEOUT_NOTIFY);
         }
 
         if (apps_set_titlebar(0, POPUP_NOTIFY)) {
             XY.x_point = 0;
             XY.y_point = 0;
-            apps_draw(res_get_popup_notify(), 40, 65);
-            Paint_DrawString_EN(
-                76, 40,
-                strcenter(state.popup.value.notify.title,
-                          strnlen(state.popup.value.notify.title, 12), 12),
-                &Font12, NOTIFY_COLOR, COLOR_FG);
-
-            char* array[8] = {0};
-            int array_s = strwrap(state.popup.value.notify.text,
-                                  strnlen(state.popup.value.notify.text, 128),
-                                  17, array, 7);
-            if (array_s != -1) {
-                for (int i = 0; i < array_s; i++)
-                    Paint_DrawString_EN(50, 70 + 12 * i, array[i], &Font12,
-                                        NOTIFY_TEXT_COLOR, COLOR_FG);
-            }
-
+            _draw_notification_text();
             apps_post_process(false);
         }
         if (screen.redraw) {

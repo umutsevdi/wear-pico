@@ -151,45 +151,29 @@ static bool _dt_map(DateTime* dt, char** str_p)
     char* endptr = NULL;
     if (!(DT_WC_YEAR & dt->flag)) {
         dt->year = strtoul(str_p[0], &endptr, 10);
-        if (*endptr != '\0' || dt->year == 0 || dt->year > 9999) {
-            WARN(YEAR);
-            return false;
-        }
+        if (*endptr != '\0' || dt->year == 0) { return false; }
     }
     if (!(DT_WC_MONTH & dt->flag)) {
         dt->month = strtoul(str_p[1], &endptr, 10);
         if (*endptr != '\0' || dt->month == 0 || dt->month > 12) {
-            WARN(MON);
             return false;
         }
     }
     if (!(DT_WC_DAY & dt->flag)) {
         dt->day = strtoul(str_p[2], &endptr, 10);
-        if (*endptr != '\0' || dt->day == 0 || dt->day > 31) {
-            WARN(DAY);
-            return false;
-        }
+        if (*endptr != '\0' || dt->day == 0 || dt->day > 31) { return false; }
     }
     if (!(DT_WC_HOUR & dt->flag)) {
         dt->hour = strtoul(str_p[3], &endptr, 10);
-        if (*endptr != '\0' || dt->hour > 24) {
-            WARN(HOUR);
-            return false;
-        }
+        if (*endptr != '\0' || dt->hour > 24) { return false; }
     }
     if (!(DT_WC_MIN & dt->flag)) {
         dt->minute = strtoul(str_p[4], &endptr, 10);
-        if (*endptr != '\0' || dt->minute > 60) {
-            WARN(MIN);
-            return false;
-        }
+        if (*endptr != '\0' || dt->minute > 60) { return false; }
     }
     if (!(DT_WC_SEC & dt->flag)) {
         dt->second = strtoul(str_p[5], &endptr, 10);
-        if (*endptr != '\0' || dt->second > 60) {
-            WARN(SEC);
-            return false;
-        }
+        if (*endptr != '\0' || dt->second > 60) { return false; }
     }
     return true;
 }

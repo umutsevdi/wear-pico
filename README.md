@@ -1,9 +1,3 @@
-# WearPico
-The WearPico an open source Smartwatch firmware written in C for the Raspberry Pi Pico.
-
-Click [here](https://github.com/umutsevdi/wear-pico-app) to visit the repository of the
-mobile application.
-
 <p align="center">
   <a href="https://github.com/umutsevdi/wear-pico">
   <h3 align="center">WearPico</h3>
@@ -13,10 +7,14 @@ mobile application.
 The WearPico an open source Smartwatch firmware written in C for the Raspberry Pi Pico.
   <br/>
     <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a></i>
-<p align="center"><a href="wiki/"><strong>Explore the docs »
+<p align="center"><a href="https://github.com/umutsevdi/wear-pico/wiki/"><strong>Explore the docs »
 </strong></a></p>
 <p align="center"><a href="Paper.pdf"><strong>Read the paper »
 </strong></a></p>
+
+Click [here](https://github.com/umutsevdi/wear-pico-app) to visit the repository of the
+mobile application.
+
 
 ## Project Definition
 
@@ -48,5 +46,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 You can contact any developer of this project for any suggestion or information.
 
 Project: [umutsevdi/wear-pico](https://github.com/umutsevdi/wear-pico)
+Project: [umutsevdi/wear-pico-app](https://github.com/umutsevdi/wear-pico-app)
 
 <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a>, 

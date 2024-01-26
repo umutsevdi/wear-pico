@@ -3,7 +3,7 @@
   <h1 align="center">WearPico</h1>
   </a>
 <p align="center">  
-The WearPico an open source Smartwatch firmware written in C for the Raspberry Pi Pico.
+An open source Smartwatch firmware written in C for the Raspberry Pi Pico.
   <br/>
     <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a></i>
 <p align="center"><a href="https://github.com/umutsevdi/wear-pico/wiki/"><strong>Explore the docs »

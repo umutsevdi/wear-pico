@@ -38,8 +38,8 @@ https://github.com/umutsevdi/wear-pico/assets/20924548/dcb3c1bb-cdcc-4bc2-9a95-e
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
 
 ## Learn More
-See [wiki](https://github.com/umutsevdi/wear-pico/wiki/Home) for the
-details.
+See [wiki](https://github.com/umutsevdi/wear-pico/wiki/Applications) for the
+applications.
 
 ## License
 

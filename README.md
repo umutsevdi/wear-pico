@@ -6,10 +6,10 @@
 An open source Smartwatch firmware written in C for the Raspberry Pi Pico.
   <br/>
     <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a></i>
-<p align="center"><a href="https://github.com/umutsevdi/wear-pico/wiki/"><strong>Explore the docs »
-</strong></a></p>
-<p align="center"><a href="Paper.pdf"><strong>Read the paper »
-</strong></a></p>
+<p align="center"> <img src="img/current_with_case.jpg" width="30%"> </p>
+<p align="center"><a href="https://github.com/umutsevdi/wear-pico/wiki/">
+<strong> Explore the docs » </strong></a></p>
+<p align="center"><a href="Paper.pdf"><strong>Read the paper » </strong></a></p>
 
 Click [here](https://github.com/umutsevdi/wear-pico-app) to visit the repository of the
 mobile application.
@@ -32,16 +32,20 @@ messages sent by the smartwatch via Bluetooth. The application allows users to s
 alarms on the smartwatch and will manage background services such as notifications,
 calls, and media controls using Android services.
 
+<video width="60%"  src="img/menu.mp4"></video>
+
 ## Installation
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
 
-## 5. License
+## Documentation
+See [Introduction](https://github.com/umutsevdi/wear-pico/wiki/Introduction) for the
+documentation.
 
-Distributed under the GPL License. See `LICENSE` for more information.
+## License
 
-<p id="contact">
+Distributed under the [GPL License](LICENSE).
 
-## 6. Contact
+## Contact
 
 You can contact any developer of this project for any suggestion or information.
 

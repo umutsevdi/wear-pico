@@ -147,7 +147,8 @@ static enum bt_fmt_t _handle_osc(String* str, int str_s)
 {
     if (str_s < 4) return ERROR(BT_FMT_ERROR_PAYLOAD);
     state.media.is_playing = str[1].bytes[0] == 't';
-
+    memset(state.media.song, 0, 30);
+    memset(state.media.artist, 0, 30);
     strncpy(state.media.song, str[2].bytes, MIN(str[2].len, 30));
     strncpy(state.media.artist, str[3].bytes, MIN(str[3].len, 30));
     state.media.is_fetched = false;

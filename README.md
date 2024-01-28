@@ -37,9 +37,9 @@ https://github.com/umutsevdi/wear-pico/assets/20924548/dcb3c1bb-cdcc-4bc2-9a95-e
 ## Installation
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
 
-## Documentation
-See [Introduction](https://github.com/umutsevdi/wear-pico/wiki/Introduction) for the
-documentation.
+## Learn More
+See [wiki](https://github.com/umutsevdi/wear-pico/wiki/Home) for the
+details.
 
 ## License
 

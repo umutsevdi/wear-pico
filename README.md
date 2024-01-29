@@ -3,7 +3,7 @@
   <h1 align="center">WearPico</h1>
   </a>
 <p align="center">  
-An open source Smartwatch firmware written in C for the Raspberry Pi Pico.
+An open-source Smartwatch firmware written in C for the Raspberry Pi Pico.
   <br/>
     <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a></i>
 <p align="center"> <img src="img/current_with_case.jpg" width="30%"> </p>
@@ -33,6 +33,39 @@ alarms on the smartwatch and will manage background services such as notificatio
 calls, and media controls using Android services.
 
 https://github.com/umutsevdi/wear-pico/assets/20924548/dcb3c1bb-cdcc-4bc2-9a95-e2a301833b03
+
+## Features
+The WearPico is designed as an
+embedded system without a full-fledged operating system. In addition to basic clock
+functions such as time, alarm, and stopwatch, the smartwatch will have features such
+as receiving notifications, handling calls, and controlling the media player on the
+phone. The touchscreen-operated watch will also include an accelerometer, a buzzer
+for alarm sounds, and a motor for vibration.
+
+As of 2024, the project supports the following features:
+
+* Fitness tracking
+* Call Management
+* Notifications
+* Music and media control
+* Reminder
+* Alarms
+* Lock Screen
+* Temperature
+* Touch Gestures
+* Stopwatch
+* Calendar
+* Notepad
+* Remote Configuration
+
+**Alarm Demo**
+
+https://github.com/umutsevdi/wear-pico/assets/20924548/749df7a0-29a2-42e6-b483-619b78cc841c
+
+**Media Player Demo**
+
+https://github.com/umutsevdi/wear-pico/assets/20924548/ea77b88b-3dda-47ed-8ad5-add205f5a800
+
 
 ## Installation
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)

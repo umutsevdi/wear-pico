@@ -87,3 +87,5 @@ Projects:
 * [umutsevdi/wear-pico-app](https://github.com/umutsevdi/wear-pico-app)
 
 <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a>
+
+<i>Smartwatch case is designed and printed by <a href="https://github.com/KozhaAkhmet">Kozha Akhmet Abrdamanov</a></i>.

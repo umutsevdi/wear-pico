@@ -78,8 +78,7 @@ enum app_status_t apps_load_chrono()
         if (clicked && apps_is_clicked(BTN_STOPWATCH)) {
             INFO(BTN_STOPWATCH);
             screen.redraw = DISP_REDRAW;
-            enum app_status_t status = _chrono_toggle();
-            if (!status) { return status; }
+            _chrono_toggle();
         }
         if (apps_set_titlebar(SCREEN_CHRONO, POPUP_NONE)) {
             XY.x_point = 0;

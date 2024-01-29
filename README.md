@@ -71,8 +71,7 @@ https://github.com/umutsevdi/wear-pico/assets/20924548/ea77b88b-3dda-47ed-8ad5-a
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
 
 ## Learn More
-See [wiki](https://github.com/umutsevdi/wear-pico/wiki/Applications) for the
-applications.
+See [wiki](https://github.com/umutsevdi/wear-pico/wiki) to learn more.
 
 ## License
 

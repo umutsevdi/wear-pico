@@ -79,6 +79,12 @@ WearPico.
 
 See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation) to compile the software from the source.
 
+# The Model
+The 3D Model for the smartwatch is available at [thingiverse](https://www.thingiverse.com/thing:6462998). The model contains STL, STEP and
+Fusion 360 project formats.
+
+![3D Model](https://cdn.thingiverse.com/assets/43/ce/e7/3b/5f/large_display_aa3e2b0a-f875-4b66-b4c4-e4c973c313d0.png)
+
 ## Learn More
 See [wiki](https://github.com/umutsevdi/wear-pico/wiki) to learn more.
 

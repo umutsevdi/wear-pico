@@ -73,8 +73,11 @@ https://github.com/umutsevdi/wear-pico/assets/20924548/749df7a0-29a2-42e6-b483-6
 https://github.com/umutsevdi/wear-pico/assets/20924548/ea77b88b-3dda-47ed-8ad5-add205f5a800
 
 
-## Installation
-See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation)
+## Building and Installation
+Please refer to the [wiki](https://github.com/umutsevdi/wear-pico/wiki) to reproduce the product. The wiki contains up-to-date information about the
+WearPico.
+
+See [Installation](https://github.com/umutsevdi/wear-pico/wiki/Installation) to compile the software from the source.
 
 ## Learn More
 See [wiki](https://github.com/umutsevdi/wear-pico/wiki) to learn more.

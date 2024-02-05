@@ -104,4 +104,4 @@ Projects:
 <i>Developed by <a href="https://github.com/umutsevdi">Umut Sevdi</a>
 
 <i>Smartwatch case is designed and printed by
-<a href="https://github.com/KozhaAkhmet">Kozha Akhmet Abrdamanov</a></i>.
+<a href="https://github.com/KozhaAkhmet">Kozha Akhmet Abdramanov</a></i>.

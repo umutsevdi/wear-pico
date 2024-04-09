@@ -92,6 +92,11 @@ See [wiki](https://github.com/umutsevdi/wear-pico/wiki) to learn more.
 
 Distributed under the [GPL License](LICENSE).
 
+# Sponsorship
+This project is sponsored by [PCBWay](https://www.pcbway.com/). PCBWay is a custom PCB provider, fabrication and assembly services for makers, hobbyists, and professionals. I am grateful for their sponsorship and partnership, and I highly recommend their services to anyone needing PCB manufacturing and assembly solutions.
+
+<p align="center"><a href="https://www.pcbway.com"> <img src="https://s3-eu-west-1.amazonaws.com/tpd/logos/54695d4a00006400057b939d/0x0.png" alt="PCBWay" width=20%/></a></p>
+
 ## Contact
 
 You can contact any developer of this project for any suggestions or

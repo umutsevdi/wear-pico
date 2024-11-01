@@ -4,3 +4,7 @@
 [submodule "src/bluetooth-stdio"]
 	path = src/bluetooth-stdio
 	url = https://github.com/Memotech-Bill/bluetooth-stdio.git
+[submodule "misc/doxygen-awesome-css"]
+	path = misc/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+    branch = v1.5.0

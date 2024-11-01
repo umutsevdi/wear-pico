@@ -1,0 +1,72 @@
+# Doxyfile 1.9.6
+# Project name
+PROJECT_NAME           = Wear Pico
+PROJECT_NUMBER         = 1.0
+PROJECT_BRIEF          = "An open-source Smartwatch firmware written" \
+                        "in C for the Raspberry Pi Pico."
+
+# Output directory
+OUTPUT_DIRECTORY       = docs/
+
+# Input directories
+INPUT                  = ../src
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+JAVADOC_AUTOBRIEF      = YES
+JAVADOC_BANNER         = YES
+BUILTIN_STL_SUPPORT    = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_METHODS  = YES
+# Patterns to ignore
+EXCLUDE_PATTERNS      = *.md
+
+# Recursively search for files in the input directory
+RECURSIVE              = YES
+
+# Generate HTML output
+GENERATE_HTML          = YES
+#GENERATE_MAN           = YES
+HTML_OUTPUT            = html
+
+# Enable or disable various output formats
+GENERATE_LATEX         = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+
+# Set up the index file for the HTML documentation
+GENERATE_TREEVIEW      = YES
+
+# Enable the extraction of documentation from the source code
+EXTRACT_ALL            = YES
+
+# Set the file patterns
+FILE_PATTERNS          = *.c \
+                         *.cc \
+                         *.cxx \
+                         *.cpp \
+                         *.h \
+                         *.hh \
+                         *.hxx \
+                         *.hpp \
+                         *.inc \
+                         *.md
+
+# Use the full path in the generated documentation
+FULL_PATH_NAMES        = NO
+# Show additional information in the generated documentation
+SHOW_INCLUDE_FILES     = YES
+
+# Whether to generate a call graph
+CALL_GRAPH             = YES
+
+# Enable the dot tool for generating graphs
+HAVE_DOT               = YES
+DOT_GRAPH_MAX_NODES    = 50
+DOT_TRANSPARENT        = YES
+DOT_MULTI_TARGETS      = YES
+
+GENERATE_TREEVIEW      = YES # optional. Also works without treeview
+FULL_SIDEBAR           = YES
+DISABLE_INDEX          = NO
+HTML_EXTRA_STYLESHEET  = ../misc/doxygen-awesome-css/doxygen-awesome.css \
+                         ../.style.css

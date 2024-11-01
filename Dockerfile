@@ -13,7 +13,7 @@ RUN apt update && apt-get install -y \
     libstdc++-arm-none-eabi-newlib \
     vim \
     python3 \
-    g++
+    g++ doxygen
 
 # Any other setup or commands you need to run during the build process
 # For example, you can install packages, configure settings, etc.

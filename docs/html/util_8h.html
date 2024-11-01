@@ -100,16 +100,6 @@ $(document).ready(function(){initNavTree('util_8h.html',''); initResizable(); })
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;unistd.h&gt;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for util.h:</div>
-<div class="dyncontent">
-<div class="center"><img src="util_8h__incl.png" border="0" usemap="#util_8h" alt=""/></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="util_8h__dep__incl.png" border="0" usemap="#util_8hdep" alt=""/></div>
-</div>
 </div>
 <p><a href="util_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -138,7 +128,7 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab632a84026ec8724e293cd18c9500b5f"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ab632a84026ec8724e293cd18c9500b5f">strcenter</a> (char *str, size_t str_s, size_t str_cap)</td></tr>
-<tr class="memdesc:ab632a84026ec8724e293cd18c9500b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Centers the given string in-place and returns it @str - string to center @str_s - length of the string @str_cap - max length of the buffer.  <a href="util_8h.html#ab632a84026ec8724e293cd18c9500b5f">More...</a><br /></td></tr>
+<tr class="memdesc:ab632a84026ec8724e293cd18c9500b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Centers the given string in-place and returns it.  <a href="util_8h.html#ab632a84026ec8724e293cd18c9500b5f">More...</a><br /></td></tr>
 <tr class="separator:ab632a84026ec8724e293cd18c9500b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad58afc989224cc43ba38c48e5bde8b43"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad58afc989224cc43ba38c48e5bde8b43">strwrap</a> (char *<a class="el" href="gyro_8c.html#a290b2a1ece9be73f8f5d191c3d273b85">buffer</a>, size_t buffer_s, int width, char **array, int array_s)</td></tr>
 <tr class="memdesc:ad58afc989224cc43ba38c48e5bde8b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits the input string into an array of substrings, considering both the line width and '<br  />
@@ -468,7 +458,15 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Centers the given string in-place and returns it @str - string to center @str_s - length of the string @str_cap - max length of the buffer. </p>
+<p>Centers the given string in-place and returns it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>- string to center </td></tr>
+    <tr><td class="paramname">str_s</td><td>- length of the string </td></tr>
+    <tr><td class="paramname">str_cap</td><td>- max length of the buffer </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -518,7 +516,16 @@ Variables</h2></td></tr>
 
 <p>Splits the input string into an array of substrings, considering both the line width and '<br  />
 ' character. </p>
-<p>When the line is split due to the it's width, last word will be wrapped as whole. @buffer - input string to split @buffer_s - size of the buffer @width - maximum line width @array - array to store substrings. @array_s - size of the array</p>
+<p>When the line is split due to the it's width, last word will be wrapped as whole. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>- input string to split </td></tr>
+    <tr><td class="paramname">buffer_s</td><td>- size of the buffer </td></tr>
+    <tr><td class="paramname">width</td><td>- maximum line width </td></tr>
+    <tr><td class="paramname">array</td><td>- array to store substrings. </td></tr>
+    <tr><td class="paramname">array_s</td><td>- size of the array</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>- actual number of lines in the array, -1 when improper inputs are given.</dd></dl>
 <p>strwrap handles the string in place and affects the original string. Inserts "..." if the array size is exceeded </p>
 

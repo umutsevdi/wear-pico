@@ -95,11 +95,6 @@ $(document).ready(function(){initNavTree('dates_8c.html',''); initResizable(); }
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">wp_common/types.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="util_8h_source.html">wp_common/util.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for dates.c:</div>
-<div class="dyncontent">
-<div class="center"><img src="dates_8c__incl.png" border="0" usemap="#dates_8c" alt=""/></div>
-</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -215,7 +210,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Maps the fields of given string array to the date time. </p>
-<p>@dt - to assign @date_s - a string array that contains each field of the struct in a different string. char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]} </p><dl class="section return"><dt>Returns</dt><dd>- whether mapping failed or not </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dt</td><td>- to assign </td></tr>
+    <tr><td class="paramname">str_p</td><td>- a string array that contains each field of the struct in a different string. char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]} </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>- whether mapping failed or not </dd></dl>
 
 </div>
 </div>
@@ -315,11 +317,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="dates_8c_a732d874e9ec685deec45778f0feacbef_cgraph.png" border="0" usemap="#dates_8c_a732d874e9ec685deec45778f0feacbef_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -366,11 +363,6 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="dates_8c_a886a0af61d634d4f7e2efb35776351fc_cgraph.png" border="0" usemap="#dates_8c_a886a0af61d634d4f7e2efb35776351fc_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>

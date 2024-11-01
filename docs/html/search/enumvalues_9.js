@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['screen_5falarm_1265',['SCREEN_ALARM',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa8f4d2e99982aa870cfd4ab5347487763',1,'types.h']]],
-  ['screen_5fcalendar_1266',['SCREEN_CALENDAR',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa8117b84f43d42f7e2b60239c431be0ae',1,'types.h']]],
-  ['screen_5fchrono_1267',['SCREEN_CHRONO',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa1951f609756d26b6bfa27922adeba42f',1,'types.h']]],
-  ['screen_5fclock_1268',['SCREEN_CLOCK',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffad5380a22a439ac9f3c8778fb231dbe4a',1,'types.h']]],
-  ['screen_5flock_1269',['SCREEN_LOCK',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa57500da2f714cdaefb13833e96c7b465',1,'types.h']]],
-  ['screen_5flog_1270',['SCREEN_LOG',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa716ec7275350a532b21ebf8e9412d4f9',1,'types.h']]],
-  ['screen_5fmedia_1271',['SCREEN_MEDIA',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffadfe4f4d3707aab23e56bca8e784bed03',1,'types.h']]],
-  ['screen_5fmenu_1272',['SCREEN_MENU',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffaa384e8d7c0f417df6b5b64f547952d52',1,'types.h']]],
-  ['screen_5fnote_1273',['SCREEN_NOTE',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffa40afcf5aef37b166bc598388417ec4ab',1,'types.h']]],
-  ['screen_5fstep_1274',['SCREEN_STEP',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffaeb5ae1907618ed1c2459f434a5a46119',1,'types.h']]],
-  ['screen_5ft_5fsize_1275',['SCREEN_T_SIZE',['../types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ffaa520e01b319838510739863c8168522c',1,'types.h']]]
+  ['tray_5falarm_820',['TRAY_ALARM',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4ae0ed3bec6905ccd72663ec0851189845',1,'resources.h']]],
+  ['tray_5fbat_5fcharge_821',['TRAY_BAT_CHARGE',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a6a5179abce2e64efea41cbdbc4d7ab89',1,'resources.h']]],
+  ['tray_5fbat_5fcrit_822',['TRAY_BAT_CRIT',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a46ba3c64d65595d88752a8d7e163fc4c',1,'resources.h']]],
+  ['tray_5fbat_5fhigh_823',['TRAY_BAT_HIGH',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4aeedb7a6ccad1475a88b29675af2d54a3',1,'resources.h']]],
+  ['tray_5fbat_5flow_824',['TRAY_BAT_LOW',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a40b5373c682acc0e8389af9041d8d6b8',1,'resources.h']]],
+  ['tray_5fbat_5fmid_825',['TRAY_BAT_MID',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4af0698fc1887d0776dbf5c1df3086e4c5',1,'resources.h']]],
+  ['tray_5fbt_5foff_826',['TRAY_BT_OFF',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a8569079b3a7f7b338c5f7825a3eefe09',1,'resources.h']]],
+  ['tray_5fbt_5fon_827',['TRAY_BT_ON',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a8c560af145aaffb4fc9df91bdac1de26',1,'resources.h']]],
+  ['tray_5fchrono_828',['TRAY_CHRONO',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a2dd8fa414715ca54bcfbe38305424c79',1,'resources.h']]],
+  ['tray_5fnone_829',['TRAY_NONE',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a25b778f79651e62c2d359dd8ab822c82',1,'resources.h']]],
+  ['tray_5fnotify_830',['TRAY_NOTIFY',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4ad0c8374f76c169218a6c61ed5064392d',1,'resources.h']]],
+  ['tray_5ft_5fsize_831',['TRAY_T_SIZE',['../resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a4ff5388c5a1b757809f84f85c1e428f4',1,'resources.h']]]
 ];

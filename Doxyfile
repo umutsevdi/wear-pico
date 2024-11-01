@@ -10,6 +10,7 @@ OUTPUT_DIRECTORY       = docs/
 
 # Input directories
 INPUT                  = src/
+EXCLUDE                = src/waveshare
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
 JAVADOC_AUTOBRIEF      = YES
@@ -60,15 +61,15 @@ SHOW_INCLUDE_FILES     = YES
 CALL_GRAPH             = YES
 
 # Enable the dot tool for generating graphs
-HAVE_DOT               = YES
+HAVE_DOT               = NO
 DOT_GRAPH_MAX_NODES    = 50
-DOT_TRANSPARENT        = YES
-DOT_MULTI_TARGETS      = YES
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = NO
 
 OPTIMIZE_OUTPUT_FOR_C  = YES
 
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
-FULL_SIDEBAR           = YES
+FULL_SIDEBAR           = NO
 DISABLE_INDEX          = NO
 HTML_EXTRA_STYLESHEET  = misc/doxygen-awesome-css/doxygen-awesome.css \
                          .style.css

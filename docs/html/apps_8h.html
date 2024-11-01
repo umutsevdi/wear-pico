@@ -97,19 +97,9 @@ $(document).ready(function(){initNavTree('apps_8h.html',''); initResizable(); })
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="util_8h_source.html">wp_common/util.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="resources_8h_source.html">wp_res/resources.h</a>&quot;</code><br />
-<code>#include &lt;<a class="el" href="DEV__Config_8h_source.html">DEV_Config.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="LCD__1in28_8h_source.html">LCD_1in28.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="Touch__1in28_8h_source.html">Touch_1in28.h</a>&gt;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for apps.h:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h__incl.png" border="0" usemap="#apps_8h" alt=""/></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h__dep__incl.png" border="0" usemap="#apps_8hdep" alt=""/></div>
-</div>
+<code>#include &lt;DEV_Config.h&gt;</code><br />
+<code>#include &lt;LCD_1in28.h&gt;</code><br />
+<code>#include &lt;Touch_1in28.h&gt;</code><br />
 </div>
 <p><a href="apps_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -169,13 +159,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:aeb9a5f1ad6e54e82e33d46e47f9403e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">UI Utilities.  <a href="apps_8h.html#aeb9a5f1ad6e54e82e33d46e47f9403e5">More...</a><br /></td></tr>
 <tr class="separator:aeb9a5f1ad6e54e82e33d46e47f9403e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1abcbacc22cadcf3a2b3440c226db607"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#a1abcbacc22cadcf3a2b3440c226db607">apps_is_clicked</a> (int x_start, int y_start, int width, int height)</td></tr>
-<tr class="memdesc:a1abcbacc22cadcf3a2b3440c226db607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the selected area has been clicked @x_start - starting position x @y_start - starting position y @width - of the selection rectangle @height - of the selection rectangle.  <a href="apps_8h.html#a1abcbacc22cadcf3a2b3440c226db607">More...</a><br /></td></tr>
+<tr class="memdesc:a1abcbacc22cadcf3a2b3440c226db607"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the selected area has been clicked.  <a href="apps_8h.html#a1abcbacc22cadcf3a2b3440c226db607">More...</a><br /></td></tr>
 <tr class="separator:a1abcbacc22cadcf3a2b3440c226db607"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56bdcaf09de9faec22e4f26dd6fa6bb9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#a56bdcaf09de9faec22e4f26dd6fa6bb9">apps_is_clicked_d</a> (int <a class="el" href="display_8c.html#a608befb0ad0bb1cadfbd4dc63f18500c">x</a>, int <a class="el" href="display_8c.html#a3994642c0f11bbc5801e541ea7a4532a">y</a>, int x_start, int y_start, int width, int height)</td></tr>
-<tr class="memdesc:a56bdcaf09de9faec22e4f26dd6fa6bb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">apps_is_clicked with extra options @x - X position of the cursor @y - Y position of the cursor @x_start - starting position x @y_start - starting position y @width - of the selection rectangle @height - of the selection rectangle  <a href="apps_8h.html#a56bdcaf09de9faec22e4f26dd6fa6bb9">More...</a><br /></td></tr>
+<tr class="memdesc:a56bdcaf09de9faec22e4f26dd6fa6bb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">apps_is_clicked with extra options  <a href="apps_8h.html#a56bdcaf09de9faec22e4f26dd6fa6bb9">More...</a><br /></td></tr>
 <tr class="separator:a56bdcaf09de9faec22e4f26dd6fa6bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a329ee8032f9cc7781b49495819051695"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#a329ee8032f9cc7781b49495819051695">apps_post_process</a> (bool is_cb)</td></tr>
-<tr class="memdesc:a329ee8032f9cc7781b49495819051695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the status from various sources and draws to the buffer @is_cb - Whether this function is called by a callback.  <a href="apps_8h.html#a329ee8032f9cc7781b49495819051695">More...</a><br /></td></tr>
+<tr class="memdesc:a329ee8032f9cc7781b49495819051695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the status from various sources and draws to the buffer.  <a href="apps_8h.html#a329ee8032f9cc7781b49495819051695">More...</a><br /></td></tr>
 <tr class="separator:a329ee8032f9cc7781b49495819051695"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a95cc0c9891f8f50a4ce8ff57820f0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#a7a95cc0c9891f8f50a4ce8ff57820f0a">apps_draw</a> (<a class="el" href="structResource.html">Resource</a> res, int start_x, int start_y)</td></tr>
 <tr class="separator:a7a95cc0c9891f8f50a4ce8ff57820f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,7 +174,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ae0e0b39421fea8ca700d22ca1a2a3eeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#ae0e0b39421fea8ca700d22ca1a2a3eeb">apps_set_titlebar</a> (enum <a class="el" href="types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ff">screen_t</a> s_title, enum <a class="el" href="types_8h.html#a96a8e2637d39c0656a4349d5e33df401">popup_t</a> p_title)</td></tr>
 <tr class="separator:ae0e0b39421fea8ca700d22ca1a2a3eeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa913f70e04a02a5dfa81c8c91250d510"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="apps_8h.html#a9fd0ab11f2d9215e565bce65b37f3bcf">app_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="apps_8h.html#aa913f70e04a02a5dfa81c8c91250d510">apps_set_module</a> (enum <a class="el" href="types_8h.html#a2fa6ac6f012693cb9ef6c6b3b9ff98ff">screen_t</a> screen_type, enum <a class="el" href="types_8h.html#a96a8e2637d39c0656a4349d5e33df401">popup_t</a> popup_type, int touch_type)</td></tr>
-<tr class="memdesc:aa913f70e04a02a5dfa81c8c91250d510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the given module @screen_type - Type of the screen, if there is @popup_type - Type of the popup, if there is @touch_type - Touch type to set, either TOUCH_GESTURE or TOUCH_POINT.  <a href="apps_8h.html#aa913f70e04a02a5dfa81c8c91250d510">More...</a><br /></td></tr>
+<tr class="memdesc:aa913f70e04a02a5dfa81c8c91250d510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the given module.  <a href="apps_8h.html#aa913f70e04a02a5dfa81c8c91250d510">More...</a><br /></td></tr>
 <tr class="separator:aa913f70e04a02a5dfa81c8c91250d510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -348,11 +338,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_a7a95cc0c9891f8f50a4ce8ff57820f0a_cgraph.png" border="0" usemap="#apps_8h_a7a95cc0c9891f8f50a4ce8ff57820f0a_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -371,11 +356,6 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_a946217d0201484327805a23858c501c5_cgraph.png" border="0" usemap="#apps_8h_a946217d0201484327805a23858c501c5_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -417,12 +397,16 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Returns whether the selected area has been clicked @x_start - starting position x @y_start - starting position y @width - of the selection rectangle @height - of the selection rectangle. </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_a1abcbacc22cadcf3a2b3440c226db607_cgraph.png" border="0" usemap="#apps_8h_a1abcbacc22cadcf3a2b3440c226db607_cgraph" alt=""/></div>
-</div>
+<p>Returns whether the selected area has been clicked. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x_start</td><td>- starting position x </td></tr>
+    <tr><td class="paramname">y_start</td><td>- starting position y </td></tr>
+    <tr><td class="paramname">width</td><td>- of the selection rectangle </td></tr>
+    <tr><td class="paramname">height</td><td>- of the selection rectangle </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -476,7 +460,18 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>apps_is_clicked with extra options @x - X position of the cursor @y - Y position of the cursor @x_start - starting position x @y_start - starting position y @width - of the selection rectangle @height - of the selection rectangle </p>
+<p>apps_is_clicked with extra options </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>- X position of the cursor </td></tr>
+    <tr><td class="paramname">y</td><td>- Y position of the cursor </td></tr>
+    <tr><td class="paramname">x_start</td><td>- starting position x </td></tr>
+    <tr><td class="paramname">y_start</td><td>- starting position y </td></tr>
+    <tr><td class="paramname">width</td><td>- of the selection rectangle </td></tr>
+    <tr><td class="paramname">height</td><td>- of the selection rectangle </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -495,11 +490,6 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_aa284481cc7f5081845858da0d94b6d51_cgraph.png" border="0" usemap="#apps_8h_aa284481cc7f5081845858da0d94b6d51_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -542,12 +532,15 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>UI Utilities. </p>
-<p>Draws the given <a class="el" href="structDateTime.html" title="Represents any date or time with optional fields.">DateTime</a> to the position. @dt - to draw. @base_x - starting position x @base_y - starting position y @show_sec - whether to reduce the font size and include seconds </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_aeb9a5f1ad6e54e82e33d46e47f9403e5_cgraph.png" border="0" usemap="#apps_8h_aeb9a5f1ad6e54e82e33d46e47f9403e5_cgraph" alt=""/></div>
-</div>
+<p>Draws the given <a class="el" href="structDateTime.html" title="Represents any date or time with optional fields.">DateTime</a> to the position. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dt</td><td>- to draw. </td></tr>
+    <tr><td class="paramname">base_x</td><td>- starting position x </td></tr>
+    <tr><td class="paramname">base_y</td><td>- starting position y </td></tr>
+    <tr><td class="paramname">show_sec</td><td>- whether to reduce the font size and include seconds </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -568,7 +561,12 @@ Here is the call graph for this function:</div>
 
 <p>Checks for new pop-up events. </p>
 <p>If there is one loads it as pop-up.</p>
-<p>@current - Current pop-up type, POPUP_NONE if the current screen is not a pop-up.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">current</td><td>- Current pop-up type, POPUP_NONE if the current screen is not a pop-up.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>the app_status_t of the loaded pop-up if a pop-up is loaded.</li>
 <li>APP_NO_POPUP - When there is no pop-up event to display</li>
@@ -576,11 +574,6 @@ Here is the call graph for this function:</div>
 </ul>
 </dd></dl>
 <p>Pop-ups have priority. If higher priority pop-up is active it will not change POPUP_CALL &gt; POPUP_ALARM &gt; POPUP_NOTIFY If higher priority pop-up is active it will not change </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_ac7a73b284d976fb2cad1ef6a2c7a55c0_cgraph.png" border="0" usemap="#apps_8h_ac7a73b284d976fb2cad1ef6a2c7a55c0_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -600,12 +593,13 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieves the status from various sources and draws to the buffer @is_cb - Whether this function is called by a callback. </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_a329ee8032f9cc7781b49495819051695_cgraph.png" border="0" usemap="#apps_8h_a329ee8032f9cc7781b49495819051695_cgraph" alt=""/></div>
-</div>
+<p>Retrieves the status from various sources and draws to the buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">is_cb</td><td>- Whether this function is called by a callback </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -623,11 +617,6 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_a943f1471b13bd65becbf3af2c02c4a82_cgraph.png" border="0" usemap="#apps_8h_a943f1471b13bd65becbf3af2c02c4a82_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -663,13 +652,16 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Initializes the given module @screen_type - Type of the screen, if there is @popup_type - Type of the popup, if there is @touch_type - Touch type to set, either TOUCH_GESTURE or TOUCH_POINT. </p>
+<p>Initializes the given module. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">screen_type</td><td>- Type of the screen, if there is </td></tr>
+    <tr><td class="paramname">popup_type</td><td>- Type of the popup, if there is </td></tr>
+    <tr><td class="paramname">touch_type</td><td>- Touch type to set, either TOUCH_GESTURE or TOUCH_POINT </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>- APP_OK if configuration is successful, APP_WARN_TOUCH_FAILED on failure </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_aa913f70e04a02a5dfa81c8c91250d510_cgraph.png" border="0" usemap="#apps_8h_aa913f70e04a02a5dfa81c8c91250d510_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -698,11 +690,6 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="apps_8h_ae0e0b39421fea8ca700d22ca1a2a3eeb_cgraph.png" border="0" usemap="#apps_8h_ae0e0b39421fea8ca700d22ca1a2a3eeb_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>

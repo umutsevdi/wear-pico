@@ -70,7 +70,7 @@ extern Display screen;
 /**
  * Checks for new pop-up events. If there is one loads it as pop-up.
  *
- * @current - Current pop-up type, POPUP_NONE if the current screen is not a
+ * @param current - Current pop-up type, POPUP_NONE if the current screen is not a
  * pop-up.
  *
  * @returns
@@ -90,30 +90,30 @@ enum app_status_t apps_poll_popup();
 
 /**
  * Draws the given DateTime to the position.
- * @dt       - to draw.
- * @base_x   - starting position x
- * @base_y   - starting position y
- * @show_sec - whether to reduce the font size and include seconds
+ * @param dt       - to draw.
+ * @param base_x   - starting position x
+ * @param base_y   - starting position y
+ * @param show_sec - whether to reduce the font size and include seconds
  */
 void apps_paint_time(DateTime* dt, int base_x, int base_y, bool show_sec);
 
 /**
  * Returns whether the selected area has been clicked
- * @x_start - starting position x
- * @y_start - starting position y
- * @width   -  of the selection rectangle
- * @height  - of the selection rectangle
+ * @param x_start - starting position x
+ * @param y_start - starting position y
+ * @param width   -  of the selection rectangle
+ * @param height  - of the selection rectangle
  */
 bool apps_is_clicked(int x_start, int y_start, int width, int height);
 
 /**
  * apps_is_clicked with extra options
- * @x - X position of the cursor
- * @y - Y position of the cursor
- * @x_start - starting position x
- * @y_start - starting position y
- * @width   -  of the selection rectangle
- * @height  - of the selection rectangle
+ * @param x - X position of the cursor
+ * @param y - Y position of the cursor
+ * @param x_start - starting position x
+ * @param y_start - starting position y
+ * @param width   -  of the selection rectangle
+ * @param height  - of the selection rectangle
  */
 bool apps_is_clicked_d(int x, int y, int x_start, int y_start, int width,
                        int height);
@@ -122,7 +122,7 @@ bool apps_is_clicked_d(int x, int y, int x_start, int y_start, int width,
 
 /**
  * Retrieves the status from various sources and draws to the buffer
- * @is_cb - Whether this function is called by a callback
+ * @param is_cb - Whether this function is called by a callback
  */
 void apps_post_process(bool is_cb);
 
@@ -135,8 +135,8 @@ void apps_reset();
 /* Inserts the titlebar of the application if the states don't match
  * - If p_title is set to anything other than POPUP_NONE, it will
  * overwrite the screen value
- * @s_title - Title of the screen
- * @p_title - Title of the pop-up, if any
+ * @param s_title - Title of the screen
+ * @param p_title - Title of the pop-up, if any
  *
  * @returns - Whether titlebar is inserted or not
  */
@@ -144,10 +144,10 @@ bool apps_set_titlebar(enum screen_t s_title, enum popup_t p_title);
 
 /**
  * Initializes the given module
- * @screen_type - Type of the screen, if there is
- * @popup_type - Type of the popup, if there is
- * @touch_type - Touch type to set, either TOUCH_GESTURE or TOUCH_POINT
- * @return - APP_OK if configuration is successful, APP_WARN_TOUCH_FAILED on
+ * @param screen_type - Type of the screen, if there is
+ * @param popup_type - Type of the popup, if there is
+ * @param touch_type - Touch type to set, either TOUCH_GESTURE or TOUCH_POINT
+ * @returns - APP_OK if configuration is successful, APP_WARN_TOUCH_FAILED on
  * failure
  */
 enum app_status_t apps_set_module(enum screen_t screen_type,

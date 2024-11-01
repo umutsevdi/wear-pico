@@ -1,12 +1,9 @@
 var annotated_dup =
 [
     [ "__BT_FD", "struct____BT__FD.html", "struct____BT__FD" ],
-    [ "_tFont", "struct__tFont.html", "struct__tFont" ],
     [ "Alarm", "structAlarm.html", "structAlarm" ],
     [ "AlarmList", "structAlarmList.html", "structAlarmList" ],
     [ "BatteryData", "structBatteryData.html", "structBatteryData" ],
-    [ "cFONT", "structcFONT.html", "structcFONT" ],
-    [ "CH_CN", "structCH__CN.html", "structCH__CN" ],
     [ "ChronoData", "structChronoData.html", "structChronoData" ],
     [ "ConfigData", "structConfigData.html", "structConfigData" ],
     [ "DateTime", "structDateTime.html", "structDateTime" ],
@@ -15,13 +12,9 @@ var annotated_dup =
     [ "EventList", "structEventList.html", "structEventList" ],
     [ "GlobalState", "structGlobalState.html", "structGlobalState" ],
     [ "GyroData", "structGyroData.html", "structGyroData" ],
-    [ "LCD_1IN28_ATTRIBUTES", "structLCD__1IN28__ATTRIBUTES.html", "structLCD__1IN28__ATTRIBUTES" ],
     [ "MediaData", "structMediaData.html", "structMediaData" ],
-    [ "PAINT", "structPAINT.html", "structPAINT" ],
-    [ "PAINT_TIME", "structPAINT__TIME.html", "structPAINT__TIME" ],
     [ "Popup", "structPopup.html", "structPopup" ],
     [ "PopupValue", "unionPopupValue.html", "unionPopupValue" ],
     [ "Resource", "structResource.html", "structResource" ],
-    [ "String", "structString.html", "structString" ],
-    [ "Touch_1IN28_XY", "structTouch__1IN28__XY.html", "structTouch__1IN28__XY" ]
+    [ "String", "structString.html", "structString" ]
 ];

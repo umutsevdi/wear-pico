@@ -70,6 +70,5 @@ var searchData=
   ['_5fstep_5fcount_5fcb_67',['_step_count_cb',['../gyro_8c.html#ac50792f477b3bb3a7178bff9664627a1',1,'gyro.c']]],
   ['_5fstep_5fdisplay_68',['_step_display',['../pedometer_8c.html#a310c451714f3112b24323bdc54639798',1,'pedometer.c']]],
   ['_5fstr_5fto_5falarm_69',['_str_to_alarm',['../parser_8c.html#a01e2aa8dcc4c78aaf95aa186d4917a84',1,'parser.c']]],
-  ['_5ftfont_70',['_tFont',['../struct__tFont.html',1,'']]],
-  ['_5ftouch_5fcb_71',['_touch_cb',['../display_8c.html#a1f2623b77b8cdb1fddc30f44105ab782',1,'display.c']]]
+  ['_5ftouch_5fcb_70',['_touch_cb',['../display_8c.html#a1f2623b77b8cdb1fddc30f44105ab782',1,'display.c']]]
 ];

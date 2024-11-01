@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['notepad_5fcolor_5fblue_1254',['NOTEPAD_COLOR_BLUE',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9a859b6aab03e3885b84ed1e4b66dfdcf1',1,'notepad.c']]],
-  ['notepad_5fcolor_5fgreen_1255',['NOTEPAD_COLOR_GREEN',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9ab7bebc944462059e6e382a3485efbff9',1,'notepad.c']]],
-  ['notepad_5fcolor_5fnone_1256',['NOTEPAD_COLOR_NONE',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9ab4d66650c9c6cd31a5a3e87baea545b6',1,'notepad.c']]],
-  ['notepad_5fcolor_5fred_1257',['NOTEPAD_COLOR_RED',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9a002c498a319cb22aaf0c3db6e0368bb3',1,'notepad.c']]],
-  ['notepad_5fcolor_5fwhite_1258',['NOTEPAD_COLOR_WHITE',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9a553d32733743cfa2a9e8e65356b95d2d',1,'notepad.c']]]
+  ['popup_5falarm_803',['POPUP_ALARM',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401af6b86812158650467b95f617a2abc957',1,'types.h']]],
+  ['popup_5fcall_804',['POPUP_CALL',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401a08db3507101ca0734957155323166082',1,'types.h']]],
+  ['popup_5fnone_805',['POPUP_NONE',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401a7a9536a77db43def3bb3414259612428',1,'types.h']]],
+  ['popup_5fnotify_806',['POPUP_NOTIFY',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401aaf78130e183f6139b9ab0b86bd256646',1,'types.h']]],
+  ['popup_5freminder_807',['POPUP_REMINDER',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401a227d327b481277321f8e7999f934e7a4',1,'types.h']]],
+  ['popup_5ft_5fsize_808',['POPUP_T_SIZE',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401a26dde19b5f60cc28b1f048d5fba35d26',1,'types.h']]]
 ];

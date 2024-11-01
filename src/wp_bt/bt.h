@@ -78,8 +78,8 @@ bool bt_is_writable();
 
 /**
  * Parses and handles the incoming request.
- * @str - string to parse
- * @str_s - size of the string
+ * @param str - string to parse
+ * @param str_s - size of the string
  * @returns - error code
  */
 enum bt_fmt_t bt_handle_req(char* str, size_t str_s);

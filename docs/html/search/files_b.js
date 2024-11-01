@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['resources_2ec_786',['resources.c',['../resources_8c.html',1,'']]],
-  ['resources_2eh_787',['resources.h',['../resources_8h.html',1,'']]]
+  ['titlebar_2ec_486',['titlebar.c',['../titlebar_8c.html',1,'']]],
+  ['tray_2ec_487',['tray.c',['../tray_8c.html',1,'']]],
+  ['types_2eh_488',['types.h',['../types_8h.html',1,'']]]
 ];

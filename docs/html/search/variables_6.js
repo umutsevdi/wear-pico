@@ -1,21 +1,7 @@
 var searchData=
 [
-  ['flag_1032',['flag',['../structDateTime.html#ac4815179af76761c26f0e2dfb2b89943',1,'DateTime::flag()'],['../LCD__1in28__test_8c.html#ad5c7d653212de1cbb3c78a93c2dadbdb',1,'flag():&#160;LCD_1in28_test.c'],['../display_8c.html#ad5c7d653212de1cbb3c78a93c2dadbdb',1,'flag():&#160;display.c']]],
-  ['flgh_1033',['flgh',['../LCD__1in28__test_8c.html#aad2328d0595a97f50d85dfa615f84f0e',1,'flgh():&#160;LCD_1in28_test.c'],['../display_8c.html#aad2328d0595a97f50d85dfa615f84f0e',1,'flgh():&#160;display.c']]],
-  ['font12_1034',['Font12',['../font12_8c.html#ac369d1d5a8cf0cc76067d72d80c45b3f',1,'Font12():&#160;font12.c'],['../fonts_8h.html#ac369d1d5a8cf0cc76067d72d80c45b3f',1,'Font12():&#160;font12.c']]],
-  ['font12_5ftable_1035',['Font12_Table',['../font12_8c.html#aab9b2d0d16e50bf5d7fb15567913f983',1,'font12.c']]],
-  ['font12cn_1036',['Font12CN',['../font12CN_8c.html#aaf278f02761363365b53e2833bf58c35',1,'Font12CN():&#160;font12CN.c'],['../fonts_8h.html#aaf278f02761363365b53e2833bf58c35',1,'Font12CN():&#160;font12CN.c']]],
-  ['font12cn_5ftable_1037',['Font12CN_Table',['../font12CN_8c.html#ad3b772bec4cc3bc57a7327b5bafff322',1,'font12CN.c']]],
-  ['font16_1038',['Font16',['../font16_8c.html#a6e3acebbb756126bbf38728c3a3f4951',1,'Font16():&#160;font16.c'],['../fonts_8h.html#a6e3acebbb756126bbf38728c3a3f4951',1,'Font16():&#160;font16.c']]],
-  ['font16_5ftable_1039',['Font16_Table',['../font16_8c.html#aca1a37c0ce9891d1d2add9ff5c9e587d',1,'font16.c']]],
-  ['font20_1040',['Font20',['../font20_8c.html#ab95a07aadc819b5b483828cbdd33e315',1,'Font20():&#160;font20.c'],['../fonts_8h.html#ab95a07aadc819b5b483828cbdd33e315',1,'Font20():&#160;font20.c']]],
-  ['font20_5ftable_1041',['Font20_Table',['../font20_8c.html#ad136547f63892f58c17f3900b92544e2',1,'font20.c']]],
-  ['font24_1042',['Font24',['../font24_8c.html#a1eb5eae2e7cf12cfff1d32a14913d4cc',1,'Font24():&#160;font24.c'],['../fonts_8h.html#a1eb5eae2e7cf12cfff1d32a14913d4cc',1,'Font24():&#160;font24.c']]],
-  ['font24_5ftable_1043',['Font24_Table',['../font24_8c.html#a57a65cbe042d8b895c4c130196303e94',1,'font24.c']]],
-  ['font24cn_1044',['Font24CN',['../font24CN_8c.html#a89196b971459cde3dbc89452c864394e',1,'Font24CN():&#160;font24CN.c'],['../fonts_8h.html#a89196b971459cde3dbc89452c864394e',1,'Font24CN():&#160;font24CN.c']]],
-  ['font24cn_5ftable_1045',['Font24CN_Table',['../font24CN_8c.html#aa792af3bbd9c5809870e21a03eff4a19',1,'font24CN.c']]],
-  ['font40_1046',['font40',['../resources_8h.html#ac77a7a0f1c4e208d4831bfcbaf23d9fc',1,'font40():&#160;font40.c'],['../font40_8c.html#ac77a7a0f1c4e208d4831bfcbaf23d9fc',1,'font40():&#160;font40.c']]],
-  ['font60_1047',['font60',['../resources_8h.html#a184e3183f60cc774b5e613ca3dd8d27d',1,'font60():&#160;font60.c'],['../font60_8c.html#a184e3183f60cc774b5e613ca3dd8d27d',1,'font60():&#160;font60.c']]],
-  ['font8_1048',['Font8',['../font8_8c.html#a76f217521df3c667d701ce0341d85b44',1,'Font8():&#160;font8.c'],['../fonts_8h.html#a76f217521df3c667d701ce0341d85b44',1,'Font8():&#160;font8.c']]],
-  ['font8_5ftable_1049',['Font8_Table',['../font8_8c.html#af9bbd624ada9709278554153b6bbbac8',1,'font8.c']]]
+  ['flag_649',['flag',['../structDateTime.html#ac4815179af76761c26f0e2dfb2b89943',1,'DateTime::flag()'],['../display_8c.html#ad5c7d653212de1cbb3c78a93c2dadbdb',1,'flag():&#160;display.c']]],
+  ['flgh_650',['flgh',['../display_8c.html#aad2328d0595a97f50d85dfa615f84f0e',1,'display.c']]],
+  ['font40_651',['font40',['../resources_8h.html#ac77a7a0f1c4e208d4831bfcbaf23d9fc',1,'font40():&#160;font40.c'],['../font40_8c.html#ac77a7a0f1c4e208d4831bfcbaf23d9fc',1,'font40():&#160;font40.c']]],
+  ['font60_652',['font60',['../resources_8h.html#a184e3183f60cc774b5e613ca3dd8d27d',1,'font60():&#160;font60.c'],['../font60_8c.html#a184e3183f60cc774b5e613ca3dd8d27d',1,'font60():&#160;font60.c']]]
 ];

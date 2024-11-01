@@ -5,10 +5,10 @@
 /**
  * Parses and splits the incoming request into tokens up to the size of the
  * given array's size. Updates the size to match the actual number of tokens.
- * @str - incoming data
- * @str_s - size of the data
- * @arr - array to insert into
- * @array_s - size of the array
+ * @param str - incoming data
+ * @param str_s - size of the data
+ * @param arr - array to insert into
+ * @param arr_s - array size to update
  * @returns - error code
  */
 static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
@@ -36,8 +36,8 @@ static enum bt_fmt_t _req_decode(char* str, size_t str_s, String* arr,
 
 /**
  * Parses and validates the incoming request. Sets the request type,
- * @arr - array of tokens
- * @req - request to set
+ * @param arr - array of tokens
+ * @param req - request to set
  * @returns - error code
  */
 static enum bt_fmt_t _req_parse(String* arr, enum bt_req_t* req)
@@ -64,9 +64,9 @@ static enum bt_fmt_t _handle_config(String* str, int str_s);
 
 /**
  * Executes the function corresponding to the request type
- * @arr - array of tokens
- * @arr_s - size of the array
- * @req - request type to select
+ * @param arr - array of tokens
+ * @param arr_s - size of the array
+ * @param request_type - request type to select
  * @returns - error code
  */
 static enum bt_fmt_t _req_route(String* arr, int arr_s,

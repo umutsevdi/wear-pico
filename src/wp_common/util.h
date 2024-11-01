@@ -56,9 +56,9 @@ extern char LOG_BUFFER[LOG_BUFFER_S];
 
 /**
  * Centers the given string in-place and returns it
- * @str - string to center
- * @str_s - length of the string
- * @str_cap - max length of the buffer
+ * @param str - string to center
+ * @param str_s - length of the string
+ * @param str_cap - max length of the buffer
  */
 const char* strcenter(char* str, size_t str_s, size_t str_cap);
 /**
@@ -66,13 +66,13 @@ const char* strcenter(char* str, size_t str_s, size_t str_cap);
  * line width and '\n' character.
  * When the line is split due to the it's width, last word will be wrapped as
  * whole.
- * @buffer   - input string to split
- * @buffer_s - size of the buffer
- * @width    - maximum line width
- * @array    - array to store substrings.
- * @array_s  - size of the array
+ * @param buffer   - input string to split
+ * @param buffer_s - size of the buffer
+ * @param width    - maximum line width
+ * @param array    - array to store substrings.
+ * @param array_s  - size of the array
  *
- * @return   - actual number of lines in the array, -1 when improper inputs are given.
+ * @returns   - actual number of lines in the array, -1 when improper inputs are given.
  *
  * strwrap handles the string in place and affects the original string.
  * Inserts "..." if the array size is exceeded

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['horizontal_1364',['HORIZONTAL',['../LCD__1in28_8h.html#a583cfe7670aa69f02d684bb5c5d3799e',1,'LCD_1in28.h']]]
+  ['log_5fbuffer_5fs_860',['LOG_BUFFER_S',['../util_8h.html#a21e2ef7d1a74086718961ef004a884c7',1,'util.h']]]
 ];

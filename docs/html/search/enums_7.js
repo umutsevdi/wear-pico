@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['notepad_5fcolor_5ft_1155',['notepad_color_t',['../wp__apps_2src_2notepad_8c.html#ab7079eae789d4c1747d0930dccb82bc9',1,'notepad.c']]]
+  ['popup_5ft_719',['popup_t',['../types_8h.html#a96a8e2637d39c0656a4349d5e33df401',1,'types.h']]]
 ];

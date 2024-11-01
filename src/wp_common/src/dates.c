@@ -17,11 +17,11 @@ enum IDX {
 static int16_t _dt_wildcard(const char* b);
 /**
  * Maps the fields of given string array to the date time.
- * @dt - to assign
- * @date_s - a string array that contains each field of the struct in a
+ * @param dt - to assign
+ * @param str_p - a string array that contains each field of the struct in a
  * different string.
  * char[6]{year[5], month[3], day[3], hour[3], minute[3], second[3]}
- * @return - whether mapping failed or not
+ * @returns - whether mapping failed or not
  */
 static bool _dt_map(DateTime* dt, char** str_p);
 

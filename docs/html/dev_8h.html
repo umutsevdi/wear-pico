@@ -94,16 +94,6 @@ $(document).ready(function(){initNavTree('dev_8h.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="util_8h_source.html">wp_common/util.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for dev.h:</div>
-<div class="dyncontent">
-<div class="center"><img src="dev_8h__incl.png" border="0" usemap="#dev_8h" alt=""/></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="dev_8h__dep__incl.png" border="0" usemap="#dev_8hdep" alt=""/></div>
-</div>
 </div>
 <p><a href="dev_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -228,13 +218,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Create a notification effect with desired GPIOs for 360ms. </p>
-<p>@count - number of repeat @flag - Which GPIOs to trigger.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td>- number of repeat </td></tr>
+    <tr><td class="paramname">flag</td><td>- Which GPIOs to trigger.</td></tr>
+  </table>
+  </dd>
+</dl>
 <p>Example: os_dev_notify(2, DEV_BUZZER | DEV_LED); </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="dev_8h_af6860e394b7a752a17d4768b1b5d6660_cgraph.png" border="0" usemap="#dev_8h_af6860e394b7a752a17d4768b1b5d6660_cgraph" alt=""/></div>
-</div>
 
 </div>
 </div>
@@ -277,12 +268,15 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>os_dev_notify with custom notification durations. </p>
-<p>@in_ms - Active duration of the selected GPIOs @out_ms - Passive duration of the selected GPIOs </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="dev_8h_a90b537677333beca80545c0282e1e370_cgraph.png" border="0" usemap="#dev_8h_a90b537677333beca80545c0282e1e370_cgraph" alt=""/></div>
-</div>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">count</td><td>- number of repeat </td></tr>
+    <tr><td class="paramname">flag</td><td>- Which GPIOs to trigger. </td></tr>
+    <tr><td class="paramname">in_ms</td><td>- Active duration of the selected GPIOs </td></tr>
+    <tr><td class="paramname">out_ms</td><td>- Passive duration of the selected GPIOs </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

@@ -2,11 +2,11 @@
 
 /**
  * Returns a reference to the index in the given resource. 
- * @idx - index of the image
- * @res - Resource to partition
- * @w - width of the image reference
- * @h - width of the image reference
- * @return a new reference
+ * @param idx - index of the image
+ * @param res - Resource to partition
+ * @param w - width of the image reference
+ * @param h - width of the image reference
+ * @returns a new reference
  */
 
 static inline Resource _get_sprite(int idx, const unsigned char* res,

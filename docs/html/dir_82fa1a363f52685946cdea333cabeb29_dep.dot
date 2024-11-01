@@ -1,0 +1,12 @@
+digraph "examples" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_ece66fc2df8e517e732af5ec1cd20206 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="waveshare" fontname="Helvetica", fontsize="10", URL="dir_ece66fc2df8e517e732af5ec1cd20206.html"]
+  dir_82fa1a363f52685946cdea333cabeb29 [shape=box, label="examples", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_82fa1a363f52685946cdea333cabeb29.html"];
+  }
+  dir_e59babc21581178d9975f6bbe4eb6a10 [shape=box label="lib" color="red" URL="dir_e59babc21581178d9975f6bbe4eb6a10.html"];
+  dir_82fa1a363f52685946cdea333cabeb29->dir_e59babc21581178d9975f6bbe4eb6a10 [headlabel="5", labeldistance=1.5 headhref="dir_000016_000010.html"];
+}

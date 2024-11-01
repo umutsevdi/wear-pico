@@ -1,0 +1,16 @@
+digraph "wp_res" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_68267d1309a1af8e8297ef4c3efbcdba {
+    graph [ bgcolor="#ddddee", pencolor="black", label="src" fontname="Helvetica", fontsize="10", URL="dir_68267d1309a1af8e8297ef4c3efbcdba.html"]
+  subgraph clusterdir_0de5c10fa9cbe090c1c5fd9cd3c210ec {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_0de5c10fa9cbe090c1c5fd9cd3c210ec.html"];
+    dir_0de5c10fa9cbe090c1c5fd9cd3c210ec [shape=plaintext label="wp_res"];
+    dir_cbfa09895c3f3b9834dba46a253ffcd5 [shape=box label="src" color="black" fillcolor="white" style="filled" URL="dir_cbfa09895c3f3b9834dba46a253ffcd5.html"];
+  }
+  }
+  dir_28711c213e476afb71f97a322fc62cbb [shape=box label="wp_common" color="red" URL="dir_28711c213e476afb71f97a322fc62cbb.html"];
+  dir_0de5c10fa9cbe090c1c5fd9cd3c210ec->dir_28711c213e476afb71f97a322fc62cbb [headlabel="1", labeldistance=1.5 headhref="dir_000003_000007.html"];
+}

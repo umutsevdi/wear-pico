@@ -22,12 +22,36 @@ for the JavaScript code in this file
 */
 var NAVTREE =
 [
-  [ "WearPico", "index.html", ]
+  [ "WearPico", "index.html", [
+    [ "Data Structures", "annotated.html", [
+      [ "Data Structures", "annotated.html", "annotated_dup" ],
+      [ "Data Structure Index", "classes.html", null ],
+      [ "Data Fields", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Variables", "functions_vars.html", null ]
+      ] ]
+    ] ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ],
+      [ "Globals", "globals.html", [
+        [ "All", "globals.html", "globals_dup" ],
+        [ "Functions", "globals_func.html", "globals_func" ],
+        [ "Variables", "globals_vars.html", null ],
+        [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
+        [ "Macros", "globals_defs.html", null ]
+      ] ]
+    ] ]
+  ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"index.html"
+"DEV__Config_8c.html",
+"Touch__1in28_8h.html#a15dc4531bb6124d6f301bf74557adbfa",
+"fonts_8h.html",
+"structGlobalState.html#a0773946e2bd35da3e962e4f7bc9d8270"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

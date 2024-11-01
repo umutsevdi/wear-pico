@@ -1,0 +1,15 @@
+digraph "LCD" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_e59babc21581178d9975f6bbe4eb6a10 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="lib" fontname="Helvetica", fontsize="10", URL="dir_e59babc21581178d9975f6bbe4eb6a10.html"]
+  dir_efd3a05cfa71c6e4a79c9e19a79bc5c2 [shape=box, label="LCD", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_efd3a05cfa71c6e4a79c9e19a79bc5c2.html"];
+  }
+  dir_56191ed532506d7cebb7eb672d9237e2 [shape=box label="GUI" URL="dir_56191ed532506d7cebb7eb672d9237e2.html"];
+  dir_5003af704b1bffd9cd233c44d0d76b79 [shape=box label="Config" URL="dir_5003af704b1bffd9cd233c44d0d76b79.html"];
+  dir_efd3a05cfa71c6e4a79c9e19a79bc5c2->dir_56191ed532506d7cebb7eb672d9237e2 [headlabel="1", labeldistance=1.5 headhref="dir_000017_000015.html"];
+  dir_efd3a05cfa71c6e4a79c9e19a79bc5c2->dir_5003af704b1bffd9cd233c44d0d76b79 [headlabel="3", labeldistance=1.5 headhref="dir_000017_000011.html"];
+  dir_56191ed532506d7cebb7eb672d9237e2->dir_5003af704b1bffd9cd233c44d0d76b79 [headlabel="3", labeldistance=1.5 headhref="dir_000015_000011.html"];
+}

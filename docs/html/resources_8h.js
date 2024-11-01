@@ -1,0 +1,46 @@
+var resources_8h =
+[
+    [ "Resource", "structResource.html", "structResource" ],
+    [ "COLOR_BG", "resources_8h.html#a739625a2e78aa663e5d91048f8cd3b59", null ],
+    [ "COLOR_FG", "resources_8h.html#a51d92db8458c4f5a667ba42cd7edb6da", null ],
+    [ "res_C", "resources_8h.html#a6b0d9bdf8e619f2253f086d8955a879b", null ],
+    [ "SCREEN_C", "resources_8h.html#a9d3899bf61f21a5dc4ebd90bb19b164b", null ],
+    [ "TRAY_C", "resources_8h.html#a257c7860fe035b62d9893581940c3872", null ],
+    [ "WATCH_HEIGHT", "resources_8h.html#a8e1b9c10acb33490c1371ddca8c5765d", null ],
+    [ "WATCH_WIDTH", "resources_8h.html#af9e284153854ec3d1ecb666541cbcc71", null ],
+    [ "gest_dir_t", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01", [
+      [ "GEST_DIR_L", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01a6d626a40639f95b98a159eb5d02f73d4", null ],
+      [ "GEST_DIR_D", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01a0b338954292ded6703cc158c79364e08", null ],
+      [ "GEST_DIR_U", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01a2d3c82a81abf97e63e68e7bebdb9f31d", null ],
+      [ "GEST_DIR_R", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01adb87fb71ee07470f626a24b116372c15", null ],
+      [ "GEST_DIR_T_SIZE", "resources_8h.html#a58008ba7d6a8534d892d3f32beb9bd01ac3cb4116bb8146812b8db606a78e6571", null ]
+    ] ],
+    [ "tray_t", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4", [
+      [ "TRAY_NONE", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a25b778f79651e62c2d359dd8ab822c82", null ],
+      [ "TRAY_BT_ON", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a8c560af145aaffb4fc9df91bdac1de26", null ],
+      [ "TRAY_BT_OFF", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a8569079b3a7f7b338c5f7825a3eefe09", null ],
+      [ "TRAY_CHRONO", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a2dd8fa414715ca54bcfbe38305424c79", null ],
+      [ "TRAY_NOTIFY", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4ad0c8374f76c169218a6c61ed5064392d", null ],
+      [ "TRAY_ALARM", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4ae0ed3bec6905ccd72663ec0851189845", null ],
+      [ "TRAY_BAT_CHARGE", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a6a5179abce2e64efea41cbdbc4d7ab89", null ],
+      [ "TRAY_BAT_HIGH", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4aeedb7a6ccad1475a88b29675af2d54a3", null ],
+      [ "TRAY_BAT_MID", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4af0698fc1887d0776dbf5c1df3086e4c5", null ],
+      [ "TRAY_BAT_LOW", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a40b5373c682acc0e8389af9041d8d6b8", null ],
+      [ "TRAY_BAT_CRIT", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a46ba3c64d65595d88752a8d7e163fc4c", null ],
+      [ "TRAY_T_SIZE", "resources_8h.html#aaab7ea00e3a54b84a8fd936fa9ad7eb4a4ff5388c5a1b757809f84f85c1e428f4", null ]
+    ] ],
+    [ "res_get_app_alarm_button", "resources_8h.html#afcc413f09f85ead4f854c4326faaa7d6", null ],
+    [ "res_get_app_chrono_button", "resources_8h.html#a48a24cacd57b8d491b572338253ea85b", null ],
+    [ "res_get_app_media_button", "resources_8h.html#ae1c0b7e332c23923a3223aef9b3bd4a9", null ],
+    [ "res_get_app_notepad", "resources_8h.html#a9cae4d01241ae5583b3f9483d9da5306", null ],
+    [ "res_get_app_step", "resources_8h.html#a925ab0080593db41013fe9695e6cb49b", null ],
+    [ "res_get_direction", "resources_8h.html#a95003dd98836fc5519af367c1cf611ee", null ],
+    [ "res_get_menu_screen", "resources_8h.html#a27474099ff16cb24db77190a97123dd5", null ],
+    [ "res_get_popup_alarm", "resources_8h.html#a736f0db7ca66b0ac8d5deb4b2f1a0a30", null ],
+    [ "res_get_popup_call", "resources_8h.html#ab75724d6569c8e937160b6825f7534b3", null ],
+    [ "res_get_popup_notify", "resources_8h.html#a2db2d5009288e921cfbec3541fca5fad", null ],
+    [ "res_get_titlebar", "resources_8h.html#af520fc94bba7de9ec8e5b73e15039106", null ],
+    [ "res_get_tray", "resources_8h.html#a96f0bcacffc0881a1a7bd6666fa7d60f", null ],
+    [ "font40", "resources_8h.html#ac77a7a0f1c4e208d4831bfcbaf23d9fc", null ],
+    [ "font60", "resources_8h.html#a184e3183f60cc774b5e613ca3dd8d27d", null ]
+];

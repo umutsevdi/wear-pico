@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['black_1303',['BLACK',['../GUI__Paint_8h.html#a7b3b25cba33b07c303f3060fe41887f6',1,'GUI_Paint.h']]],
+  ['blue_1304',['BLUE',['../GUI__Paint_8h.html#a79d10e672abb49ad63eeaa8aaef57c38',1,'GUI_Paint.h']]],
+  ['bpc0h_1305',['BPC0H',['../Touch__1in28_8h.html#a65325501d9ac4fa3d20d8658cf578843',1,'Touch_1in28.h']]],
+  ['bpc0l_1306',['BPC0L',['../Touch__1in28_8h.html#a1f2e677a5108ffdc26ff7ed48121fb0f',1,'Touch_1in28.h']]],
+  ['bpc1h_1307',['BPC1H',['../Touch__1in28_8h.html#a89d3c8fcebd719a8291fe0b034353cd6',1,'Touch_1in28.h']]],
+  ['bpc1l_1308',['BPC1L',['../Touch__1in28_8h.html#ac4c0d8b40bdb18d85484988c23391c5c',1,'Touch_1in28.h']]],
+  ['bred_1309',['BRED',['../GUI__Paint_8h.html#a2adb4c9e293ac446897ccfac5a52d6c2',1,'GUI_Paint.h']]],
+  ['brown_1310',['BROWN',['../GUI__Paint_8h.html#ab2baea56ece91306020afd6d77fd19f9',1,'GUI_Paint.h']]],
+  ['brred_1311',['BRRED',['../GUI__Paint_8h.html#a7a180e479d5885267c5cf68bda4ba51a',1,'GUI_Paint.h']]],
+  ['btn_5fblue_1312',['BTN_BLUE',['../wp__apps_2src_2notepad_8c.html#a803621e940f21aa3562d7f432929eae9',1,'notepad.c']]],
+  ['btn_5fclear_1313',['BTN_CLEAR',['../wp__apps_2src_2notepad_8c.html#acd2a6241c14aad9630035ebb2509aa7a',1,'notepad.c']]],
+  ['btn_5feraser_1314',['BTN_ERASER',['../wp__apps_2src_2notepad_8c.html#a8a20817b6c7a77b6e13b40c8cef43c37',1,'notepad.c']]],
+  ['btn_5fgreen_1315',['BTN_GREEN',['../wp__apps_2src_2notepad_8c.html#afd5dcb433c10a1417557a3c2c6d3731a',1,'notepad.c']]],
+  ['btn_5fnext_1316',['BTN_NEXT',['../wp__apps_2src_2media_8c.html#a48bf8f29cd0edfa0f7526f8ac86b679d',1,'media.c']]],
+  ['btn_5fplay_5fpause_1317',['BTN_PLAY_PAUSE',['../wp__apps_2src_2media_8c.html#ab677e9d1ec241469a1ddee8ea5285752',1,'media.c']]],
+  ['btn_5fprev_1318',['BTN_PREV',['../wp__apps_2src_2media_8c.html#a42f365506c531c34161f9c4ce3c34324',1,'media.c']]],
+  ['btn_5fred_1319',['BTN_RED',['../wp__apps_2src_2notepad_8c.html#a37cef1a4f5079b905ff1f3a15dc44418',1,'notepad.c']]],
+  ['btn_5fstopwatch_1320',['BTN_STOPWATCH',['../chrono_8c.html#aa54a737f27bb8d44a4cae6c9b132c7a2',1,'chrono.c']]],
+  ['btn_5fwhite_1321',['BTN_WHITE',['../wp__apps_2src_2notepad_8c.html#ae3381c9c63230e4dfda8e81c3d6f2d37',1,'notepad.c']]]
+];

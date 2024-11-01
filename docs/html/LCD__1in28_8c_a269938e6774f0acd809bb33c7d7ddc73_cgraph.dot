@@ -1,0 +1,13 @@
+digraph "LCD_1IN28_SendData_8Bit"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="LCD_1IN28_SendData_8Bit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="function : send data parameter: Data : Write data"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="DEV_Digital_Write",height=0.2,width=0.4,color="black",URL="$DEV__Config_8c.html#a115bf3186fb590c5a9fa1bbfc2f38352",tooltip="GPIO read and write."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="DEV_SPI_WriteByte",height=0.2,width=0.4,color="black",URL="$DEV__Config_8c.html#a81090f78e7cb924d294d518b16ce3cc3",tooltip="SPI."];
+}

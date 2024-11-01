@@ -1,0 +1,16 @@
+html {
+/*
+    --primary-color: #1779c4;
+    --primary-dark-color: #335c80;
+    --primary-light-color: #70b1e9;
+
+    --page-background-color: #ffffff;
+    --page-foreground-color: #2f4153;
+    --page-secondary-foreground-color: #6f7e8e;
+*/
+
+--border-radius-small: 0;
+--border-radius-medium: 0;
+--border-radius-large: 0;
+--animation-duration: .06s
+}

@@ -1,0 +1,20 @@
+digraph "src" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_dee50937b975944f7c9648251dc93242 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="wp_apps" fontname="Helvetica", fontsize="10", URL="dir_dee50937b975944f7c9648251dc93242.html"]
+  dir_ee1edc0f0784b87343041848a173b456 [shape=box, label="src", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_ee1edc0f0784b87343041848a173b456.html"];
+  }
+  dir_0de5c10fa9cbe090c1c5fd9cd3c210ec [shape=box label="wp_res" color="red" URL="dir_0de5c10fa9cbe090c1c5fd9cd3c210ec.html"];
+  dir_56690f865c0fb1678ce292c7fd411ad3 [shape=box label="wp_bt" color="red" URL="dir_56690f865c0fb1678ce292c7fd411ad3.html"];
+  dir_ece66fc2df8e517e732af5ec1cd20206 [shape=box label="waveshare" color="red" URL="dir_ece66fc2df8e517e732af5ec1cd20206.html"];
+  dir_9302ac7e3aa509d61fd690b87f2b61b2 [shape=box label="wp_dev" color="red" URL="dir_9302ac7e3aa509d61fd690b87f2b61b2.html"];
+  dir_ee1edc0f0784b87343041848a173b456->dir_0de5c10fa9cbe090c1c5fd9cd3c210ec [headlabel="7", labeldistance=1.5 headhref="dir_000002_000003.html"];
+  dir_ee1edc0f0784b87343041848a173b456->dir_56690f865c0fb1678ce292c7fd411ad3 [headlabel="3", labeldistance=1.5 headhref="dir_000002_000005.html"];
+  dir_ee1edc0f0784b87343041848a173b456->dir_ece66fc2df8e517e732af5ec1cd20206 [headlabel="1", labeldistance=1.5 headhref="dir_000002_000009.html"];
+  dir_ee1edc0f0784b87343041848a173b456->dir_9302ac7e3aa509d61fd690b87f2b61b2 [headlabel="12", labeldistance=1.5 headhref="dir_000002_000012.html"];
+  dir_56690f865c0fb1678ce292c7fd411ad3->dir_9302ac7e3aa509d61fd690b87f2b61b2 [headlabel="2", labeldistance=1.5 headhref="dir_000005_000012.html"];
+  dir_9302ac7e3aa509d61fd690b87f2b61b2->dir_56690f865c0fb1678ce292c7fd411ad3 [headlabel="1", labeldistance=1.5 headhref="dir_000012_000005.html"];
+}

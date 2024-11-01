@@ -1,0 +1,17 @@
+digraph "waveshare" {
+  bgcolor=transparent;
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_68267d1309a1af8e8297ef4c3efbcdba {
+    graph [ bgcolor="#ddddee", pencolor="black", label="src" fontname="Helvetica", fontsize="10", URL="dir_68267d1309a1af8e8297ef4c3efbcdba.html"]
+  subgraph clusterdir_ece66fc2df8e517e732af5ec1cd20206 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_ece66fc2df8e517e732af5ec1cd20206.html"];
+    dir_ece66fc2df8e517e732af5ec1cd20206 [shape=plaintext label="waveshare"];
+    dir_82fa1a363f52685946cdea333cabeb29 [shape=box label="examples" color="black" fillcolor="white" style="filled" URL="dir_82fa1a363f52685946cdea333cabeb29.html"];
+    dir_e59babc21581178d9975f6bbe4eb6a10 [shape=box label="lib" color="red" fillcolor="white" style="filled" URL="dir_e59babc21581178d9975f6bbe4eb6a10.html"];
+  }
+  }
+  dir_ece66fc2df8e517e732af5ec1cd20206->dir_82fa1a363f52685946cdea333cabeb29 [headlabel="1", labeldistance=1.5 headhref="dir_000009_000016.html"];
+  dir_82fa1a363f52685946cdea333cabeb29->dir_e59babc21581178d9975f6bbe4eb6a10 [headlabel="5", labeldistance=1.5 headhref="dir_000016_000010.html"];
+}

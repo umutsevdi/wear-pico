@@ -9,12 +9,12 @@ PROJECT_BRIEF          = "An open-source Smartwatch firmware written" \
 OUTPUT_DIRECTORY       = docs/
 
 # Input directories
-INPUT                  = ../src
+INPUT                  = src/
 BRIEF_MEMBER_DESC      = YES
 REPEAT_BRIEF           = YES
 JAVADOC_AUTOBRIEF      = YES
 JAVADOC_BANNER         = YES
-BUILTIN_STL_SUPPORT    = YES
+BUILTIN_STL_SUPPORT    = NO
 EXTRACT_STATIC         = YES
 EXTRACT_LOCAL_METHODS  = YES
 # Patterns to ignore
@@ -65,8 +65,10 @@ DOT_GRAPH_MAX_NODES    = 50
 DOT_TRANSPARENT        = YES
 DOT_MULTI_TARGETS      = YES
 
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
 GENERATE_TREEVIEW      = YES # optional. Also works without treeview
 FULL_SIDEBAR           = YES
 DISABLE_INDEX          = NO
-HTML_EXTRA_STYLESHEET  = ../misc/doxygen-awesome-css/doxygen-awesome.css \
-                         ../.style.css
+HTML_EXTRA_STYLESHEET  = misc/doxygen-awesome-css/doxygen-awesome.css \
+                         .style.css

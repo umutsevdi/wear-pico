@@ -1,0 +1,28 @@
+var resources_8c =
+[
+    [ "_get_sprite", "resources_8c.html#a4447ecf8797c247da834a46d05641169", null ],
+    [ "res_get_app_alarm_button", "resources_8c.html#afcc413f09f85ead4f854c4326faaa7d6", null ],
+    [ "res_get_app_chrono_button", "resources_8c.html#a48a24cacd57b8d491b572338253ea85b", null ],
+    [ "res_get_app_media_button", "resources_8c.html#ae1c0b7e332c23923a3223aef9b3bd4a9", null ],
+    [ "res_get_app_notepad", "resources_8c.html#a9cae4d01241ae5583b3f9483d9da5306", null ],
+    [ "res_get_app_step", "resources_8c.html#a925ab0080593db41013fe9695e6cb49b", null ],
+    [ "res_get_direction", "resources_8c.html#a95003dd98836fc5519af367c1cf611ee", null ],
+    [ "res_get_menu_screen", "resources_8c.html#a27474099ff16cb24db77190a97123dd5", null ],
+    [ "res_get_popup_alarm", "resources_8c.html#a736f0db7ca66b0ac8d5deb4b2f1a0a30", null ],
+    [ "res_get_popup_call", "resources_8c.html#ab75724d6569c8e937160b6825f7534b3", null ],
+    [ "res_get_popup_notify", "resources_8c.html#a2db2d5009288e921cfbec3541fca5fad", null ],
+    [ "res_get_titlebar", "resources_8c.html#af520fc94bba7de9ec8e5b73e15039106", null ],
+    [ "res_get_tray", "resources_8c.html#a96f0bcacffc0881a1a7bd6666fa7d60f", null ],
+    [ "_res_alarm_button", "resources_8c.html#abf0da6bbbfbd101f5ca273a719a4f0f7", null ],
+    [ "_res_alarm_popup", "resources_8c.html#a85ff84c60631a2272797973ebb75c7f4", null ],
+    [ "_res_call", "resources_8c.html#a0524c825c9e1639836dd56a205e8d7f8", null ],
+    [ "_res_gest", "resources_8c.html#aca2453110205bfa74ae327c06550664b", null ],
+    [ "_res_media", "resources_8c.html#a8eac25f8341762797809f6341ff16c7a", null ],
+    [ "_res_menu", "resources_8c.html#aab70708a2bb9af54a131238195d51305", null ],
+    [ "_res_notepad", "resources_8c.html#af11ece24d04f6df8b097ce1bf9811291", null ],
+    [ "_res_notify", "resources_8c.html#a2ada52bb2eade66b432436514b598eea", null ],
+    [ "_res_step", "resources_8c.html#a2b621f9e019711a65f10cee9dd3b6f96", null ],
+    [ "_res_stopwatch", "resources_8c.html#a8c12b5d12bd44af88ba2cef25b765455", null ],
+    [ "_res_titlebar", "resources_8c.html#a942f0c2e1421e4e84c02cb2885c8d935", null ],
+    [ "_res_tray", "resources_8c.html#ad553927b1c113102c2b8238e987b1460", null ]
+];

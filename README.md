@@ -11,6 +11,8 @@ An open-source Smartwatch firmware written in C for the Raspberry Pi Pico.
 <strong> Explore the docs » </strong></a></p>
 <p align="center"><a href="Paper.pdf"><strong>Read the paper »
 </strong></a></p>
+<p align="center"><a href="https://umutsevdi.github.io/wear-pico/"><strong>Code Documentation »
+</strong></a></p>
 
 Click [here](https://github.com/umutsevdi/wear-pico-app) to visit the
 repository of the
